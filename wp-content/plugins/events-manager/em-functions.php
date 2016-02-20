@@ -94,7 +94,7 @@ function em_admin_paginate($total, $limit, $page=1, $vars=false, $base = false, 
 		'current' => $page,
 		'add_args' => $vars
 	));
-	$return .= sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of %s', 'dbem') . ' </span>%s',
+	$return .= sprintf( '<span class="displaying-num">' . __( 'Displaying %1$s&#8211;%2$s of %3$s', 'events-manager') . ' </span>%4$s',
 		number_format_i18n( ( $page - 1 ) * $limit + 1 ),
 		number_format_i18n( min( $page * $limit, $total ) ),
 		number_format_i18n( $total ),
@@ -202,27 +202,27 @@ function em_get_countries($add_blank = false, $sort = true){
  */
 function em_get_scopes(){
 	$scopes = array(
-		'all' => __('All events','dbem'),
-		'future' => __('Future events','dbem'),
-		'past' => __('Past events','dbem'),
-		'today' => __('Today\'s events','dbem'),
-		'tomorrow' => __('Tomorrow\'s events','dbem'),
-		'month' => __('Events this month','dbem'),
-		'next-month' => __('Events next month','dbem'),
-		'1-months'  => __('Events current and next month','dbem'),
-		'2-months'  => __('Events within 2 months','dbem'),
-		'3-months'  => __('Events within 3 months','dbem'),
-		'6-months'  => __('Events within 6 months','dbem'),
-		'12-months' => __('Events within 12 months','dbem')
+		'all' => __('All events','events-manager'),
+		'future' => __('Future events','events-manager'),
+		'past' => __('Past events','events-manager'),
+		'today' => __('Today\'s events','events-manager'),
+		'tomorrow' => __('Tomorrow\'s events','events-manager'),
+		'month' => __('Events this month','events-manager'),
+		'next-month' => __('Events next month','events-manager'),
+		'1-months'  => __('Events current and next month','events-manager'),
+		'2-months'  => __('Events within 2 months','events-manager'),
+		'3-months'  => __('Events within 3 months','events-manager'),
+		'6-months'  => __('Events within 6 months','events-manager'),
+		'12-months' => __('Events within 12 months','events-manager')
 	);
 	return apply_filters('em_get_scopes',$scopes);
 }
 
 function em_get_currencies(){
 	$currencies = new stdClass();
-	$currencies->names = array('EUR' => 'EUR - Euros','USD' => 'USD - U.S. Dollars','GBP' => 'GBP - British Pounds','CAD' => 'CAD - Canadian Dollars','AUD' => 'AUD - Australian Dollars','BRL' => 'BRL - Brazilian Reais','CZK' => 'CZK - Czech Koruny','DKK' => 'DKK - Danish Kroner','HKD' => 'HKD - Hong Kong Dollars','HUF' => 'HUF - Hungarian Forints','ILS' => 'ILS - Israeli New Shekels','JPY' => 'JPY - Japanese Yen','MYR' => 'MYR - Malaysian Ringgit','MXN' => 'MXN - Mexican Pesos','TWD' => 'TWD - New Taiwan Dollars','NZD' => 'NZD - New Zealand Dollars','NOK' => 'NOK - Norwegian Kroner','PHP' => 'PHP - Philippine Pesos','PLN' => 'PLN - Polish Zlotys','SGD' => 'SGD - Singapore Dollars','SEK' => 'SEK - Swedish Kronor','CHF' => 'CHF - Swiss Francs','THB' => 'THB - Thai Baht','TRY' => 'TRY - Turkish Liras');
-	$currencies->symbols = array( 'EUR' => '&euro;','USD' => '$','GBP' => '&pound;','CAD' => '$','AUD' => '$','BRL' => 'R$','DKK' => 'kr','HKD' => '$','HUF' => 'Ft','JPY' => '&#165;','MYR' => 'RM','MXN' => '$','TWD' => '$','NZD' => '$','NOK' => 'kr','PHP' => 'Php','SGD' => '$','SEK' => 'kr','CHF' => 'CHF','TRY' => 'TL');
-	$currencies->true_symbols = array( 'EUR' => '€','USD' => '$','GBP' => '£','CAD' => '$','AUD' => '$','BRL' => 'R$','DKK' => 'kr','HKD' => '$','HUF' => 'Ft','JPY' => '¥','MYR' => 'RM','MXN' => '$','TWD' => '$','NZD' => '$','NOK' => 'kr','PHP' => 'Php','SGD' => '$','SEK' => 'kr','CHF' => 'CHF','TRY' => 'TL');
+	$currencies->names = array('EUR' => 'EUR - Euros','USD' => 'USD - U.S. Dollars','GBP' => 'GBP - British Pounds','CAD' => 'CAD - Canadian Dollars','AUD' => 'AUD - Australian Dollars','BRL' => 'BRL - Brazilian Reais','CZK' => 'CZK - Czech Koruny','DKK' => 'DKK - Danish Kroner','HKD' => 'HKD - Hong Kong Dollars','HUF' => 'HUF - Hungarian Forints','ILS' => 'ILS - Israeli New Shekels','JPY' => 'JPY - Japanese Yen','MYR' => 'MYR - Malaysian Ringgit','MXN' => 'MXN - Mexican Pesos','TWD' => 'TWD - New Taiwan Dollars','NZD' => 'NZD - New Zealand Dollars','NOK' => 'NOK - Norwegian Kroner','PHP' => 'PHP - Philippine Pesos','PLN' => 'PLN - Polish Zlotys','SGD' => 'SGD - Singapore Dollars','SEK' => 'SEK - Swedish Kronor','CHF' => 'CHF - Swiss Francs','THB' => 'THB - Thai Baht','TRY' => 'TRY - Turkish Liras', 'RUB'=>'RUB - Russian Ruble');
+	$currencies->symbols = array( 'EUR' => '&euro;','USD' => '$','GBP' => '&pound;','CAD' => '$','AUD' => '$','BRL' => 'R$','DKK' => 'kr','HKD' => '$','HUF' => 'Ft','JPY' => '&#165;','MYR' => 'RM','MXN' => '$','TWD' => '$','NZD' => '$','NOK' => 'kr','PHP' => 'Php','SGD' => '$','SEK' => 'kr','CHF' => 'CHF','TRY' => 'TL','RUB'=>'&#8381;');
+	$currencies->true_symbols = array( 'EUR' => '€','USD' => '$','GBP' => '£','CAD' => '$','AUD' => '$','BRL' => 'R$','DKK' => 'kr','HKD' => '$','HUF' => 'Ft','JPY' => '¥','MYR' => 'RM','MXN' => '$','TWD' => '$','NZD' => '$','NOK' => 'kr','PHP' => 'Php','SGD' => '$','SEK' => 'kr','CHF' => 'CHF','TRY' => 'TL', 'RUB'=>'₽');
 	return apply_filters('em_get_currencies',$currencies);
 }
 
@@ -264,7 +264,7 @@ function em_verify_nonce($action, $nonce_name='_wpnonce'){
 	if( is_admin() ){
 		if( !wp_verify_nonce($_REQUEST[$nonce_name], $action) ) check_admin_referer('trigger_error');
 	}else{
-		if( !wp_verify_nonce($_REQUEST[$nonce_name], $action) ) exit( __('Trying to perform an illegal action.','dbem') );
+		if( !wp_verify_nonce($_REQUEST[$nonce_name], $action) ) exit( __('Trying to perform an illegal action.','events-manager') );
 	}
 }
 
@@ -406,22 +406,22 @@ function em_register_new_user( $user_data ) {
 
 	// Check the username
 	if ( $sanitized_user_login == '' ) {
-		$errors->add( 'empty_username', __( '<strong>ERROR</strong>: Please enter a username.', 'dbem') );
+		$errors->add( 'empty_username', __( '<strong>ERROR</strong>: Please enter a username.', 'events-manager') );
 	} elseif ( ! validate_username( $user_data['user_login'] ) ) {
-		$errors->add( 'invalid_username', __( '<strong>ERROR</strong>: This username is invalid because it uses illegal characters. Please enter a valid username.', 'dbem') );
+		$errors->add( 'invalid_username', __( '<strong>ERROR</strong>: This username is invalid because it uses illegal characters. Please enter a valid username.', 'events-manager') );
 		$sanitized_user_login = '';
 	} elseif ( username_exists( $sanitized_user_login ) ) {
-		$errors->add( 'username_exists', __( '<strong>ERROR</strong>: This username is already registered, please choose another one.', 'dbem' ) );
+		$errors->add( 'username_exists', __( '<strong>ERROR</strong>: This username is already registered, please choose another one.', 'events-manager') );
 	}
 
 	// Check the e-mail address
 	if ( $user_email == '' ) {
-		$errors->add( 'empty_email', __( '<strong>ERROR</strong>: Please type your e-mail address.', 'dbem') );
+		$errors->add( 'empty_email', __( '<strong>ERROR</strong>: Please type your e-mail address.', 'events-manager') );
 	} elseif ( ! is_email( $user_email ) ) {
-		$errors->add( 'invalid_email', __( '<strong>ERROR</strong>: The email address isn&#8217;t correct.', 'dbem') );
+		$errors->add( 'invalid_email', __( '<strong>ERROR</strong>: The email address isn&#8217;t correct.', 'events-manager') );
 		$user_email = '';
 	} elseif ( email_exists( $user_email ) ) {
-		$errors->add( 'email_exists', __( '<strong>ERROR</strong>: This email is already registered, please choose another one.', 'dbem' ) );
+		$errors->add( 'email_exists', __( '<strong>ERROR</strong>: This email is already registered, please choose another one.', 'events-manager') );
 	}
 
 	do_action( 'register_post', $sanitized_user_login, $user_email, $errors );
@@ -441,7 +441,7 @@ function em_register_new_user( $user_data ) {
 	}
 
 	if ( ! $user_id ) {
-		$errors->add( 'registerfail', sprintf( __( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !', 'dbem'), get_option( 'admin_email' ) ) );
+		$errors->add( 'registerfail', sprintf( __( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !', 'events-manager'), get_option( 'admin_email' ) ) );
 		return $errors;
 	}
 
@@ -477,10 +477,10 @@ function em_new_user_notification() {
 	// we want to reverse this for the plain text arena of emails.
 	$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 
-	$message  = sprintf(__('New user registration on your blog %s:', 'dbem'), $blogname) . "\r\n\r\n";
-	$message .= sprintf(__('Username: %s', 'dbem'), $user_login) . "\r\n\r\n";
-	$message .= sprintf(__('E-mail: %s', 'dbem'), $user_email) . "\r\n";
-	@wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Registration', 'dbem'), $blogname), $message);
+	$message  = sprintf(__('New user registration on your blog %s:', 'events-manager'), $blogname) . "\r\n\r\n";
+	$message .= sprintf(__('Username: %s', 'events-manager'), $user_login) . "\r\n\r\n";
+	$message .= sprintf(__('E-mail: %s', 'events-manager'), $user_email) . "\r\n";
+	@wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Registration', 'events-manager'), $blogname), $message);
 
 	if ( empty($plaintext_pass) )
 		return;
@@ -619,7 +619,7 @@ function em_options_input_text($title, $name, $description ='', $default='') {
 		<th scope="row"><?php echo esc_html($title); ?></th>
 	    <td>
 			<input name="<?php echo esc_attr($name) ?>" type="text" id="<?php echo esc_attr($name) ?>" style="width: 95%" value="<?php echo esc_attr(get_option($name, $default), ENT_QUOTES); ?>" size="45" />			
-	    	<?php if( $translate ): ?><span class="em-translatable"></span><?php endif; ?>
+	    	<?php if( $translate ): ?><span class="em-translatable dashicons dashicons-admin-site"></span><?php endif; ?>
 	    	<br />
 			<?php 
 				if( $translate ){
@@ -637,7 +637,7 @@ function em_options_input_text($title, $name, $description ='', $default='') {
 						}
 					}
 					echo '</table>';
-					echo '<em>'.__('If translations are left blank, the default value will be used.','dbem').'</em>';
+					echo '<em>'.__('If translations are left blank, the default value will be used.','events-manager').'</em>';
 					echo $default_lang.'</div>';
 				}
 			?>
@@ -666,7 +666,7 @@ function em_options_textarea($title, $name, $description ='') {
 		<th scope="row"><?php echo esc_html($title); ?></th>
 			<td>
 				<textarea name="<?php echo esc_attr($name) ?>" id="<?php echo esc_attr($name) ?>" rows="6" cols="60"><?php echo esc_attr(get_option($name), ENT_QUOTES);?></textarea>			
-		    	<?php if( $translate ): ?><span class="em-translatable"></span><?php endif; ?>
+		    	<?php if( $translate ): ?><span class="em-translatable  dashicons dashicons-admin-site"></span><?php endif; ?>
 		    	<br />
 				<?php 
 					if( $translate ){
@@ -680,11 +680,11 @@ function em_options_textarea($title, $name, $description ='') {
 								</tr>
 								<?php
 							}else{
-								$default_lang = '<input name="'.esc_attr($name).'_ml['.EM_ML::$wplang.']" type="hidden" id="'. esc_attr($name.'_'. EM_ML::$wplang) .'" value="'. esc_attr(get_option($name, $default), ENT_QUOTES).'" />';
+								$default_lang = '<input name="'.esc_attr($name).'_ml['.EM_ML::$wplang.']" type="hidden" id="'. esc_attr($name.'_'. EM_ML::$wplang) .'" value="'. esc_attr(get_option($name), ENT_QUOTES).'" />';
 							}
 						}
 						echo '</table>';
-						echo '<em>'.__('If left blank, the default value will be used.','dbem').'</em>';
+						echo '<em>'.__('If left blank, the default value will be used.','events-manager').'</em>';
 						echo $default_lang.'</div>';
 					}
 				?>
@@ -718,7 +718,7 @@ function em_options_radio($name, $options, $title='') {
 }
 
 function em_options_radio_binary($title, $name, $description='', $option_names = '', $trigger='') {
-	if( empty($option_names) ) $option_names = array(0 => __('No','dbem'), 1 => __('Yes','dbem'));
+	if( empty($option_names) ) $option_names = array(0 => __('No','events-manager'), 1 => __('Yes','events-manager'));
 	if( substr($name, 0, 7) == 'dbem_ms' ){
 		$list_events_page = get_site_option($name);
 	}else{
@@ -790,7 +790,7 @@ if( !function_exists( 'is_main_query' ) ){
 }
 
 /**
- * Depreciated
+ * deprecated
  * @return unknown
  */
 function em_get_date_format(){

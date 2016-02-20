@@ -1,6 +1,6 @@
 === Custom Taxonomies Menu Widget ===
 
-Version: 1.3.1
+Version: 1.4
 Author: Ade Walker
 Author page: http://www.studiograsshopper.ch
 Contributors: studiograsshopper
@@ -8,10 +8,10 @@ Plugin page: http://www.studiograsshopper.ch/custom-taxonomies-menu-widget/
 Donate link: http://www.studiograsshopper.ch/custom-taxonomies-menu-widget/
 Tags: custom taxonomies,taxonomy, menu, widget
 Requires at least: 3.8
-Tested up to: 3.8
+Tested up to: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Stable tag: 1.3.1
+Stable tag: 1.4
 
 Creates a simple menu of your custom taxonomies and their associated terms, ideal for sidebars. Highly customisable via widget control panel.
 
@@ -182,6 +182,11 @@ Version 1.3 introduces new options for determining how the plugin should treat n
 Added 'sgr_ctmw_taxonomies' filter which can be used to filter the $args sent to the get_taxonomies() function used by the plugin. The filter passes an array called $args. This allows you to add in built-in taxonomies if you wish to to do so.
 
 
+= 1.4 =
+
+Plugin's class constructor now uses PHP5 style constructor (replacing the PHP4 constructor) in readiness for WP 4.3.
+
+
 
 == Screenshots ==
 1. Custom Taxonomies Menu Widget control panel
@@ -190,9 +195,13 @@ Added 'sgr_ctmw_taxonomies' filter which can be used to filter the $args sent to
 
 == Changelog ==
 
+= 1.4 =
+* Released 8 August 2015
+* Enhance: Replaced PHP4 class constructor with PHP5 style constructor, in readiness for WP 4.3
+
 = 1.3.1 =
 * Released 16 December 2013
-* Enhance: Wp 3.8 minimum version required
+* Enhance: WP 3.8 minimum version required
 * Bug fix: Tweaked admin CSS to fix new-look WP 3.8 Dashboard styles
 
 = 1.3 =

@@ -3,9 +3,9 @@
  *
  * @category   Apptha
  * @package    Contus video Gallery
- * @version    2.8.1
+ * @version    3.0
  * @author     Apptha Team <developers@contus.in>
- * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @copyright  Copyright (C) 2015 Apptha. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 
@@ -31,8 +31,8 @@ function checkingarray(checkname)						//for giving the coma seprerated  selcted
 	}
 }
 
-function t1( t2 )
-{    
+function t1( t2 ) 
+{ 
 	if ( t2.value == "y" || t2 == "y" )
 	{
 		document.getElementById( 'upload2' ).style.display = "block";
@@ -46,19 +46,31 @@ function t1( t2 )
 		document.getElementById( 'filetypevalue' ).value = 2;
 		document.getElementById( 'youtube' ).style.display = "none";
 		document.getElementById( 'embedvideo' ).style.display = "none";
+		document.getElementById( 'adstypebox' ).style.display = "block";
 		document.getElementById( 'customurl' ).style.display = "none";
 	} else if ( t2.value == "c" || t2 == "c" ) {
-		document.getElementById( 'youtube' ).style.display = "block";
-		document.getElementById( 'upload2' ).style.display = "block";
-		document.getElementById( 'supportformats' ).style.display = "none";
+		if(document.getElementById( 'youtube' ))
+			document.getElementById( 'youtube' ).style.display = "block";
+		if(document.getElementById( 'upload2' ))
+			document.getElementById( 'upload2' ).style.display = "block";
+		if(document.getElementById( 'supportformats' ))
+			document.getElementById( 'supportformats' ).style.display = "none";
+		if(document.getElementById( 'supportformats' ))
 		document.getElementById( 'ffmpeg_disable_new4' ).style.display = "none";
+		if(document.getElementById( 'supportformats' ))
 		document.getElementById( 'ffmpeg_disable_new2' ).style.display = "none";
+		if(document.getElementById( 'supportformats' ))
 		document.getElementById( 'ffmpeg_disable_new3' ).style.display = "none";
+		if(document.getElementById( 'supportformats' ))
 		document.getElementById( 'ffmpeg_disable_new1' ).style.display = "none";
+		if(document.getElementById( 'supportformats' ))
 		document.getElementById( 'ffmpeg_disable_new5' ).style.display = "";
+		if(document.getElementById( 'supportformats' ))
 		document.getElementById( 'ffmpeg_disable_new6' ).style.display = "";
+		if(document.getElementById( 'supportformats' ))
 		document.getElementById( 'embedvideo' ).style.display = "none";
 		document.getElementById( 'customurl' ).style.display = "none";
+		document.getElementById( 'adstypebox' ).style.display = "block";
 		document.getElementById( 'filetypevalue' ).value = 1;
 	} else if ( t2.value == "url" || t2 == "url" ) {
 		document.getElementById( 'customurl' ).style.display = "block";
@@ -74,6 +86,7 @@ function t1( t2 )
 		document.getElementById( 'ffmpeg_disable_new6' ).style.display = "";
 		document.getElementById( 'stream1' ).style.display = "none";
 		document.getElementById( 'hdvideourl' ).style.display = "";
+		document.getElementById( 'adstypebox' ).style.display = "block";
 		document.getElementById( 'youtube' ).style.display = "none";
 		document.getElementById( 'filetypevalue' ).value = 3;
 	} else if ( t2.value == "rtmp" || t2 == "rtmp" ) {
@@ -91,6 +104,7 @@ function t1( t2 )
 		document.getElementById( 'embedvideo' ).style.display = "none";
 		document.getElementById( 'hdvideourl' ).style.display = "none";
 		document.getElementById( 'youtube' ).style.display = "none";
+		document.getElementById( 'adstypebox' ).style.display = "block";
 		document.getElementById( 'filetypevalue' ).value = 4;
 	} else if ( t2.value == "embed" || t2 == "embed" ) {
 		document.getElementById( 'embedvideo' ).style.display = "block";
@@ -128,9 +142,14 @@ function VideogoogleaddeleteIds(){
 			alert("Please select a Google Adsense to delete");
 			return false;
 		}
-	}
-	else
-	{
+	}else if(googleadactiondown ==="videogoogleadpublish" || googleadactionup ==="videogoogleadpublish" || googleadactiondown === "videogoogleadunpublish" || googleadactionup === "videogoogleadunpublish"){
+		if(googleaddeleteID){
+			return true;
+		}else{
+			alert("Please select  a googlead to  publish");
+			return false;
+		}
+	}else {
 		alert("Please select an action");
 	}
 	return false;
@@ -153,9 +172,14 @@ function PlaylistdeleteIds()
 			alert("Please select a Category to delete");
 			return false;
 		}
-	}
-	else
-	{
+	}else if(playlistactiondown ==="playlistpublish" || playlistactionup ==="playlistpublish" || playlistactiondown === "playlistunpublish" || playlistactionup === "playlistunpublish"){
+		if(playlistID){
+			return true;
+		}else{
+			alert("Please select  a Category to  publish");
+			return false;
+		}
+	}else {
 		alert("Please select an action");
 	}
 	return false;
@@ -172,8 +196,6 @@ function Videoadtype(adtype)
 		document.getElementById('admethod').value                  = "prepost";
 		document.getElementById('videoadmethod').style.display     = "block";
 		document.getElementById('videoaddetails').style.display    = "block";
-		document.getElementById('adimpresurl').style.display       = "block";
-		document.getElementById('adclickurl').style.display        = "block";
 		document.getElementById('adtargeturl').style.display       = "block";
 		document.getElementById('addescription').style.display     = "block";
 		document.getElementById('adtitle').style.display           = "block";
@@ -188,8 +210,6 @@ function Videoadtype(adtype)
 		document.getElementById('admethod').value					= "midroll";
 		document.getElementById('videoadurl').style.display			= "none";
 		document.getElementById('videoaddetails').style.display		= "block";
-		document.getElementById('adimpresurl').style.display		= "block";
-		document.getElementById('adclickurl').style.display			= "block";
 		document.getElementById('adtargeturl').style.display		= "block";
 		document.getElementById('addescription').style.display		= "block";
 		document.getElementById('adtitle').style.display			= "block";
@@ -203,8 +223,6 @@ function Videoadtype(adtype)
 		document.getElementById('videoadurl').style.display			= "none";
 		document.getElementById('videoaddetails').style.display		= "block";
 		document.getElementById('videoimaaddetails').style.display	= "block";
-		document.getElementById('adimpresurl').style.display		= "none";
-		document.getElementById('adclickurl').style.display			= "none";
 		document.getElementById('adtargeturl').style.display		= "none";
 		document.getElementById('addescription').style.display		= "none";
 		document.getElementById('adtitle').style.display			= "";
@@ -257,9 +275,10 @@ function changeimaadtype(adtype)
 	}
 }
 
-function validateadInput() {
+function validateadInput() { 
 	var tomatch = /(http:\/\/|https:\/\/)[A-Za-z0-9\.-]{3,}\.[A-Za-z]{3}|(http:\/\/|https:\/\/)/;
-	if (document.getElementById('targeturl').value !== '') {
+	
+	if (document.getElementById('targeturl') && document.getElementById('targeturl').value !== '') {
 		var thevideoadurl = document.getElementById("targeturl").value;
 		if (!tomatch.test(thevideoadurl))
 		{
@@ -267,8 +286,8 @@ function validateadInput() {
 			document.getElementById("targeturl").focus();
 			return false;
 		}
-	}
-	if (document.getElementById('clickurl').value !== '') {
+	} 
+	if (document.getElementById('clickurl') && document.getElementById('clickurl').value !== '') {
 		var thevideoadurl = document.getElementById("clickurl").value;
 		if (!tomatch.test(thevideoadurl))
 		{
@@ -276,8 +295,8 @@ function validateadInput() {
 			document.getElementById("clickurl").focus();
 			return false;
 		}
-	}
-	if (document.getElementById('impressionurl').value !== '') {
+	} 
+	if (document.getElementById('impressionurl') && document.getElementById('impressionurl').value !== '') {
 		var thevideoadurl = document.getElementById("impressionurl").value;
 		if (!tomatch.test(thevideoadurl))
 		{
@@ -286,14 +305,14 @@ function validateadInput() {
 			return false;
 		}
 	}
-
-	if (document.getElementById('prepostroll').checked === true)
+	if (document.getElementById('prepostroll') && document.getElementById('prepostroll').checked == true)
 	{
-		if (document.getElementById('filebtn').checked === true && document.getElementById('normalvideoform-value').value === '')
+		if (document.getElementById('filebtn') && document.getElementById('filebtn').checked === true && document.getElementById('normalvideoform-value').value === '')
 		{
 			document.getElementById('filepathuploaderrormessage').innerHTML = 'Upload file for Ad';
 			return false;
-		} else if (document.getElementById('urlbtn').checked === true)
+		} 
+		else if (document.getElementById('urlbtn') && document.getElementById('urlbtn').checked === true) 
 		{
 			if (document.getElementById('videoadfilepath').value === '') {
 				document.getElementById('filepatherrormessage').innerHTML = 'Enter Ad URL';
@@ -320,7 +339,7 @@ function validateadInput() {
 			return false;
 		}
 	}
-	if (document.getElementById('imaad').checked === true) {
+	if (document.getElementById('imaad') && document.getElementById('imaad').checked === true) {
 		if (document.getElementById('imaadTypetext').checked === true && document.getElementById('publisherId').value === '')
 		{
 			document.getElementById('imapublisherIderrormessage').innerHTML = 'Enter IMA Ad Publisher ID';
@@ -361,7 +380,7 @@ function validateadInput() {
 		}
 
 	}
-	if (document.getElementById('name').value === '') {
+	if (document.getElementById('name') && document.getElementById('name').value === '') {
 		document.getElementById('nameerrormessage').style.display	= "block";
 		document.getElementById('nameerrormessage').innerHTML		= 'Enter Ad Name';
 		document.getElementById('name').focus();
@@ -385,6 +404,13 @@ function VideoaddeleteIds()
 		else
 		{
 			alert("Please select a Video ad to delete");
+			return false;
+		}
+	}else if(videoadactiondown ==="videoadpublish" || videoadactionup ==="videoadpublish" || videoadactiondown === "videoadunpublish" || videoadactionup === "videoadunpublish"){
+		if(videoadID){
+			return true;
+		}else{
+			alert("Please select  a Video ad to  publish");
 			return false;
 		}
 	}
@@ -592,8 +618,8 @@ function setStatus(form_handle, status)
 			document.getElementById(divprefix + "-upload-status").innerHTML			= "Queued";
 			document.getElementById(divprefix + "-upload-message").style.display	= "none";
 			document.getElementById(divprefix + "-upload-filename").innerHTML		= document.forms[form_handle].myfile.value;
-			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + '/images/empty.gif';
-			document.getElementById(divprefix + "-upload-cancel").innerHTML			= '<a style="float:right;padding-right:10px;" href=javascript:cancelUpload("' + form_handle + '") name="submitcancel">Cancel</a>';
+			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + 'empty.gif';
+			document.getElementById(divprefix + "-upload-cancel").innerHTML			= '<a style="padding-right:10px;" href=javascript:cancelUpload("' + form_handle + '") name="submitcancel">Cancel</a>';
 			break;
 
 		case "Uploading":
@@ -602,8 +628,8 @@ function setStatus(form_handle, status)
 			document.getElementById(divprefix + "-upload-status").innerHTML			= "Uploading";
 			document.getElementById(divprefix + "-upload-message").style.display	= "none";
 			document.getElementById(divprefix + "-upload-filename").innerHTML		= document.forms[form_handle].myfile.value;
-			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + '/images/loader.gif';
-			document.getElementById(divprefix + "-upload-cancel").innerHTML			= '<a style="float:right;padding-right:10px;" href=javascript:cancelUpload("' + form_handle + '") name="submitcancel">Cancel</a>';
+			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + 'loader.gif';
+			document.getElementById(divprefix + "-upload-cancel").innerHTML			= '<a style="padding-right:10px;" href=javascript:cancelUpload("' + form_handle + '") name="submitcancel">Cancel</a>';
 			break;
 		case "Retry":
 		case "Cancelled":
@@ -613,7 +639,7 @@ function setStatus(form_handle, status)
 			enableUpload(form_handle);
 			break;
 		case 0:
-			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + '/images/success.gif';
+			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + 'success.gif';
 			document.getElementById(divprefix + "-upload-status").innerHTML			= "";
 			document.getElementById(divprefix + "-upload-message").style.display	= "";
 			document.getElementById(divprefix + "-upload-message").style.backgroundColor = "#CEEEB2";
@@ -626,7 +652,7 @@ function setStatus(form_handle, status)
 
 
 		default:
-			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + '/images/error.gif';
+			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + 'error.gif';
 			document.getElementById(divprefix + "-upload-status").innerHTML			= " ";
 			document.getElementById(divprefix + "-upload-message").style.display	= "";
 			document.getElementById(divprefix + "-upload-message").innerHTML		= uploadmessage + " <a href=javascript:setStatus('" + form_handle + "','Retry')>Retry</a>";
@@ -703,15 +729,6 @@ function extension(fname)
 	}
 	return extension;
 }
-function generate12(str1)
-{
-	var re = /http:\/\/www\.youtube[^"]+/;
-	if (re.test(str1)){
-		document.getElementById('generate').style.visibility = "visible";	  
-	}else {
-		document.getElementById('generate').style.visibility = "hidden";
-    }
- }	
 
 function validateInput() {
 
@@ -908,7 +925,6 @@ function playlistclose()
 
 function generate12(str1)
 {
-	var theurl = str1;
 	var theurl = document.getElementById("filepath1").value;
 	if (theurl.indexOf("youtu.be") !== -1 || theurl.indexOf("youtube.com") !== -1) {
 		document.getElementById('generate').style.visibility = "visible";
@@ -992,3 +1008,67 @@ function validateerrormsg() {
 
 	}
 }
+function removeLogo()
+{
+	if (document.getElementById('logopathvalue').value !== ''){
+		document.getElementById('logoname').innerHTML = '';
+		document.getElementById('logopathvalue').innerHTML = '';
+		document.getElementById('logopathvalue').value = '';
+		document.getElementById('removepng').style.display = "none";
+	}
+}
+
+function enablefbapi( val ) { 
+    if ( val == 0 || val == 1 ) { 
+        document.getElementById( 'facebook_api' ).style.display = 'table-row'; 
+        document.getElementById( 'facebook_api_link' ).style.display = 'table-row'; 
+        document.getElementById( 'disqus_api' ).style.display = 'none'; 
+    } else if ( val == 2 ) { 
+        document.getElementById( 'facebook_api' ).style.display = 'table-row'; 
+        document.getElementById( 'facebook_api_link' ).style.display = 'table-row'; 
+        document.getElementById( 'disqus_api' ).style.display = 'none'; 
+    } else if ( val == 3 ) { 
+        document.getElementById( 'facebook_api' ).style.display = 'table-row'; 
+        document.getElementById( 'facebook_api_link' ).style.display = 'table-row'; 
+        document.getElementById( 'disqus_api' ).style.display = 'table-row'; 
+    } 
+}
+function enablerelateditems( val ) { 
+    if ( val == 'side' ) { 
+        document.getElementById( 'related_scroll_barColor' ).style.display = ''; 
+        document.getElementById( 'related_scroll_barbgColor' ).style.display = ''; 
+        document.getElementById( 'related_bgColor' ).style.display = ''; 
+        document.getElementById( 'related_playlist_open' ).style.display = ''; 
+    } else { 
+        document.getElementById( 'related_scroll_barColor' ).style.display = 'none'; 
+        document.getElementById( 'related_scroll_barbgColor' ).style.display = 'none'; 
+        document.getElementById( 'related_bgColor' ).style.display = 'none'; 
+        document.getElementById( 'related_playlist_open' ).style.display = 'none'; 
+    } 
+} 
+var sortdr = jQuery.noConflict(); 
+sortdr( function() { 
+    sortdr( ".column" ).sortable( { 
+        connectWith: ".column" 
+    }); 
+    sortdr( ".portlet" ).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" ) 
+          .find( ".portlet-header" ) 
+          .addClass( "ui-widget-header ui-corner-all" ) 
+          .prepend( "<span class='ui-icon ui-icon-minusthick'></span>" ) 
+          .end() 
+          .find( ".portlet-content" );
+    sortdr( ".portlet-header .ui-icon" ).click( function() { 
+        sortdr( this ).toggleClass( "ui-icon-minusthick" ).toggleClass( "ui-icon-plusthick" ); 
+        sortdr( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle(); 
+    } ); 
+    sortdr('#videogallery_setting').click(function(){ 
+        var trackcode = sortdr('#trackcode').val(); 
+        var trackcodepattern = /^ua-\d{4,9}-\d{1,4}$/i; 
+        if( ( !trackcodepattern.test(trackcode) )  && trackcode!='' ) { 
+            sortdr('#trackcodeerror').html('Enter valid Google Analytics Tracking Code'); 
+            sortdr('#trackcodeerror').addClass('updated below-h2'); 
+            return false; 
+        }
+        return true; 
+    } ); 
+} ); 

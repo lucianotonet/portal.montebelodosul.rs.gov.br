@@ -4,608 +4,487 @@
  *
  * @category   Apptha
  * @package    Contus video Gallery
- * @version    2.8.1
+ * @version    3.0
  * @author     Apptha Team <developers@contus.in>
- * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @copyright  Copyright (C) 2015 Apptha. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
-if (class_exists ( 'ContusMoreView' ) != true) {
-	class ContusMoreView extends ContusMoreController { // CLASS FOR HOME PAGE STARTS
-		public $_settingsData;
-		public $_vId;
-		public $_playid;
-		public $_pagenum;
-		public function __construct() { // contructor starts
-			parent::__construct ();
-			global $wp_query;
-			$video_search = '';
-			$this->_settingsData = $this->settings_data (); // Get player settings
-			$this->_mPageid = $this->more_pageid (); // Get more page id
-			$this->_feaMore = $this->video_count (); // Get featured videos count
-			$this->_vId = absint( filter_input ( INPUT_GET, 'vid' ) ); // Get vid from URL
-			$this->_pagenum = absint (filter_input ( INPUT_GET, 'pagenum' ) ); // Get current page number
-			$this->_playid =  &$wp_query->query_vars ['playid'] ;
-			$this->_userid = &$wp_query->query_vars ['userid'] ;
-			
-			// Get pid from URL
-			$this->_viewslang = __ ( 'Views', 'video_gallery' );
-			$this->_viewlang = __ ( 'View', 'video_gallery' );
-			// Get search keyword
-			$searchVal = str_replace ( ' ', '%20', __ ( 'Video Search ...', 'video_gallery' ) );
-			if (isset ( $wp_query->query_vars ['video_search'] ) && $wp_query->query_vars ['video_search'] !== $searchVal) {
-				$video_search = $wp_query->query_vars ['video_search'];
-			}
-			$this->_video_search = stripslashes ( urldecode ( $video_search ) );
-			
-			$this->_showF = 5;
-			$this->_colF = $this->_settingsData->colMore; // get row of more page
-			$this->_colCat = $this->_settingsData->colCat; // get column of more page
-			$this->_rowCat = $this->_settingsData->rowCat; // get row of category videos
-			$this->_perCat = $this->_colCat * $this->_rowCat; // get column of category videos
-			$dir = dirname ( plugin_basename ( __FILE__ ) );
-			$dirExp = explode ( '/', $dir );
-			$this->_folder = $dirExp [0]; // Get plugin folder name
-			$this->_site_url = get_site_url (); // Get base url
-			$this->_imagePath = APPTHA_VGALLERY_BASEURL . 'images' . DS; // Declare image path
-		} // contructor ends
-		/**
-		 * Content show in the video more page
-		 * @parem $type
-		 */
-		function video_more_pages($type) { 
-			if (function_exists ( 'homeVideo' ) != true) {
-				$type_name = '';
-				switch ($type) {
-					case 'popular' : 
-						$rowF = $this->_settingsData->rowMore; // row field of popular videos
-						$colF = $this->_settingsData->colMore; // column field of popular videos
-						$dataLimit = $rowF * $colF;
-						$where = '';
-						$thumImageorder = 'w.hitcount DESC';
-						$pagenum =  $this->_pagenum;
-						if( empty($pagenum ) ) {
-							$pagenum = 1;
-						}
-						$TypeOFvideos = $this->home_thumbdatamore ( $thumImageorder, $where, $pagenum, $dataLimit );
-						$CountOFVideos = $this->countof_videos ( '', '', $thumImageorder, $where );
-						$typename = __ ( 'Popular', 'video_gallery' );
-						$type_name = 'popular';
-						$morePage = '&more=pop';
-						break; 
-					
-					case 'recent' :
-						$rowF = $this->_settingsData->rowMore;
-						$where = '';
-						$colF = $this->_settingsData->colMore;
-						$dataLimit = $rowF * $colF;
-						$thumImageorder = 'w.vid DESC';
-						$pagenum =  $this->_pagenum;
-						if( empty($pagenum ) ) {
-							$pagenum = 1;
-						}
-						$TypeOFvideos = $this->home_thumbdatamore ( $thumImageorder, $where, $pagenum, $dataLimit );
-						$CountOFVideos = $this->countof_videos ( '', '', $thumImageorder, $where );
-						$typename = __ ( 'Recent', 'video_gallery' );
-						$type_name = 'recent';
-						$morePage = '&more=rec';
-						break;
-					case 'random':
-						$rowF = $this->_settingsData->rowMore;
-						$where = '';
-						$colF = $this->_settingsData->colMore;
-						$dataLimit = $rowF * $colF;
-						$thumImageorder = 'w.vid DESC';
-						$pagenum =  $this->_pagenum;
-						if( empty($pagenum ) ) {
-							$pagenum = 1;
-						}
-						$TypeOFvideos = $this->home_thumbdatamore ( $thumImageorder, $where, $pagenum, $dataLimit );
-						$CountOFVideos = $this->countof_videos ( '', '', $thumImageorder, $where );
-						$typename = __ ( 'Random', 'video_gallery' );
-						$type_name = 'random';
-						$morePage = '&more=rand';
-						break;
-					case 'featured' :
-						$thumImageorder = 'w.ordering ASC';
-						$where = 'AND w.featured=1';
-						$rowF = $this->_settingsData->rowMore;
-						$colF = $this->_settingsData->colMore;
-						$dataLimit = $rowF * $colF;
-						$pagenum =  $this->_pagenum;
-						if( empty($pagenum ) ) {
-							$pagenum = 1;
-						}
-						$player_color = unserialize( $this->_settingsData->player_colors);
-						$recent_video_order = $player_color['recentvideo_order'];	
-						if ($recent_video_order == 'id') {
-							$thumImageorder = 'w.vid DESC';
-						} elseif ($recent_video_order == 'hitcount') {
-							$thumImageorder = 'w.' . $recent_video_order . ' DESC';
-						} elseif ($recent_video_order == 'default') {
-							$thumImageorder = 'w.ordering ASC';
-						}  else {
-							$thumImageorder = 'w.vid DESC';
-						}
-						$TypeOFvideos = $this->home_thumbdatamore ( $thumImageorder, $where, $pagenum, $dataLimit );
-						$CountOFVideos = $this->countof_videos ( '', '', $thumImageorder, $where );
-						$typename = __ ( 'Featured', 'video_gallery' );
-						$type_name = 'featured';
-						$morePage = '&more=fea';
-						break;
-					case 'cat' :
-						$thumImageorder = absint( $this->_playid );
-						$where = '';
-						$rowF = $this->_settingsData->rowCat;
-						$colF = $this->_settingsData->colCat;
-						$dataLimit = $rowF * $colF;
-						$pagenum =  $this->_pagenum;
-						if( empty($pagenum ) ) {
-							$pagenum = 1;
-						}
-						$player_color = unserialize( $this->_settingsData->player_colors);
-						$recent_video_order = $player_color['recentvideo_order'];
-						if ($recent_video_order == 'id') {
-							$default_order = 'w.vid DESC';
-						} elseif ($recent_video_order == 'hitcount') {
-							$default_order = 'w.' . $recent_video_order . ' DESC';
-						} elseif ($recent_video_order == 'default') {
-							$default_order = 'w.ordering ASC';
-						}  else {
-							$default_order = 'w.vid DESC';
-						}
-						$TypeOFvideos = $this->home_catthumbdata ( $thumImageorder, $pagenum, $dataLimit ,$default_order );
-						$CountOFVideos = $this->countof_videos ( absint( $this->_playid ), '', $thumImageorder, $where );
-						$typename = __ ( 'Category', 'video_gallery' );
-						$morePage = '&playid=' . $thumImageorder;
-						break;
-					case 'user' :
-						$thumImageorder = $this->_userid;
-						$where = '';
-						$rowF = $this->_settingsData->rowCat;
-						$colF = $this->_settingsData->colCat;
-						$dataLimit = $rowF * $colF;
-						$pagenum =  $this->_pagenum;
-						if( empty($pagenum ) ) {
-							$pagenum = 1;
-						}
-						$TypeOFvideos = $this->home_userthumbdata ( $thumImageorder, $pagenum, $dataLimit );
-						$CountOFVideos = $this->countof_videos ( '', $this->_userid, $thumImageorder, $where );
-						$typename = __ ( 'User', 'video_gallery' );
-						$morePage = '&userid=' . $thumImageorder;
-						break;
-					case 'search' :
-						$video_search = str_replace ( '%20', ' ', $this->_video_search );
-						if ($this->_video_search == __ ( 'Video Search ...', 'video_gallery' )) {
-							$video_search = '';
-						}
-						$thumImageorder = $video_search;
-						$rowF = $this->_settingsData->rowMore;
-						$colF = $this->_settingsData->colMore;
-						$dataLimit = $rowF * $colF;
-						$pagenum =  $this->_pagenum;
-						if( empty($pagenum ) ) {
-							$pagenum = 1;
-						}
-						$TypeOFvideos = $this->home_searchthumbdata ( $thumImageorder, $pagenum, $dataLimit );
-						$CountOFVideos = $this->countof_videosearch ( $thumImageorder );
-						return $this->searchlist ( $video_search, $CountOFVideos, $TypeOFvideos, $this->_pagenum, $dataLimit );
-						break;
-					case 'categories' :
-					default :
-						$rowF = $this->_settingsData->rowCat; // category setting row value
-						$colF = $this->_settingsData->colCat; // category setting column value
-						$dataLimit = $rowF * $colF;
-						$pagenum =  $this->_pagenum;
-						if( empty($pagenum ) ) {
-							$pagenum = 1;
-						}
-						$TypeOFvideos = $this->home_categoriesthumbdata ( $pagenum, $dataLimit );
-						$CountOFVideos = $this->countof_videocategories ();
-						$typename = __ ( 'Video Categories', 'video_gallery' );
-						return $this->categorylist ( $CountOFVideos, $TypeOFvideos, $this->_pagenum, $dataLimit );
-						break;
-				}
-				
-				$div = '';
-				$ratearray = array (
-						'nopos1',
-						'onepos1',
-						'twopos1',
-						'threepos1',
-						'fourpos1',
-						'fivepos1' 
-				);
-				?><?php		
-				$pagenum = absint( $this->_pagenum ) ? absint ( $this->_pagenum ) : 1;
-				$div = '<div class="video_wrapper" id="' . $type_name . '_video">';
-				$div .= '<style type="text/css"> .video-block {  margin-left:' . $this->_settingsData->gutterspace . 'px !important; } </style>';
-				if ($typename == 'Category') {
-					$playlist_name = get_playlist_name ( intval ( absint( $this->_playid ) ) );
-					$div .= '<h2 class="titleouter" >' . $playlist_name . ' </h2>';
-				} else if ($typename == 'User') {
-					$user_name = get_user_name ( intval ( $this->_userid ) );
-					$div .= '<h2 >' . $user_name . ' </h2>';
-				} else {
-					$div .= '<h2 >' . $typename . ' ' . __ ( 'Videos', 'video_gallery' ) . ' </h2>';
-				}
-				if (! empty ( $TypeOFvideos )) {
-					$videolist = 0;
-					$fetched [$videolist] = '';
-					$image_path = str_replace ( 'plugins/' . $this->_folder . '/', 'uploads/videogallery/', APPTHA_VGALLERY_BASEURL );
-					foreach ( $TypeOFvideos as $video ) {
-						$duration [$videolist] = $video->duration; // VIDEO DURATION
-						$imageFea [$videolist] = $video->image; // VIDEO IMAGE
-						$file_type = $video->file_type; // Video Type
-						$guid [$videolist] = get_video_permalink ( $video->slug ); // guid
-						if ($video->image == '') { // If there is no thumb image for video
-							$imageFea [$videolist] = $this->_imagePath . 'nothumbimage.jpg';
-						} else {
-							if ($file_type == 2 || $file_type == 5 ) { // For uploaded image
-                                if( $video->amazon_buckets == 1 && strpos( $video->image , '/' ) ){
-                                  $imageFea[$videolist] = $imageFea[$videolist];
-								} else{
-								   $imageFea [$videolist] = $image_path . $imageFea [$videolist];
-								}
-							} else if( $file_type == 3 ) {
-								$imageFea [$videolist] = $imageFea [$videolist];
-							}
-						}
-						$vidF [$videolist]      = $video->vid;            // VIDEO ID
-						$nameF [$videolist]     = $video->name;          // VIDEI NAME
-						$hitcount [$videolist]  = $video->hitcount;   // VIDEO HITCOUNT
-						$ratecount [$videolist] = $video->ratecount; // VIDEO RATECOUNT
-						$rate [$videolist]      = $video->rate;           // VIDEO RATE
-						$des[$videolist]        = substr($video->description,0,30).'&hellip;';    // video description
-						if (! empty (  $this->_playid  ) ) {
-							$fetched [$videolist] = $video->playlist_name;
-							$fetched_pslug [$videolist] = $video->playlist_slugname;
-							$playlist_id [$videolist] = absint( $this->_playid );
-						} else {
-							$getPlaylist = $this->_wpdb->get_row ( 'SELECT playlist_id FROM ' . $this->_wpdb->prefix . 'hdflvvideoshare_med2play WHERE media_id="' . intval ( $vidF [$videolist] ) . '"' );
-							if (isset ( $getPlaylist->playlist_id )) {
-								$playlist_id [$videolist] = $getPlaylist->playlist_id; // VIDEO CATEGORY ID
-								$fetPlay [$videolist] = $this->_wpdb->get_row ( 'SELECT playlist_name,playlist_slugname FROM ' . $this->_wpdb->prefix . 'hdflvvideoshare_playlist WHERE pid="' . intval ( $playlist_id [$videolist] ) . '"' );
-								$fetched [$videolist] = $fetPlay [$videolist]->playlist_name; // CATEOGORY NAME
-								$fetched_pslug [$videolist] = $fetPlay [$videolist]->playlist_slugname; // CATEOGORY NAME
-							}
-						}
-						$videolist ++;
-					}
-					$div .= '<div>';
-					$div .= '<ul class="video-block-container">';
-					for($videolist = 0; $videolist < count ( $TypeOFvideos ); $videolist ++) {
-						if (strlen ( $nameF [$videolist] ) > 30) { // Displaying Video Title
-							$videoname = substr ( $nameF [$videolist], 0, 30 ) . '..';
-						} else {
-							$videoname = $nameF [$videolist];
-						}
-						if (($videolist % $colF) == 0 && $videolist != 0) { // COLUMN COUNT
-							$div .= '</ul><div class="clear"></div><ul class="video-block-container">';
-						}
-						$div .= '<li class="video-block">';
-						$div .= '<div  class="video-thumbimg"><a href="' . $guid [$videolist] . '" title="'.$nameF[$videolist].'"><img src="' . $imageFea [$videolist] . '" alt="' . $nameF [$videolist] . '" class="imgHome" title="' . $nameF [$videolist] . '" /></a>';
-						if ($duration [$videolist] != '0:00') {
-							$div .= '<span class="video_duration">' . $duration [$videolist] . '</span>';
-						}
-						$div .= '</div>';
-						$div .= '<div class="vid_info"><a href="' . $guid [$videolist] . '" title="'.$nameF[$videolist].'" class="videoHname"><span>';
-						$div .= $videoname;
-						$div .= '</span></a>';
-						if (! empty ( $fetched [$videolist] ) && ( $this->_settingsData->categorydisplay == 1 )) {
-							$playlist_url = get_playlist_permalink ( $this->_mPageid, $playlist_id [$videolist], $fetched_pslug [$videolist] );
-							$div .= '<a  class="playlistName"   href="' . $playlist_url . '"><span>' . $fetched [$videolist] . '</span></a>';
-						}
-						// Rating starts here
-						if ($this->_settingsData->ratingscontrol == 1) {
-							if (isset ( $ratecount [$videolist] ) && $ratecount [$videolist] != 0) {
-								$ratestar = round ( $rate [$videolist] / $ratecount [$videolist] );
-							} else {
-								$ratestar = 0;
-							}
-							$div .= '<span class="ratethis1 ' . $ratearray [$ratestar] . '"></span>';
-						}
-						// Rating ends and views starts here
-						if ($this->_settingsData->view_visible == 1) {
-							$div .= '<span class="video_views">';
-							if ($hitcount [$videolist] > 1) {
-								$viewlang = $this->_viewslang;
-							} else {
-								$viewlang = $this->_viewlang;
-							}
-							$div .= $hitcount [$videolist] . '&nbsp;' . $viewlang;
-							$div .= '</span>';
-						}
-						$div .= '</div>';
-						$div .= '</li>';
-						// ELSE ENDS
-					} // FOR EACH ENDS
-					$div .= '</ul>';
-					$div .= '</div>';
-					$div .= '<div class="clear"></div>';
-				} else {
-					if ($typename == 'Category') {
-						$div .= __ ( 'No', 'video_gallery' ) . '&nbsp;' . __ ( 'Videos', 'video_gallery' ) . '&nbsp;' . __ ( 'Under&nbsp;this&nbsp;Category', 'video_gallery' );
-					} else {
-						$div .= __ ( 'No', 'video_gallery' ) . '&nbsp;' . $typename . '&nbsp;' . __ ( 'Videos', 'video_gallery' );
-					}
-				}
-				$div .= '</div>';
-				
-				// PAGINATION STARTS
-				$total = $CountOFVideos;
-				$num_of_pages = ceil ( $total / $dataLimit );
-				$page_links = paginate_links ( array (
-						'base' => add_query_arg ( 'pagenum', '%#%' ),
-						'format' => '',
-						'prev_text' => __ ( '&laquo;', 'aag' ),
-						'next_text' => __ ( '&raquo;', 'aag' ),
-						'total' => $num_of_pages,
-						'current' => $pagenum 
-				) );
-				
-				if ($page_links) {
-					$div .= '<div class="tablenav"><div class="tablenav-pages" >' . $page_links . '</div></div>';
-				}
-				// PAGINATION ENDS
-				return $div;
-			}
-		}
-		function categorylist($CountOFVideos, $TypeOFvideos, $pagenum, $dataLimit) {
-			global $wpdb;
-			$div = '';
-			$pagenum = absint ( $pagenum ) ? absint ( $pagenum ) : 1; // Calculating page number
-			$start = ($pagenum - 1) * $dataLimit; // Video starting from
-			$ratearray = array (
-					'nopos1',
-					'onepos1',
-					'twopos1',
-					'threepos1',
-					'fourpos1',
-					'fivepos1' 
-			);
-			?>
 
-			<?php
-			$div .= '<style> .video-block { margin-left:' . $this->_settingsData->gutterspace . 'px !important; } </style>';
-			foreach ( $TypeOFvideos as $catList ) {
-				// Fetch videos for every category
-				$sql = 'SELECT s.guid,w.* FROM ' . $wpdb->prefix . 'hdflvvideoshare AS w
-						LEFT JOIN ' . $wpdb->prefix . 'hdflvvideoshare_med2play AS m ON m.media_id = w.vid
-						LEFT JOIN ' . $wpdb->prefix . 'hdflvvideoshare_playlist AS p on m.playlist_id = p.pid
-						LEFT JOIN ' . $this->_wpdb->prefix . 'posts s ON s.ID=w.slug
-						WHERE w.publish=1 AND p.is_publish=1 AND m.playlist_id=' . intval ( $catList->pid ) . ' GROUP BY w.vid';
-				$playLists = $wpdb->get_results ( $sql );
-				$moreName = $wpdb->get_var ( 'SELECT ID FROM ' . $wpdb->prefix . 'posts WHERE post_content LIKE "%[videomore]%" AND post_status="publish" AND post_type="page" LIMIT 1' );
-				$playlistCount = count ( $playLists );
-				
-				$div .= '<div class="titleouter"> <h4 class="clear more_title">' . $catList->playlist_name . '</h4></div>';
-				if (! empty ( $playlistCount )) {
-					$i = 0;
-					$inc = 1;
-					$image_path = str_replace ( 'plugins/' . $this->_folder . '/', 'uploads/videogallery/', APPTHA_VGALLERY_BASEURL );
-					$div .= '<ul class="video-block-container">';
-					foreach ( $playLists as $playList ) {
-						
-						$duration = $playList->duration;
-						$imageFea = $playList->image; // VIDEO IMAGE
-						$file_type = $playList->file_type; // Video Type
-						$guid = get_video_permalink ( $playList->slug ); // guid
-						if ($imageFea == '') { // If there is no thumb image for video
-							$imageFea = $this->_imagePath . 'nothumbimage.jpg';
-						} else {
-							if ($file_type == 2 || $file_type == 5  ) { // For uploaded image
-                          
-                                if( (isset($playList->amazon_buckets) && $playList->amazon_buckets ) && strpos($imageFea , '/' ) ) {
-                                	$imageFea = $imageFea;
-                                }else{
-									$imageFea = $image_path . $imageFea;
-								}
-							} else if( $file_type == 3 ) {
-								if( $file_type == 3){
-									$imageFea = $imageFea;
-								}
-							}
-						}
-						if (strlen ( $playList->name ) > 30) {
-							$playListName = substr ( $playList->name, 0, 30 ) . '..';
-						} else {
-							$playListName = $playList->name;
-						}
-						$playlist_more_link =  get_playlist_permalink($moreName,$catList->pid,$catList->playlist_slugname );
-						$div .= '<li class="video-block"><div class="video-thumbimg"><a href="' . $guid . '" title="'.$playList->name.'" ><img src="' . $imageFea . '" alt="" class="imgHome" title="" /></a>';
-						if ($duration != '0:00') {
-							$div .= '<span class="video_duration">' . $duration . '</span>';
-						}
-						$div .= '</div><div class="vid_info"><h5><a href="' . $guid . '" class="videoHname" title="'.$playList->name.'">' . $playListName . '</a></h5>';
-						
-						if( $this->_settingsData->categorydisplay == 1 ){
-                            $div .='<a class="playlistName" href="'.$playlist_more_link .'"><span>'.$catList->playlist_name.'</span></a>'; 
-                        }
-                        // Rating starts here
-						if ($this->_settingsData->ratingscontrol == 1) {
-							if (isset ( $playList->ratecount ) && $playList->ratecount != 0) {
-								$ratestar = round ( $playList->rate / $playList->ratecount );
-							} else {
-								$ratestar = 0;
-							}
-							$div .= '<span class="ratethis1 ' . $ratearray [$ratestar] . '"></span>';
-						}
-						// Rating ends and views starts here
-						if ($this->_settingsData->view_visible == 1) {
-							if ($playList->hitcount > 1) {
-								$viewlang = $this->_viewslang;
-							} else {
-								$viewlang = $this->_viewlang;
-							}
-							$div .= '<span class="video_views">' . $playList->hitcount . '&nbsp;' . $viewlang . '</span>';
-						}
-						
-						$div .= '</div></li>';
-						
-						if ($i > ($this->_perCat - 2)) {
-							break;
-						} else {
-							$i = $i + 1;
-						}
-						if (($inc % $this->_colCat) == 0 && $inc != 0) { // COLUMN COUNT
-							$div .= '</ul><div class="clear"></div><ul class="video-block-container">';
-						}
-						$inc ++;
-					}
-					$div .= '</ul>';
-					$rowF = $this->_settingsData->rowCat; // category setting row value
-					$colF = $this->_settingsData->colCat; // category setting column value
-					if ($rowF && $colF) {
-						$dataLimit = $rowF * $colF;
-					} else if($rowF || $colF){
-							
-					} else {
-						$dataLimit = 8;
-					}
-					if (($playlistCount > $dataLimit)) {
-						
-						$div .= '<a class="video-more" href="' . $playlist_more_link .'">' . __ ( 'More&nbsp;Videos', 'video_gallery' ) . '</a>';
-					} else {
-						$div .= '<div align="clear"> </div>';
-					}
-				} else { // If there is no video for category
-					$div .= '<div class="titleouter">' . __ ( 'No&nbsp;Videos&nbsp;for&nbsp;this&nbsp;Category', 'video_gallery' ) . '</div>';
-				}
-			}
-			
-			$div .= '<div class="clear"></div>';
-			// PAGINATION STARTS
-			$total = $CountOFVideos;
-			$num_of_pages = ceil ( $total / $dataLimit );
-			$page_links = paginate_links ( array (
-					'base' => add_query_arg ( 'pagenum', '%#%' ),
-					'format' => '',
-					'prev_text' => __ ( '&laquo;', 'aag' ),
-					'next_text' => __ ( '&raquo;', 'aag' ),
-					'total' => $num_of_pages,
-					'current' => $pagenum 
-			) );
-			
-			if ($page_links) {
-				$div .= '<div class="contus_tablenav"><div class="contus_tablenav-pages" >' . $page_links . '</div></div>';
-			}
-			
-			// PAGINATION ENDS
-			return $div;
-		}
-		function searchlist($video_search, $CountOFVideos, $TypeOFvideos, $pagenum, $dataLimit) {
-			$div = '';
-			$pagenum = isset ( $pagenum ) ? absint ( $pagenum ) : 1; // Calculating page number
-			$start = ($pagenum - 1) * $dataLimit; // Video starting from
-			$limit = $dataLimit; // Video Limit
-			$ratearray = array (
-					'nopos1',
-					'onepos1',
-					'twopos1',
-					'threepos1',
-					'fourpos1',
-					'fivepos1' 
-			);
-			$div .= '<div class="video_wrapper" id="video_search_result"><h3 class="entry-title">' . __ ( 'Search Results', 'video_gallery' ) . ' - ' . $video_search . '</h3>';
-			$div .= '<style> .video-block { margin-left:' . $this->_settingsData->gutterspace . 'px !important; } </style>';
-			
-			// Fetch videos for every category
-			if (! empty ( $TypeOFvideos )) {
-				$i = $inc = 0;
-				$image_path = str_replace ( 'plugins/' . $this->_folder . '/', 'uploads/videogallery/', APPTHA_VGALLERY_BASEURL );
-				$div .= '<ul class="video-block-container">';
-				
-				foreach ( $TypeOFvideos as $playList ) {
-					
-					$duration = $playList->duration;
-					$imageFea = $playList->image; // VIDEO IMAGE
-					$file_type = $playList->file_type; // Video Type
-					$guid = get_video_permalink ( $playList->slug ); // guid
-					if ($imageFea == '') { // If there is no thumb image for video
-						$imageFea = $this->_imagePath . 'nothumbimage.jpg';
-					} else {
-						if ($file_type == 2 || $file_type == 5) { 
-							if( strpos( $imageFea , '/' ) ){
-								$imageFea = $imageFea;
-							} else {
-								$imageFea = $image_path . $imageFea;
-							}
-						} else if($file_type == 3){
-							$imageFea = $imageFea;
-						}
-					}
-					if (strlen ( $playList->name ) > 30) {
-						$playListName = substr ( $playList->name, 0, 30 ) . '..';
-					} else {
-						$playListName = $playList->name;
-					}
-					if (($inc % $this->_colF) == 0 && $inc != 0) { // COLUMN COUNT
-						$div .= '</ul><div class="clear"></div><ul class="video-block-container">';
-					}
-					$div .= '<li class="video-block"><div class="video-thumbimg"><a href="' . $guid . '" title="'.$playList->name.'"><img src="' . $imageFea . '" alt="" class="imgHome" title="" /></a>';
-					if ($duration != '0:00') {
-						$div .= '<span class="video_duration">' . $duration . '</span>';
-					}
-					$div .= '</div><div class="vid_info"><a href="' . $guid . '" class="videoHname" title="'.$playList->name.'" >' . $playListName . '</a>';
-					if (! empty ( $playList->playlist_name )) {
-						$playlist_url = get_playlist_permalink ( $this->_mPageid, $playList->pid, $playList->playlist_slugname );
-						$div .= '<a class="playlistName" href="' . $playlist_url . '">' . $playList->playlist_name . '</a>';
-					}
-					// Rating starts here
-					if ($this->_settingsData->ratingscontrol == 1) {
-						if (isset ( $playList->ratecount ) && $playList->ratecount != 0) {
-							$ratestar = round ( $playList->rate / $playList->ratecount );
-						} else {
-							$ratestar = 0;
-						}
-						$div .= '<span class="ratethis1 ' . $ratearray [$ratestar] . '"></span>';
-					}
-					// Rating ends and views starts here
-					if ($this->_settingsData->view_visible == 1) {
-						if ($playList->hitcount > 1) {
-							$viewlang = $this->_viewslang;
-						} else {
-							$viewlang = $this->_viewlang;
-						}
-						$div .= '<span class="video_views">' . $playList->hitcount . '&nbsp;' . $viewlang . '</span>';
-					}
-					$div .= '</div></li>';
-					
-					$inc ++;
-				}
-				$div .= '</ul>';
-			} else { // If there is no video for category
-				$div .= '<div>' . __ ( 'No&nbsp;Videos&nbsp;Found', 'video_gallery' ) . '</div>';
-			}
-			$div .= '</div>';
-			
-			$div .= '<div class="clear"></div>';
-			
-			// PAGINATION STARTS
-			$total = $CountOFVideos;
-			$num_of_pages = ceil ( $total / $dataLimit );
-			$video_search = str_replace ( ' ', '%20', $video_search );
-			$arr_params = array (
-					'pagenum' => '%#%' 
-			);
-			$page_links = paginate_links ( array (
-					'base' => add_query_arg ( $arr_params ),
-					'format' => '',
-					'prev_text' => __ ( '&laquo;', 'aag' ),
-					'next_text' => __ ( '&raquo;', 'aag' ),
-					'total' => $num_of_pages,
-					'current' => $pagenum 
-			) );
-			
-			if ($page_links) {
-				$div .= '<div class="contus_tablenav"><div class="contus_tablenav-pages" >' . $page_links . '</div></div>';
-			}
-			
-			// PAGINATION ENDS
-			return $div;
-		} // CATEGORY FUNCTION ENDS
-	} // class over
+/** Check ContusMoreView class is exist */
+if ( !class_exists ( 'ContusMoreView' )) {
+  /**
+   * ContusMoreView class is used to display home page player and thumbnails
+   *
+   * @author user
+   */
+  class ContusMoreView extends ContusMoreController {   
+    /**
+     * ContusMoreView constructor starts
+     */
+    public function __construct() {
+        parent::__construct ();
+        global $wp_query;
+        /**
+         * Call plugin helper function
+         * to get plugin settings
+         * and more page id 
+         * for more pages
+         */
+        $this->_settingsData          = getPluginSettings (); 
+        $this->_player_colors         = unserialize ( $this->_settingsData->player_colors );
+        $this->_recent_video_order    = $this->_player_colors ['recentvideo_order'];
+        $this->_mPageid       = morePageID ();
+        /**
+         * Get video id , playlist id,
+         * page number and userid
+         * from request URL
+         */
+        $this->_vId           = absint ( filter_input ( INPUT_GET, 'vid' ) ); 
+        $this->_pagenum       = absint ( filter_input ( INPUT_GET, 'pagenum' ) ); 
+        $this->_playid        = &$wp_query->query_vars ['playid'];
+        $this->_userid        = &$wp_query->query_vars ['userid'];
+        /** Get search keyword */ 
+        $searchVal            = str_replace ( ' ', '%20', __ ( 'Video Search ...', APPTHA_VGALLERY ) );
+        if(!empty($wp_query->query_vars) && isset($wp_query->query_vars ['video_search'])) {
+            $video_search         = $wp_query->query_vars ['video_search'];
+            if ($video_search !== $searchVal) {
+                $video_search       = $video_search;
+            } else {
+                $video_search       = '';
+            }
+            /** Get serach value */
+            $this->_video_search  = stripslashes ( urldecode ( $video_search ) );
+        }
+        /**
+         * Get row, column for more
+         * videos from settings
+         */        
+        $this->_rowF          = $this->_settingsData->rowMore;
+        $this->_colF          = $this->_settingsData->colMore; 
+        $this->_perMore       = $this->_rowF * $this->_colF;
+        /**
+         * Get row, column for category 
+         * videos from settings
+         * and calculate total values
+         */
+        $this->_colCat        = $this->_settingsData->colCat; 
+        $this->_rowCat        = $this->_settingsData->rowCat; 
+        $this->_perCat        = $this->_colCat * $this->_rowCat;
+        /**
+         * Get plugin images directory path
+         * and upload path 
+         * from plugin helper
+         */
+        $this->_imagePath     = getImagesDirURL();
+    }   
+    
+    /**
+     * Function to get videos for 
+     * recent, feature, random, popular,
+     * user and category page     
+     *
+     * @parem   $type     
+     */
+    function getTypeOfVideos ( $type, $arguments ) {
+        $type_name  = $TypeOFvideos = $CountOFVideos = $typename = $morePage = $where = '';
+        /** Check if short code is uesed */
+        if (isset ( $arguments ['rows'] ) && isset ( $arguments ['cols'] )) {
+          /** Get row, column value from shortcode */
+            $dataLimit    = $arguments ['rows'] * $arguments ['cols'];
+        } else if ( $type == 'cat') {
+          /** Check the page is category page */
+          /** Get datalimit for category page from settings */ 
+            $dataLimit      = $this->_perCat;
+        } else {
+          /** Get data limit for more pages from settings */
+            $dataLimit      = $this->_perMore;
+        }
+        /** Get recent video order */
+        $default_order  = getVideoOrder ( $this->_recent_video_order );
+        switch ($type) {
+            case 'popular' :
+                $thumImageorder = ' w.hitcount DESC ';
+                $typename       = __ ( 'Popular', APPTHA_VGALLERY );
+                $type_name      = 'popular';
+                $morePage       = '&more=pop';
+                $TypeOFvideos   = $this->home_thumbdata ( $thumImageorder, $where, $this->_pagenum, $dataLimit );
+                $CountOFVideos  = $this->countof_videos ( '', '', $thumImageorder, $where );
+                break;
+            case 'recent' :
+                $typename       = __ ( 'Recent', APPTHA_VGALLERY );
+                $thumImageorder = ' w.vid DESC ';
+                $type_name      = 'recent';
+                $morePage       = '&more=rec';
+                $TypeOFvideos   = $this->home_thumbdata ( $thumImageorder, $where, $this->_pagenum, $dataLimit );
+                $CountOFVideos  = $this->countof_videos ( '', '', $thumImageorder, $where );
+                break;
+            case 'random' :
+                $thumImageorder = ' rand() ';                
+                $type_name      = 'random';
+                $typename       = __ ( 'Random', APPTHA_VGALLERY );
+                $morePage       = '&more=rand';
+                $TypeOFvideos   = $this->home_thumbdata ( $thumImageorder, $where, $this->_pagenum, $dataLimit );
+                $CountOFVideos  = $this->countof_videos ( '', '', $thumImageorder, $where );
+                break;
+            case 'featured' :
+                $where          = 'AND w.featured=1';
+                $thumImageorder = getVideoOrder ( $this->_recent_video_order );
+                $typename       = __ ( 'Featured', APPTHA_VGALLERY );
+                $morePage       = '&more=fea';
+                $type_name      = 'featured';
+                $TypeOFvideos   = $this->home_thumbdata ( $thumImageorder, $where, $this->_pagenum, $dataLimit );
+                $CountOFVideos  = $this->countof_videos ( '', '', $thumImageorder, $where );
+                break;
+            case 'cat' : 
+                $thumImageorder = absint ( $this->_playid );
+                $typename       = __ ('Category', APPTHA_VGALLERY );
+                $type_name      = 'Category';
+                $morePage       = '&playid=' . $thumImageorder;
+                $TypeOFvideos   = $this->home_catthumbdata ( $thumImageorder, $this->_pagenum, $dataLimit, $default_order );
+                $CountOFVideos  = $this->countof_videos ( absint ( $this->_playid ), '', $thumImageorder, $where );
+                break;
+            case 'playlist' :
+               	$thumImageorder = absint ( $this->_playid );
+               	$typename       = __ ('Playlist', APPTHA_VGALLERY );
+               	$type_name      = 'Playlist';
+               	$morePage       = '&playid=' . $thumImageorder;
+               	$TypeOFvideos   = $this->home_playlistthumbdata( $thumImageorder, $this->_pagenum, $dataLimit, $default_order );
+               	$CountOFVideos  = $this->home_countplaylistthumbdata ( $thumImageorder );
+               	break;
+            case 'user' : 
+                $thumImageorder = $this->_userid;            
+                $typename       = __ ('User', APPTHA_VGALLERY );
+                $type_name      = 'User';
+                $morePage       = '&userid=' . $thumImageorder;
+                $TypeOFvideos   = $this->home_userthumbdata ( $thumImageorder, $this->_pagenum, $dataLimit );
+                $CountOFVideos  = $this->countof_videos ( '', $this->_userid, $thumImageorder, $where );
+                break;
+            default: break;
+        } 
+        /** Return video details for more pages */
+        return array ( $TypeOFvideos, $CountOFVideos, $typename, $type_name, $morePage, $dataLimit );
+    }
+}
+/** Check ContusMoreView class is exist if ends */
 } else {
-	echo 'class contusMore already exists';
+  /** Display contusMore exists message */
+  echo 'class contusMore already exists';
+}
+    
+/** This class is used to get category and search results 
+ * Display the category page results
+ */ 
+class MoreCategoryView extends ContusMoreView {
+	/**
+	 * Include videoHelper trait to include commonly used function for watch later functinality
+	 */
+/**
+	 * Function to get watch later video details for home and more page videos
+	 * This function has videoId to hold video id
+	 * This function has playlistImg to hold video playlist thumb image
+	 * This function has watchLaterImg to hold watch Later thumb img
+	 * This function has watchLaterTitle to hold watch Later Title
+	 * This function has clickEvent to hold click event
+	 * This function has duration  to hold video duration 
+	 * This function has file_type  to hold video file_type 
+	 * This function has guid  to hold video guid url
+	 * This function has imageFea to hold imageFea
+	 * @return void
+	 */
+	function watchLaterHelper($playList,$watchLaterVideoIds) {
+		/** videoId to hold video id */
+      	$this->videoId =  $playList->vid;
+      	/** playlistImg to hold video playlist thumb image */
+      	$this->playlistImg = APPTHA_VGALLERY_BASEURL.'images/playlist.png';
+      	if(in_array($this->videoId,$watchLaterVideoIds)) {
+      		/** watchLaterImg to hold watch Later thumb img */
+      		$this->watchLaterImg = APPTHA_VGALLERY_BASEURL.'images/accepted.png';
+      		/** watchLaterTitle to hold watch Later Title */
+      		$this->watchLaterTitle = 'Added to Watch Later';
+      		/** clickEvent to hold click event */
+      		$this->clickEvent = '';
+      	}
+      	else {
+      		/** watchLaterImg to hold watch Later thumb img */
+      		$this->watchLaterImg = APPTHA_VGALLERY_BASEURL.'images/watchlater2.png';
+      		/** watchLaterTitle to hold watch Later Title */
+      		$this->watchLaterTitle = 'Add to Watch Later';
+      		/** clickEvent to hold click event */
+      		$this->clickEvent = 'onclick="watchLater('.$this->videoId.',this)"';
+      	}
+      	/** duration  to hold video duration  */
+        $this->duration     = $playList->duration;
+        /** file_type  to hold video file_type */
+        $this->file_type    = $playList->file_type;
+        /** guid  to hold video guid url */
+        $this->guid         = get_video_permalink ( $playList->slug );
+        /** imageFea to hold imageFea */
+        $this->imageFea     = getImagesValue ($playList->image, $this->file_type, $playList->amazon_buckets, '');
+	}
+    /**
+     * Function to get videos for search 
+     * and more videos page
+     *
+     * @parem   $type
+     */
+    function getSearchCategoryVideos ( $type ) {
+       /** Get current page number for search, video more pages */
+        $pagenum        = $this->_pagenum;
+        if (empty ( $pagenum )) {
+          $pagenum      = 1;
+        }
+        /** Check hether the page is videomore page or search page */
+        switch ($type) {   
+          case 'search' :
+            $dataLimit      = $this->_perMore;
+            $thumImageorder   = str_replace ( '%20', ' ', $this->_video_search );
+            if ($this->_video_search == __ ( 'Video Search ...', APPTHA_VGALLERY )) {
+                $thumImageorder = '';
+            }
+            $TypeOfSearchvideos   = $this->home_searchthumbdata ( $thumImageorder, $pagenum, $dataLimit );
+            $CountOfSearchVideos  = $this->countof_videosearch ( $thumImageorder );
+            break;
+          case 'categories' :
+          default :
+            $dataLimit      = $this->_perCat;        
+            $default_order  = getVideoOrder ( $this->_recent_video_order );            
+            $TypeOfCatvideos   = $this->home_categoriesthumbdata ( $pagenum, $dataLimit );
+            $CountOfCatVideos  = getPlaylistCount ();
+            break;
+        }
+        /** Check current page is search page */
+        if ($type == 'search') {
+          /** Call function to display search results */ 
+            return $this->searchlist ( $thumImageorder, $CountOfSearchVideos, $TypeOfSearchvideos, $this->_pagenum, $dataLimit );
+        } else if ($type == 'categories') {
+          /** Call function to display videomore results */
+            return $this->categorylist ( $CountOfCatVideos, $TypeOfCatvideos, $this->_pagenum, $dataLimit, $default_order );
+        } else {
+            return $this->categorylist ( $CountOfCatVideos, $TypeOfCatvideos, $this->_pagenum, $dataLimit, $default_order );
+        }
+    }
+      
+    /**
+     * Function to display category thumbs 
+     * 
+     * @param unknown $CountOfCatVideos
+     * @param unknown $TypeOfCatvideos
+     * @param unknown $pagenum
+     * @param unknown $dataLimit
+     * @param unknown $default_order
+     * @return string
+     */
+    function categorylist($CountOfCatVideos, $TypeOfCatvideos, $pagenum, $dataLimit, $default_order) {
+        global $wpdb;
+        $userId = get_current_user_id();
+        $watchLaterVideoIds = getWatchLaterVideoIds($userId,$this->watchDetailsTable);
+        $div        = '';
+        /** Calculating page number for category videos */
+        $pagenum    = absint ( $pagenum ) ? absint ( $pagenum ) : 1; 
+        $div        .= '<style> .video-block { margin-left:' . $this->_settingsData->gutterspace . 'px !important; } </style>';
+        foreach ( $TypeOfCatvideos as $catList ) { 
+            /** Fetch videos for every category
+             * Get more page id */ 
+            $playLists      = getCatVideos ($catList->pid, $dataLimit,  $default_order);
+            $moreName       = morePageID ();
+            $playlistCount  = count ( $playLists );
+            $div      .= '<div class="titleouter"> <h4 class="clear more_title">' . $catList->playlist_name . '</h4></div>';
+            if (! empty ( $playlistCount )) {
+                $i      = 0;
+                $inc    = 1;
+                $div    .= '<ul class="video-block-container">';
+                foreach ( $playLists as $playList ) {
+                	$this->watchLaterHelper($playList,$watchLaterVideoIds);
+                    /** To display the category videos thumb image and video duration  */
+                    $div    .= '<li class="video-block"><div class="video-thumbimg"><a href="' . $this->guid . '" title="' . $playList->name . '" ><img src="' . $this->imageFea . '" alt="" class="imgHome" title="" /></a>';
+
+                 if (!empty($this->duration) && $this->duration != '0:00') {
+                        $div  .= '<span class="video_duration">' . $this->duration . '</span>';
+                    }
+                    $div     .= '<span class="watchlaterIcon" '.$this->clickEvent.' ><img class="watchlaterImg" style="width:24px !important;height:24px !important;" src="'.$this->watchLaterImg.'" title="'.$this->watchLaterTitle.'"></span>
+                    		    <span class="playlistIcon" data-vid = '.$this->videoId.'><img class="playlistIconImg" style="width:24px !important;height:24px !important;" src="'.$this->playlistImg.'" title="Add to playlist"></span>';
+                    /** To display playlist name as linkable */
+                    $div    .= '</div><div class="vid_info"><h5><a href="' . $this->guid . '" class="videoHname" title="' . $playList->name . '">' . limitTitle ( $playList->name ) . '</a></h5>';                  
+                    if ($this->_settingsData->categorydisplay == 1) {
+                        $div  .= '<a class="playlistName" href="' . $playlist_more_link . '"><span>' . $catList->playlist_name . '</span></a>';
+                    }
+                    if ($this->_settingsData->ratingscontrol == 1) {
+                       /** Rating starts here
+                        * for category videos */
+                        $div  .= getRatingValue ( $playList->rate, $playList->ratecount, '' ); 
+                    }
+                    
+                    /** Views starts here for category videos */ 
+                    if ($this->_settingsData->view_visible == 1) {
+                        $div  .= displayViews($playList->hitcount); 
+                    }                    
+                    $div   .= '</div></li>';
+                    if ($i > ($this->_perCat - 2)) {
+                      break;
+                    } else {
+                        $i = $i + 1;
+                    }
+                    if (($inc % $this->_colCat) == 0 && $inc != 0) { 
+                        $div  .= '</ul><div class="clear"></div><ul class="video-block-container">';
+                    }
+                    $inc ++;
+                }
+                $div      .= '</ul>';
+                /** Calculate datalimit for video more page */
+                if ( $this->_rowCat && $this->_colCat ) {
+                    $dataLimit = $this->_perCat;
+                } else if ( $this->_rowCat || $this->_colCat ) {
+                  $dataLimit = '';
+                } else {
+                    $dataLimit = 8;
+                }
+                /** Display more videos link for category thumbs  */
+                if (($playlistCount > $dataLimit)) {
+                    $div .= '<a class="video-more" href="' . $playlist_more_link . '">' . __ ( 'More&nbsp;Videos', APPTHA_VGALLERY ) . '</a>';
+                } else {
+                    $div .= '<div align="clear"> </div>';
+                }
+            } else {
+                /** If there is no video for category */
+                $div .= '<div class="titleouter">' . __ ( 'No&nbsp;Videos&nbsp;for&nbsp;this&nbsp;Category', APPTHA_VGALLERY ) . '</div>';
+            }
+        }      
+        $div .= '<div class="clear"></div>';
+        /** Pagination starts - Call helper function to get pagination values for categories */
+        if($dataLimit != 0) { 
+            $div .= paginateLinks ($CountOfCatVideos, $dataLimit, $pagenum, '', '' );
+        }  
+        /** Pagination ends */
+        /** Display videmore page content */       
+        echo $div;
+    }     
+} 
+
+
+/**
+ *  This class is used to display the search page results
+ */
+class MoreSearchView extends MoreCategoryView {
+  /**
+   * Include videoHelper trait to include commonly used function for watch later functinality
+   */
+/**
+	 * Function to get watch later video details for home and more page videos
+	 * This function has videoId to hold video id
+	 * This function has playlistImg to hold video playlist thumb image
+	 * This function has watchLaterImg to hold watch Later thumb img
+	 * This function has watchLaterTitle to hold watch Later Title
+	 * This function has clickEvent to hold click event
+	 * This function has duration  to hold video duration 
+	 * This function has file_type  to hold video file_type 
+	 * This function has guid  to hold video guid url
+	 * This function has imageFea to hold imageFea
+	 * @return void
+	 */
+	function watchLaterHelper($playList,$watchLaterVideoIds) {
+		/** videoId to hold video id */
+      	$this->videoId =  $playList->vid;
+      	/** playlistImg to hold video playlist thumb image */
+      	$this->playlistImg = APPTHA_VGALLERY_BASEURL.'images/playlist.png';
+      	if(in_array($this->videoId,$watchLaterVideoIds)) {
+      		/** watchLaterImg to hold watch Later thumb img */
+      		$this->watchLaterImg = APPTHA_VGALLERY_BASEURL.'images/accepted.png';
+      		/** watchLaterTitle to hold watch Later Title */
+      		$this->watchLaterTitle = 'Added to Watch Later';
+      		/** clickEvent to hold click event */
+      		$this->clickEvent = '';
+      	}
+      	else {
+      		/** watchLaterImg to hold watch Later thumb img */
+      		$this->watchLaterImg = APPTHA_VGALLERY_BASEURL.'images/watchlater2.png';
+      		/** watchLaterTitle to hold watch Later Title */
+      		$this->watchLaterTitle = 'Add to Watch Later';
+      		/** clickEvent to hold click event */
+      		$this->clickEvent = 'onclick="watchLater('.$this->videoId.',this)"';
+      	}
+      	/** duration  to hold video duration  */
+        $this->duration     = $playList->duration;
+        /** file_type  to hold video file_type */
+        $this->file_type    = $playList->file_type;
+        /** guid  to hold video guid url */
+        $this->guid         = get_video_permalink ( $playList->slug );
+        /** imageFea to hold imageFea */
+        $this->imageFea     = getImagesValue ($playList->image, $this->file_type, $playList->amazon_buckets, '');
+	}
+  /**
+   * Function to display search results
+   *
+   * @param unknown $video_search
+   * @param unknown $CountOfSearchVideos
+   * @param unknown $TypeOfSearchvideos
+   * @param unknown $pagenum
+   * @param unknown $dataLimit
+   * @return string
+   */
+  function searchlist($video_search, $CountOfSearchVideos, $TypeOfSearchvideos, $pagenum, $dataLimit) {
+    $div        = '';
+    $userId = get_current_user_id();
+    $watchLaterVideoIds = getWatchLaterVideoIds($userId,$this->watchDetailsTable);
+    /**
+     * Calculating page number
+     * for search videos
+     */
+    $pagenum    = isset ( $pagenum ) ? absint ( $pagenum ) : 1;
+    $div        .= '<div class="video_wrapper" id="video_search_result"><h3 class="entry-title">' . __ ( 'Search Results', APPTHA_VGALLERY ) . ' - ' . $video_search . '</h3>';
+    $div        .= '<style> .video-block { margin-left:' . $this->_settingsData->gutterspace . 'px !important; } </style>';
+    /** Fetch videos based on search  */
+    if (! empty ( $TypeOfSearchvideos )) {
+      $inc    = 0;
+      $div    .= '<ul class="video-block-container">';
+      foreach ( $TypeOfSearchvideos as $playList ) {
+      	$this->watchLaterHelper($playList,$watchLaterVideoIds);         
+        if (($inc % $this->_colF) == 0 && $inc != 0) {
+          /** Column count for search page */
+          $div  .= '</ul><div class="clear"></div><ul class="video-block-container">';
+        }
+        /** Display search videos
+         * thumb and duration */
+        $div    .= '<li class="video-block"><div class="video-thumbimg"><a href="' . $this->guid . '" title="' . $playList->name . '"><img src="' . $this->imageFea . '" alt="" class="imgHome" title="" /></a>';
+        if (!empty($this->duration) && $this->duration != '0:00') {
+          $div .= '<span class="video_duration">' . $this->duration . '</span>';
+        }
+        $div   .= '<span class="watchlaterIcon" '.$this->clickEvent.' ><img class="watchlaterImg" style="width:24px !important;height:24px !important;" src="'.$this->watchLaterImg.'" title="'.$this->watchLaterTitle.'"></span>
+        		   <span class="playlistIcon" data-vid = '.$this->videoId.'><img class="playlistIconImg" style="width:24px !important;height:24px !important;" src="'.$this->playlistImg.'" title="Add to playlist"></span>';
+  
+        /** Display video title, playlist name and link  */
+        $div    .= '</div><div class="vid_info"><a href="' . $this->guid . '" class="videoHname" title="' . $playList->name . '" >' . limitTitle ( $playList->name ) . '</a>';
+        if (! empty ( $playList->playlist_name )) {
+          $playlist_url = get_playlist_permalink ( $this->_mPageid, $playList->pid, $playList->playlist_slugname );
+          $div  .= '<a class="playlistName" href="' . $playlist_url . '">' . $playList->playlist_name . '</a>';
+        }
+        /** Rating starts here
+         * for search videos */
+        if ($this->_settingsData->ratingscontrol == 1) {
+          $div  .= getRatingValue( $playList->rate, $playList->ratecount, '' );
+        }
+        if ($this->_settingsData->view_visible == 1) {
+          /** Views starts here
+           * for search videos */
+          $div    .= displayViews ( $playList->hitcount );
+        }
+        $div .= '</div></li>';
+        $inc ++;
+      }
+      $div  .= '</ul>';
+    } else {
+      /** If there is no video
+       * for search result */
+      $div  .= '<div>' . __ ( 'No&nbsp;Videos&nbsp;Found', APPTHA_VGALLERY ) . '</div>';
+    }
+    $div .= '</div> <div class="clear"></div>';
+    /** Pagination starts
+     * Call helper function
+     * to get pagination values */
+    if($dataLimit != 0) {
+      $div .= paginateLinks ($CountOfSearchVideos, $dataLimit, $pagenum, '', '' );
+    }
+    echo $div;
+    /** Search result function ends  */
+  }
 }
 ?>

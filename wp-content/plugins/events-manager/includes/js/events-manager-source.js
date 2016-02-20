@@ -271,7 +271,6 @@ jQuery(document).ready( function($){
 			e.preventDefault();
 			var el = $(this);
 			var tbody = el.closest('tbody');
-			console.log(tbody.find('input.ticket_id').val());
 			if( tbody.find('input.ticket_id').val() > 0 ){
 				//only will happen if no bookings made
 				el.text('Deleting...');	
@@ -1142,7 +1141,7 @@ function em_map_infobox(marker, message, map) {
           }
           return false;
           break;
-        case 40: // Down arrow, similar in behaviour to up arrow.
+        case 40: // Down arrow, similar in behavior to up arrow.
           if (showPicker()) {
             return false;
           };

@@ -159,6 +159,7 @@ if( !class_exists('EM_Permalinks') ){
 					}
 				}
 			}
+			$em_rules = apply_filters('em_rewrite_rules_array_events', $em_rules, $events_slug);
 			//make sure there's no page with same name as archives, that should take precedence as it can easily be deleted wp admin side
 			$em_query = new WP_Query(array('pagename'=>EM_POST_TYPE_EVENT_SLUG));
 			if( $em_query->have_posts() ){
@@ -200,7 +201,7 @@ if( !class_exists('EM_Permalinks') ){
 		}
 		
 		/**
-		 * Depreciated, use get_post_permalink() from now on or the output function with a placeholder
+		 * deprecated, use get_post_permalink() from now on or the output function with a placeholder
 		 * Generate a URL. Pass each section of a link as a parameter, e.g. EM_Permalinks::url('event',$event_id); will create an event link.
 		 * @return string 
 		 */

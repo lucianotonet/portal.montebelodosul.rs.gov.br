@@ -12,7 +12,7 @@ class youtube_embed_front_end{
 			$this->plugin_url=$params['plugin_url'];
 		else
 			$this->plugin_url=trailingslashit(dirname(plugins_url('',__FILE__)));
-		// set plugin path
+		// Set the YouTube Embed plugin path
 		if(isset($params['plugin_path']))
 			$this->plugin_path=$params['plugin_path'];
 		else

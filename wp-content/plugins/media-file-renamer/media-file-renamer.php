@@ -2,11 +2,12 @@
 /*
 Plugin Name: Media File Renamer
 Plugin URI: http://www.meow.fr
-Description: Renames media files based on their titles and updates the associated posts links.
-Version: 2.3.2
+Description: Renames media files automatically based on their titles and updates the references.
+Version: 2.6.7
 Author: Jordy Meow
 Author URI: http://www.meow.fr
-Remarks: John Godley originaly developed rename-media (http://urbangiraffe.com/plugins/rename-media/), but it wasn't working on Windows, had issues with apostrophes, and was not updating the links in the posts. That's why Media File Renamer exists.
+Text Domain: media-file-renamer
+Domain Path: /languages
 
 Dual licensed under the MIT and GPL licenses:
 http://www.opensource.org/licenses/mit-license.php
@@ -25,7 +26,7 @@ class Meow_MediaFileRenamer {
 	}
 
 	function init() {
-		require( 'jordy_meow_footer.php' );
+		require( 'meow_footer.php' );
 		load_plugin_textdomain( 'media-file-renamer', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		add_action( 'admin_head', array( $this, 'admin_head' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -40,8 +41,11 @@ class Meow_MediaFileRenamer {
 		add_action( 'save_post', array( $this, 'save_post' ) );
 
 		// Column for Media Library
-		add_filter( 'manage_media_columns', array( $this, 'add_media_columns' ) );
-		add_action( 'manage_media_custom_column', array( $this, 'manage_media_custom_column' ), 10, 2 );
+		$auto_rename = $this->getoption( 'auto_rename', 'mfrh_basics', 'media_title' );
+		if ( $auto_rename != 'none' ) {
+			add_filter( 'manage_media_columns', array( $this, 'add_media_columns' ) );
+			add_action( 'manage_media_custom_column', array( $this, 'manage_media_custom_column' ), 10, 2 );
+		}
 
 		// Media Library
 		add_filter( 'views_upload', array( $this, 'views_upload' ) );
@@ -113,19 +117,38 @@ class Meow_MediaFileRenamer {
 	}
 
 	function manage_media_custom_column( $column_name, $id ) {
-			if ( $column_name == 'mfrh_column' ) {
-			if ( $this->check_attachment( $id, $output ) ) {
+		$paged = isset( $_GET['paged'] ) ? ( '&paged=' . $_GET['paged'] ) : "";
+		if ( $column_name == 'mfrh_column' ) {
+			$check = $this->check_attachment( $id, $output );
+			if ( $check )
 				$this->generate_explanation( $output );
-			} else {
-				echo "<a href='post.php?post=" . $id . "&action=edit''><img style='margin-bottom: 2px; width: 16px; height: 16px;' src='" . trailingslashit( WP_PLUGIN_URL ) . trailingslashit( 'media-file-renamer/img') . "tick-circle.png' /></a>";
+			else if ( $output['manual'] ) {
+				echo "<span title='" . __( 'Manually renamed.', 'media-file-renamer' ) . "' style='font-size: 24px; color: #36B15C;' class='dashicons dashicons-yes'></span>";
+				$page = isset( $_GET['page'] ) ? ( '&page=' . $_GET['page'] ) : "";
+				echo "<a title='" . __( 'Locked to manual only. Click to unlock it.', 'media-file-renamer' ) . "' href='?" . $page . "&mfrh_unlock=" . $id . $paged . "'><span style='color: #36B15C; font-size: 20px; margin-top: 0px;' class='dashicons dashicons-lock'></span></a>";
 			}
+			else {
+				echo "<span title='" . __( 'Automatically renamed.', 'media-file-renamer' ) . "'style='font-size: 24px; color: #36B15C;' class='dashicons dashicons-yes'></span>";
+				$page = isset( $_GET['page'] ) ? ( '&page=' . $_GET['page'] ) : "";
+				echo "<a title='" . __( 'Click to lock it to manual only.', 'media-file-renamer' ) . "' href='?" . $page . "&mfrh_lock=" . $id . $paged . "'><span style='font-size: 16px; margin-top: 1px;' class='dashicons dashicons-unlock'></span></a>";
 			}
+		}
 	}
 
 	function admin_head() {
 		if ( !empty( $_GET['mfrh_rename'] ) ) {
 			$mfrh_rename = $_GET['mfrh_rename'];
 			$this->rename_media( get_post( $mfrh_rename, ARRAY_A ), null );
+			$_SERVER['REQUEST_URI'] = remove_query_arg( array( 'mfrh_rename' ), $_SERVER['REQUEST_URI'] );
+		}
+		if ( !empty( $_GET['mfrh_unlock'] ) ) {
+			$mfrh_unlock = $_GET['mfrh_unlock'];
+			delete_post_meta( $mfrh_unlock, '_manual_file_renaming' );
+			$_SERVER['REQUEST_URI'] = remove_query_arg( array( 'mfrh_rename' ), $_SERVER['REQUEST_URI'] );
+		}
+		if ( !empty( $_GET['mfrh_lock'] ) ) {
+			$mfrh_lock = $_GET['mfrh_lock'];
+			add_post_meta( $mfrh_lock, '_manual_file_renaming', true, true );
 			$_SERVER['REQUEST_URI'] = remove_query_arg( array( 'mfrh_rename' ), $_SERVER['REQUEST_URI'] );
 		}
 
@@ -202,7 +225,10 @@ class Meow_MediaFileRenamer {
 	}
 
 	function admin_menu() {
-		add_media_page( 'Media File Renamer', __( 'File Renamer', 'media-file-renamer' ), 'manage_options', 'rename_media_files', array( $this, 'rename_media_files' ) );
+		$auto_rename = $this->getoption( 'auto_rename', 'mfrh_basics', 'media_title' );
+		if ( $auto_rename != 'none' ) {
+			add_media_page( 'Media File Renamer', __( 'File Renamer', 'media-file-renamer' ), 'manage_options', 'rename_media_files', array( $this, 'rename_media_files' ) );
+		}
 		add_options_page( 'Media File Renamer', 'File Renamer', 'manage_options', 'mfrh_settings', array( $this, 'settings_page' ) );
 	}
 
@@ -222,7 +248,8 @@ class Meow_MediaFileRenamer {
 
 	function file_counter( &$flagged, &$total, $force = false ) {
 		global $wpdb;
-		$postids = $wpdb->get_col( "SELECT p.ID FROM $wpdb->posts p WHERE post_status = 'inherit' AND post_type = 'attachment'" );
+		$postids = $wpdb->get_col( "SELECT p.ID FROM $wpdb->posts p WHERE post_status = 'inherit'
+				AND post_type = 'attachment'" );
 		static $calculated = false;
 		static $sflagged = 0;
 		static $stotal = 0;
@@ -251,10 +278,45 @@ class Meow_MediaFileRenamer {
 		return in_array( $id, $headers );
 	}
 
-	// Return false if everything is fine, otherwise return true with an output.
-	function check_attachment( $id, &$output ) {
-		if ( get_post_meta( $id, '_manual_file_renaming', true ) )
+	function generate_unique_filename( $actual, $dirname, $filename, $counter = null ) {
+		$new_filename = $filename;
+		if ( !is_null( $counter ) ) {
+			$whereisdot = strrpos( $new_filename, '.' );
+			$new_filename = substr( $new_filename, 0, $whereisdot ) . '-' . $counter
+				. '.' . substr( $new_filename, $whereisdot + 1 );
+		}
+		if ( $actual == $new_filename )
 			return false;
+		if ( file_exists( $dirname . "/" . $new_filename ) )
+			return $this->generate_unique_filename( $actual, $dirname, $filename,
+				is_null( $counter ) ? 2 : $counter + 1 );
+		return $new_filename;
+	}
+
+	function get_post_from_media( $id ) {
+		global $wpdb;
+		$postid = $wpdb->get_var( $wpdb->prepare( "
+			SELECT post_parent p
+			FROM $wpdb->posts p
+			WHERE ID = %d", $id ),
+			0, 0 );
+		if ( empty( $postid ) )
+			return null;
+		return get_post( $postid, OBJECT );
+	}
+
+	// Return false if everything is fine, otherwise return true with an output.
+	function check_attachment( $id, &$output = array() ) {
+		$auto_rename = $this->getoption( 'auto_rename', 'mfrh_basics', 'media_title' );
+		if ( $auto_rename === 'none') {
+			delete_post_meta( $id, '_require_file_renaming' );
+			return false;
+		}
+		if ( get_post_meta( $id, '_manual_file_renaming', true ) ) {
+			$output['manual'] = true;
+			return false;
+		}
+
 		// Skip header images
 		if ( $this->is_header_image( $id ) ) {
 			delete_post_meta( $id, '_require_file_renaming' );
@@ -263,7 +325,14 @@ class Meow_MediaFileRenamer {
 
 		// Get information
 		$post = get_post( $id, ARRAY_A );
-		$desired_filename = $this->new_filename( $post );
+		$base_title = $post['post_title'];
+		if ( $auto_rename == 'post_title' ) {
+			$attachedpost = $this->get_post_from_media( $post['ID'] );
+			if ( is_null( $attachedpost ) )
+				return false;
+			$base_title = $attachedpost->post_title;
+		}
+		$desired_filename = $this->new_filename( $post, $base_title );
 		$old_filepath = get_attached_file( $post['ID'] );
 		$path_parts = pathinfo( $old_filepath );
 
@@ -286,17 +355,29 @@ class Meow_MediaFileRenamer {
 		$output['desired_filename'] = $desired_filename;
 		$output['desired_filename_exists'] = false;
 		if ( file_exists( $path_parts['dirname'] . "/" . $desired_filename ) ) {
-			$output['desired_filename_exists'] = true;
-			if ( strtolower( $output['current_filename'] ) == strtolower( $output['desired_filename'] ) ) {
-				// If Windows, let's be careful about the fact that case doesn't affect files
-				delete_post_meta( $post['ID'], '_require_file_renaming' );
-				return false;
+			$is_numbered = $this->getoption( 'numbered_files', 'mfrh_basics', false );
+			if ( $this->is_pro() && $is_numbered ) {
+				$output['desired_filename'] = $this->generate_unique_filename( $path_parts['basename'],
+					$path_parts['dirname'], $desired_filename );
+				if ( $output['desired_filename'] == false ) {
+					delete_post_meta( $id, '_require_file_renaming' );
+					return false;
+				}
+				add_post_meta( $post['ID'], '_numbered_filename', $output['desired_filename'], true );
+			}
+			else {
+				$output['desired_filename_exists'] = true;
+				if ( strtolower( $output['current_filename'] ) == strtolower( $output['desired_filename'] ) ) {
+					// If Windows, let's be careful about the fact that case doesn't affect files
+					delete_post_meta( $post['ID'], '_require_file_renaming' );
+					return false;
+				}
 			}
 		}
 
 		// It seems it could be renamed :)
 		if ( !get_post_meta( $post['ID'], '_require_file_renaming' ) ) {
-			add_post_meta( $post['ID'], '_require_file_renaming', true );
+			add_post_meta( $post['ID'], '_require_file_renaming', true, true );
 		}
 		return true;
 	}
@@ -318,17 +399,22 @@ class Meow_MediaFileRenamer {
 
 	function generate_explanation( $file ) {
 		if ( $file['post_title'] == "" ) {
-			echo " <a class='button-primary' href='post.php?post=" . $file['post_id'] . "&action=edit'>" . __( 'Edit Media', 'media-file-renamer' ) . "</a><p style='margin-top: 5px; font-size: 9px; line-height: 11px;'>" . __( 'This title cannot be used for a filename.', 'media-file-renamer' ) . "</p>";
+			echo " <a class='button-primary' href='post.php?post=" . $file['post_id'] . "&action=edit'>" . __( 'Edit Media', 'media-file-renamer' ) . "</a><br /><small>" . __( 'This title cannot be used for a filename.', 'media-file-renamer' ) . "</small>";
 		}
 		else if ( $file['desired_filename_exists'] ) {
-			echo "<a class='button-primary' href='post.php?post=" . $file['post_id'] . "&action=edit'>" . __( 'Edit Media', 'media-file-renamer' ) . "</a><p style='margin-top: 5px; font-size: 9px; line-height: 11px;'>" . __( 'Ideal filename already exists.', 'media-file-renamer' ) . "</p>";
+			echo "<a class='button-primary' href='post.php?post=" . $file['post_id'] . "&action=edit'>" . __( 'Edit Media', 'media-file-renamer' ) . "</a><br /><small>" . __( 'The ideal filename already exists. If you would like to use a count and rename it, enable the <b>Numbered Files</b> option in the plugin settings.', 'media-file-renamer' ) . "</small>";
 		}
 		else {
 			$page = isset( $_GET['page'] ) ? ( '&page=' . $_GET['page'] ) : "";
 			$mfrh_scancheck = ( isset( $_GET ) && isset( $_GET['mfrh_scancheck'] ) ) ? '&mfrh_scancheck' : '';
 			$mfrh_to_rename = ( !empty( $_GET['to_rename'] ) && $_GET['to_rename'] == 1 ) ? '&to_rename=1' : '';
 			$modify_url = "post.php?post=" . $file['post_id'] . "&action=edit";
-			echo "<a class='button-primary' href='?" . $page . $mfrh_scancheck . $mfrh_to_rename . "&mfrh_rename=" . $file['post_id'] . "'>" . __( 'Auto-Rename', 'media-file-renamer' ) . "</a><br /><small>" .
+			$page = isset( $_GET['page'] ) ? ( '&page=' . $_GET['page'] ) : "";
+
+			echo "<a class='button-primary' href='?" . $page . $mfrh_scancheck . $mfrh_to_rename . "&mfrh_rename=" . $file['post_id'] . "'>" . __( 'Auto-Rename', 'media-file-renamer' ) . "</a>";
+			echo "<a title='" . __( 'Click to lock it to manual only.', 'media-file-renamer' ) . "' href='?" . $page . "&mfrh_lock=" . $file['post_id'] . "'><span style='font-size: 16px; margin-top: 5px;' class='dashicons dashicons-unlock'></span></a>";
+
+			echo"<br /><small>" .
 				sprintf( __( 'Rename to %s. You can also <a href="%s">edit this media</a>.', 'media-file-renamer' ), $file['desired_filename'], $modify_url ) . "</small>";
 		}
 	}
@@ -338,7 +424,7 @@ class Meow_MediaFileRenamer {
 		<div class='wrap'>
 		<?php jordy_meow_donation(); ?>
 		<div id="icon-upload" class="icon32"><br></div>
-		<h2>Media File Renamer <?php by_jordy_meow(); ?></h2>
+		<h1>Media File Renamer <?php by_jordy_meow(); ?></h1>
 
 		<?php
 		$checkFiles = null;
@@ -360,13 +446,13 @@ class Meow_MediaFileRenamer {
 
 			<a onclick='mfrh_rename_media(true)' id='mfrh_rename_all_images' class='button'
 				style='margin-left: 10px; margin-right: 10px'>
-				<?php echo sprintf( __( "Rename all %d media", 'media-file-renamer' ), $total ); ?>
+				<?php echo sprintf( __( "Unlock & Rename all %d media", 'media-file-renamer' ), $total ); ?>
 			</a>
 			<span id='mfrh_progression'></span>
 		</div>
 
 		<p>
-			<b>There are <span class='mfrh-flagged' style='color: red;'><?php _e( $flagged ); ?></span> media files flagged for auto-renaming out of <?php _e( $total ); ?> in total.</b> Those are the files that couldn't be renamed on the fly when their names were updated. You can now rename those flagged media, or rename all of them (which should actually done when you install the plugin for the first time). <span style='color: red;'>Please backup your WordPress upload folder and database before using these functions.</span>
+			<b>There are <span class='mfrh-flagged' style='color: red;'><?php _e( $flagged ); ?></span> media files flagged for auto-renaming out of <?php _e( $total ); ?> in total.</b> Those are the files that couldn't be renamed on the fly when their names were updated. You can now rename those flagged media, or rename all of them (which will unlock them all and force their renaming). <span style='color: red;'>Please backup your WordPress upload folder and database before using these functions.</span>
 		</p>
 
 		<table class='wp-list-table widefat fixed media' style='margin-top: 15px;'>
@@ -416,19 +502,22 @@ class Meow_MediaFileRenamer {
 	 */
 
 	function rename_media_on_publish ( $post_id ) {
-		$args = array( 'post_type' => 'attachment', 'numberposts' => -1, 'post_status' =>'any', 'post_parent' => $post_id );
-		$attachments = get_posts($args);
+		$onsave = $this->getoption( "rename_on_save", "mfrh_basics", false );
+		$args = array( 'post_type' => 'attachment',
+			'numberposts' => -1, 'post_status' =>'any', 'post_parent' => $post_id );
+		$attachments = get_posts( $args );
 		if ( $attachments ) {
 			foreach ( $attachments as $attachment ) {
 				$attachment = get_post( $attachment, ARRAY_A );
-				$this->rename_media( $attachment, $attachment, true );
+				$this->check_attachment( $attachment['ID'] );
+				if ( $onsave ) {
+					$this->rename_media( $attachment, $attachment, true );
+				}
 			}
 		}
 	}
 
 	function save_post( $post_id ) {
-		if ( !$this->getoption( "rename_on_save", "mfrh_basics", false ) )
-			return;
 		$status = get_post_status( $post_id );
 		if ( !in_array( $status, array( 'publish', 'future' ) ) )
 			return;
@@ -457,19 +546,38 @@ class Meow_MediaFileRenamer {
 	function attachment_fields( $post ) {
 		$info = pathinfo( get_attached_file( $post->ID ) );
 		$basename = $info['basename'];
-		echo '<input type="text" ' . ( ( $this->getoption( 'manual_rename', 'mfrh_basics', false ) && $this->is_pro() ) ? '' : 'readonly' ) . ' class="widefat" name="mfrh_new_filename" value="' . $basename. '" />';
-		echo '<p class="description">You can rename the file here' . ( $this->is_pro() ? '' : ' <a target="_blank" href="http://apps.meow.fr/media-file-renamer/">(Pro only)</a>' ) . '.</p>';
+		$is_manual = $this->getoption( 'manual_rename', 'mfrh_basics', false );
+		echo '<input type="text" ' . ( $is_manual && $this->is_pro() ? '' : 'readonly' ) . ' class="widefat" name="mfrh_new_filename" value="' . $basename. '" />';
+		if ( !$is_manual ) {
+			echo '<p class="description">You need to enable <b>Manual Rename</b> in the plugin settings.</p>';
+		}
+		else if ( !$this->is_pro() ) {
+			echo '<p class="description">This feature is for <a target="_blank" href="http://apps.meow.fr/media-file-renamer/">Pro users</a> only.</p>';
+		}
+		else {
+			echo '<p class="description">You can rename the file manually.</p>';
+		}
 		return $post;
 	}
 
 	function attachment_save( $post, $attachment ) {
+		$auto_rename = $this->getoption( 'auto_rename', 'mfrh_basics', 'media_title' );
 		$info = pathinfo( get_attached_file( $post['ID'] ) );
 		$basename = $info['basename'];
 		$new = $post['mfrh_new_filename'];
+
+		// The filename is being changed manually, let's force it through $new.
 		if ( !empty( $new ) && $basename !== $new )
 			return $this->rename_media( $post, $attachment, false, $new );
-		else
+
+		$auto_rename = $this->getoption( 'auto_rename', 'mfrh_basics', 'media_title' );
+		if ( $auto_rename == 'media_title' ) {
+			// If the title was not changed, don't do anything.
+			if ( get_the_title( $post['ID'] ) == $post['post_title'] )
+				return $post;
 			return $this->rename_media( $post, $attachment, false, null );
+		}
+		return $post;
 	}
 
 	function log_sql( $data, $antidata ) {
@@ -484,7 +592,9 @@ class Meow_MediaFileRenamer {
 		fclose( $fh_anti );
 	}
 
-	function log( $data ) {
+	function log( $data, $inErrorLog = false ) {
+		if ( $inErrorLog )
+			error_log( $data );
 		if ( !$this->getoption( 'log', 'mfrh_basics', false ) )
 			return;
 		$fh = fopen( trailingslashit( WP_PLUGIN_DIR ) . 'media-file-renamer/media-file-renamer.log', 'a' );
@@ -506,38 +616,31 @@ class Meow_MediaFileRenamer {
 	}
 
 	function validate_pro( $subscr_id ) {
-		if ( empty( $subscr_id ) ) {
-			delete_option( 'mfrh_pro_serial', "" );
-			delete_option( 'mfrh_pro_status', "" );
-			set_transient( 'mfrh_validated', false, 0 );
+		delete_option( 'mfrh_pro_serial', "" );
+		delete_option( 'mfrh_pro_status', "" );
+		set_transient( 'mfrh_validated', false, 0 );
+		if ( empty( $subscr_id ) )
 			return false;
-		}
-		require_once ABSPATH . WPINC . '/class-IXR.php';
-		require_once ABSPATH . WPINC . '/class-wp-http-ixr-client.php';
-		$client = new WP_HTTP_IXR_Client( 'http://apps.meow.fr/xmlrpc.php' );
-		if ( !$client->query( 'meow_sales.auth', $subscr_id, 'media-file-renamer', get_site_url() ) ) {
-			update_option( 'mfrh_pro_serial', "" );
-			update_option( 'mfrh_pro_status', "A network error: " . $client->getErrorMessage() );
-			set_transient( 'mfrh_validated', false, 0 );
-			return false;
-		}
-		$post = $client->getResponse();
-		if ( !$post['success'] ) {
-			if ( $post['message_code'] == "NO_SUBSCRIPTION" ) {
-				$status = __( "Your serial does not seem right." );
-			}
-			else if ( $post['message_code'] == "NOT_ACTIVE" ) {
-				$status = __( "Your subscription is not active." );
-			}
-			else if ( $post['message_code'] == "TOO_MANY_URLS" ) {
-				$status = __( "Too many URLs are linked to your subscription." );
-			}
-			else {
-				$status = "There is a problem with your subscription.";
-			}
-			update_option( 'mfrh_pro_serial', "" );
+		$response = wp_remote_post( 'http://apps.meow.fr/wp-json/meow/v1/auth', array(
+			'body' => array( 'subscr_id' => $subscr_id, 'item' => 'media-file-renamer', 'url' => get_site_url() )
+		) );
+		$body = is_array( $response ) ? $response['body'] : null;
+		$post = @json_decode( $body );
+		if ( !$post || $post->code ) {
+			$status = __( "There was an error while validating the serial.<br />Please contact <a target='_blank' href='http://apps.meow.fr/contact/'>Meow Apps</a> and mention the following log.<br /><br /><small>" . print_r( $response, true ) . "</small>" );
 			update_option( 'mfrh_pro_status', $status );
-			set_transient( 'mfrh_validated', false, 0 );
+			return false;
+		}
+		if ( !$post->success ) {
+			if ( $post->message_code == "NO_SUBSCRIPTION" )
+				$status = __( "Your serial does not seem right." );
+			else if ( $post->message_code == "NOT_ACTIVE" )
+				$status = __( "Your subscription is not active." );
+			else if ( $post->message_code == "TOO_MANY_URLS" )
+				$status = __( "Too many URLs are linked to your subscription." );
+			else
+				$status = "There is a problem with your subscription.";
+			update_option( 'mfrh_pro_status', $status );
 			return false;
 		}
 		set_transient( 'mfrh_validated', $subscr_id, 3600 * 24 * 100 );
@@ -557,9 +660,9 @@ class Meow_MediaFileRenamer {
 		global $mfrh_settings_api;
 		echo '<div class="wrap">';
 			jordy_meow_donation(true);
-		echo "<div id='icon-options-general' class='icon32'><br></div><h2>Media File Renamer";
+		echo "<div id='icon-options-general' class='icon32'><br></div><h1>Media File Renamer";
 			by_jordy_meow();
-			echo "</h2>";
+			echo "</h1>";
 			$mfrh_settings_api->show_navigation();
 			$mfrh_settings_api->show_forms();
 			echo '</div>';
@@ -602,13 +705,18 @@ class Meow_MediaFileRenamer {
 
 		// Default Auto-Generate
 		$auto_rename = $this->getoption( 'auto_rename', 'mfrh_basics', null );
-		if ( $auto_rename === null )
-				$this->setoption( 'auto_rename', 'mfrh_basics', 'on' );
+		if ( $auto_rename === null || $auto_rename === true )
+			$this->setoption( 'auto_rename', 'mfrh_basics', 'media_title' );
 
 		// Default Rename Slug
 		$rename_slug = $this->getoption( 'rename_slug', 'mfrh_basics', null );
 		if ( $rename_slug === null )
 				$this->setoption( 'rename_slug', 'mfrh_basics', 'on' );
+
+		// Default Rename GUID
+		$rename_guid = $this->getoption( 'rename_guid', 'mfrh_basics', null );
+		if ( $rename_guid === null )
+				$this->setoption( 'rename_guid', 'mfrh_basics', 'on' );
 
 		// Default Update Posts
 		$update_posts = $this->getoption( 'update_posts', 'mfrh_basics', null );
@@ -619,6 +727,11 @@ class Meow_MediaFileRenamer {
 		$update_postmeta = $this->getoption( 'update_postmeta', 'mfrh_basics', null );
 		if ( $update_postmeta === null )
 				$this->setoption( 'update_postmeta', 'mfrh_basics', 'on' );
+
+		// Default UTF-8
+		$update_postmeta = $this->getoption( 'utf8_filename', 'mfrh_basics', null );
+		if ( $update_postmeta === null )
+				$this->setoption( 'utf8_filename', 'mfrh_basics', 'off' );
 
 		if ( isset( $_POST ) && isset( $_POST['mfrh_pro'] ) )
 				$this->validate_pro( $_POST['mfrh_pro']['subscr_id'] );
@@ -637,21 +750,32 @@ class Meow_MediaFileRenamer {
 		$fields = array(
 			'mfrh_basics' => array(
 				array(
-						'name' => 'auto_rename',
-						'label' => __( 'Auto Rename', 'media-file-renamer' ),
-						'desc' => __( 'The files will be renamed automatically depending on the title.<br /><small>If the plugin considers that it is dangerous to rename the file directly at this point, it will flag it as "to be renamed". The list of the files which has to be renamed can be found in Media > File Renamer.</small>', 'media-file-renamer' ),
-						'type' => 'checkbox',
-						'default' => true
+					'name' => 'auto_rename',
+					'label' => __( 'Auto Rename', 'media-file-renamer' ),
+					'desc' => __( 'If the plugin considers that it is too dangerous to rename the file directly at some point, it will be flagged internally as <b>to be renamed</b>. The list of those flagged files can be found in Media > File Renamer and they can be renamed from there.', 'media-file-renamer' ),
+					'type' => 'radio',
+					'default' => 'media_title',
+					'options' => array(
+						'none' => __( "None<br /><small>Disabled. Only manual renaming can be used.</small><br />", 'media-file-renamer' ),
+						'media_title' => __( "Media Title<br /><small>The filename will be renamed automatically depending on the title of the media. <b>This is the recommended method.</b></small><br />", 'media-file-renamer' ),
+						'post_title' => __( "Post Title (Pro)<br /><small>The filename will be renamed automatically depending on the title of the post the media <b>is attached to</b>.</small><br />", 'media-file-renamer' ),
+					)
 				), array(
 						'name' => 'manual_rename',
 						'label' => __( 'Manual Rename (Pro)', 'media-file-renamer' ),
-						'desc' => __( 'You can rename manually the files using the Media edit screen.<br /><small>This feature is only for Pro users (check the Pro tab).</small>', 'media-file-renamer' ),
+						'desc' => __( 'Enable manual renaming in the Media edit screen.<br /><small>This feature is only for Pro users (check the Pro tab).</small>', 'media-file-renamer' ),
+						'type' => 'checkbox',
+						'default' => false
+				), array(
+						'name' => 'numbered_files',
+						'label' => __( 'Numbered Files (Pro)', 'media-file-renamer' ),
+						'desc' => __( 'Identical filenames will be allowed and a number will be added.<br /><small>This is useful if your titles the same ones for many of your images (myfile.jpg, myfile-2.jpg, myfile-3.jpg, etc).</small>', 'media-file-renamer' ),
 						'type' => 'checkbox',
 						'default' => false
 				), array(
 						'name' => 'side_updates',
 						'label' => '',
-						'desc' => __( '<h2>Side-Updates</h2><small>When the files are renamed, many links to them on your WordPress might be broken. By default, the plugin updates all the references in the posts. As the plugin evolves (thanks to the Pro version), more and more plugins/themes will be covered by those updates as we discover them together.</small>', 'wp-retina-2x' ),
+						'desc' => __( '<h1>Side-Updates</h1><small>When the files are renamed, many links to them on your WordPress might be broken. By default, the plugin updates all the references in the posts. As the plugin evolves (thanks to the Pro version), more and more plugins/themes will be covered by those updates as we discover them together.</small>', 'media-file-renamer' ),
 						'type' => 'html'
 				), array(
 						'name' => 'update_posts',
@@ -668,7 +792,7 @@ class Meow_MediaFileRenamer {
 				), array(
 						'name' => 'update_something',
 						'label' => __( '', 'media-file-renamer' ),
-						'desc' => __( '<i>Something is not updated when you rename a file? Please <a href="mailto:apps@meow.fr">contact me</a> and I will add support for it.</i>', 'media-file-renamer' ),
+						'desc' => __( '<i>Something is not updated when you rename a file? Please <a href="http://apps.meow.fr/contact/">contact me</a> and I will add support for it.</i>', 'media-file-renamer' ),
 						'type' => 'html',
 						'default' => false
 				), array(
@@ -692,12 +816,18 @@ class Meow_MediaFileRenamer {
 				), array(
 						'name' => 'advanced',
 						'label' => '',
-						'desc' => __( '<h2>Advanced</h2><small>If you are geeky this section might be more interesting for you. <b>Want to clear/reset the logs? Click <a href="?page=mfrh_settings&reset=true">here</a>.</b></small>', 'media-file-renamer' ),
+						'desc' => __( '<h1>Advanced</h1><small>If you are geeky this section might be more interesting for you. <b>Want to clear/reset the logs? Click <a href="?page=mfrh_settings&reset=true">here</a>.</b></small>', 'media-file-renamer' ),
 						'type' => 'html'
 				), array(
 						'name' => 'rename_on_save',
 						'label' => __( 'Rename On Save', 'media-file-renamer' ),
 						'desc' => __( 'Attachments will be renamed automatically when published posts/pages are saved.<br /><small>You can change the names of your media while editing a post but that wouldn\'t let the plugin updates the HTML, of course. With this option, the plugin will check for any changes in the media names and will update your post right after you saved it.</small>', 'media-file-renamer' ),
+						'type' => 'checkbox',
+						'default' => false
+				), array(
+						'name' => 'utf8_filename',
+						'label' => __( 'UTF-8 Filename (Pro)', 'media-file-renamer' ),
+						'desc' => __( 'The plugin will be allowed to use non-ASCII characters in the filenames.<br /><small>This usually doesn\'t work well on Windows installs.</small>', 'media-file-renamer' ),
 						'type' => 'checkbox',
 						'default' => false
 				), array(
@@ -745,29 +875,53 @@ class Meow_MediaFileRenamer {
 	 */
 
 	// NEW MEDIA FILE INFO (depending on the title of the media)
-	function new_filename( $post, $forceFilename = null ) {
+	function new_filename( $media, $title, $forceFilename = null ) {
 		if ( $forceFilename )
 			$forceFilename = preg_replace( '/\\.[^.\\s]{3,4}$/', '', trim( $forceFilename ) );
 		$force = !empty( $forceFilename );
-		$old_filepath = get_attached_file( $post['ID'] );
+		$old_filepath = get_attached_file( $media['ID'] );
 		$path_parts = pathinfo( $old_filepath );
 		$old_filename = $path_parts['basename'];
-		$ext = str_replace( 'jpeg', 'jpg', $path_parts['extension'] );
+		// This line is problematic during the further rename that exclude the extensions. Better to implement
+		// this properly with thorough testing later.
+		//$ext = str_replace( 'jpeg', 'jpg', $path_parts['extension'] ); // In case of a jpeg extension, rename it to jpg
+		$ext = $path_parts['extension'];
+
 		if ( $force )
 			$sanitized_media_title = $forceFilename;
-		else
-			$sanitized_media_title = str_replace( "%", "-", sanitize_title( $post['post_title'] ) );
+		else {
+			$utf8_filename = $this->getoption( 'utf8_filename', 'mfrh_basics', null ) && $this->is_pro();
+			$sanitized_media_title = $utf8_filename ? sanitize_file_name( $title ) :
+				str_replace( "%", "-", sanitize_title( $title ) );
+		}
 		if ( empty( $sanitized_media_title ) )
 			$sanitized_media_title = "empty";
 		$sanitized_media_title = $sanitized_media_title . '.' . $ext;
-		$sanitized_media_title = apply_filters( 'mfrh_new_filename', $sanitized_media_title, $old_filename, $post );
+		if ( !$forceFilename )
+			$sanitized_media_title = apply_filters( 'mfrh_new_filename', $sanitized_media_title, $old_filename, $media );
 		return $sanitized_media_title;
+	}
+
+	// Only replace the first occurence
+	function str_replace( $needle, $replace, $haystack ) {
+		$pos = strpos( $haystack, $needle );
+		if ( $pos !== false ) {
+		    $haystack = substr_replace( $haystack, $replace, $pos, strlen( $needle ) );
+		}
+		return $haystack;
 	}
 
 	function rename_media( $post, $attachment, $disableMediaLibraryMode = false, $forceFilename = null ) {
 		$force = !empty( $forceFilename );
 		$manual = get_post_meta( $post['ID'], '_manual_file_renaming', true );
 		$require = get_post_meta( $post['ID'], '_require_file_renaming', false );
+		$auto_rename = $this->getoption( 'auto_rename', 'mfrh_basics', 'media_title' );
+		$numbered_filename = get_post_meta( $post['ID'], '_numbered_filename', true );
+		if ( !empty( $numbered_filename ) ) {
+			$this->log( "Numbered filename ($numbered_filename) is being injected." );
+			$forceFilename = $numbered_filename;
+			delete_post_meta( $post['ID'], '_numbered_filename' );
+		}
 
 			// MEDIA TITLE & FILE PARTS
 		$meta = wp_get_attachment_metadata( $post['ID'] );
@@ -776,7 +930,11 @@ class Meow_MediaFileRenamer {
 		$directory = $path_parts['dirname']; // '2011/01'
 		$old_filename = $path_parts['basename']; // 'whatever.jpeg'
 		$old_ext = $path_parts['extension'];
-		$ext = str_replace( 'jpeg', 'jpg', $path_parts['extension'] ); // In case of a jpeg extension, rename it to jpg
+
+		// This line is problematic during the further rename that exclude the extensions. Better to implement
+		// this properly with thorough testing later.
+		//$ext = str_replace( 'jpeg', 'jpg', $path_parts['extension'] ); // In case of a jpeg extension, rename it to jpg
+		$ext = $path_parts['extension'];
 
 		$this->log( "** Rename Media: " . $old_filename );
 
@@ -786,24 +944,26 @@ class Meow_MediaFileRenamer {
 			delete_post_meta( $post['ID'], '_require_file_renaming' );
 			return $post;
 		}
-		// Empty post title when renaming using title? Let's not go further.
-		if ( !$force && !$require && get_the_title( $post['ID'] ) == $post['post_title'] ) {
-			$this->log( "The title didn't change, no need to continue." );
-			delete_post_meta( $post['ID'], '_require_file_renaming' );
-			return $post;
+
+		// If this is being renamed based on the post the media is attached to.
+		$base_new_title = $post['post_title'];
+		if ( !$force && $auto_rename == 'post_title' ) {
+			$linkedpost = $this->get_post_from_media( $post['ID'] );
+			if ( empty( $linkedpost ) ) {
+				$this->log( "Attachment {$post['ID']} is not linked to a post yet it seems." );
+				delete_post_meta( $post['ID'], '_require_file_renaming' );
+				return $post;
+			}
+			$base_new_title = $linkedpost->post_title;
 		}
+
 		// Empty post title when renaming using title? Let's not go further.
-		if ( !$force && empty( $post['post_title'] ) ) {
+		if ( !$force && empty( $base_new_title ) ) {
 			$this->log( "Title is empty, doesn't rename." );
 			delete_post_meta( $post['ID'], '_require_file_renaming' );
 			return $post;
 		}
-		// Empty post title when renaming using title? Let's not go further.
-		if ( !$force && empty( $post['post_title'] ) ) {
-			$this->log( "Title is empty, doesn't rename." );
-			delete_post_meta( $post['ID'], '_require_file_renaming' );
-			return $post;
-		}
+
 		// Is it a header image? Skip.
 		if ( $this->is_header_image( $post['ID'] ) ) {
 			$this->log( "Doesn't rename header image." );
@@ -815,7 +975,7 @@ class Meow_MediaFileRenamer {
 		}
 
 		delete_post_meta( $post['ID'], '_manual_file_renaming' );
-		$sanitized_media_title = $this->new_filename( $post, $forceFilename );
+		$sanitized_media_title = $this->new_filename( $post, $base_new_title, $forceFilename );
 		$this->log( "New file should be: " . $sanitized_media_title );
 
 		// Don't do anything if the media title didn't change or if it would turn to an empty string
@@ -832,31 +992,38 @@ class Meow_MediaFileRenamer {
 		if ( !$media_library_mode ) {
 			// This media requires renaming
 			if ( !get_post_meta( $post['ID'], '_require_file_renaming' ) )
-				add_post_meta( $post['ID'], '_require_file_renaming', true );
+				add_post_meta( $post['ID'], '_require_file_renaming', true, true );
 			$this->log( "Seems like the user is editing a post. Marked the file as to be renamed." );
 			return $post;
 		}
 
 		// NEW DESTINATION FILES ALREADY EXISTS - WE DON'T DO NOTHING
-		if ( file_exists( $directory . "/" . $sanitized_media_title ) ) {
-			if ( !get_post_meta( $post['ID'], '_require_file_renaming' ) )
-				add_post_meta( $post['ID'], '_require_file_renaming', true );
-			$this->log( "The new file already exists, it is safer to avoid doing anything." );
-			return $post;
-		}
-
-		// RENAMING
 		$new_filepath = trailingslashit( $directory ) . $sanitized_media_title;
-		// If the new file already exists, it's a weird case, let's do nothing.
-		if ( file_exists( $new_filepath ) === true ) {
-			trigger_error( "Media File Renamer wants to rename a file to " + $new_filepath + " but it already exists.", E_USER_NOTICE );
-			return $post;
+		if ( file_exists( $directory . "/" . $sanitized_media_title ) ) {
+
+			$desired = false;
+			$is_numbered = $this->getoption( 'numbered_files', 'mfrh_basics', false );
+			if ( $this->is_pro() && $is_numbered ) {
+				$desired = $this->generate_unique_filename( $old_filename,
+					$path_parts['dirname'], $sanitized_media_title );
+			}
+			if ( $desired != false ) {
+				$this->log( "Seems like $sanitized_media_title could be numbered as $desired." );
+				$new_filepath = trailingslashit( $directory ) . $desired;
+				$sanitized_media_title = $desired;
+			}
+			else {
+				if ( !get_post_meta( $post['ID'], '_require_file_renaming' ) )
+					add_post_meta( $post['ID'], '_require_file_renaming', true, true );
+				$this->log( "The new file already exists ($new_filepath), it is safer to avoid doing anything." );
+				return $post;
+			}
 		}
 
 		// Exact same code as rename-media, it's a good idea to keep track of the original filename.
 		$original_filename = get_post_meta( $post['ID'], '_original_filename', true );
 		if ( empty( $original_filename ) )
-			add_post_meta( $post['ID'], '_original_filename', $old_filename );
+			add_post_meta( $post['ID'], '_original_filename', $old_filename, true );
 
 		// Rename the main media file.
 		try {
@@ -872,14 +1039,14 @@ class Meow_MediaFileRenamer {
 		}
 
 		// Filenames without extensions
-		$noext_old_filename = str_replace( '.' . $old_ext, '', $old_filename );
-		$noext_new_filename = str_replace( '.' . $ext, '', $sanitized_media_title );
+		$noext_old_filename = $this->str_replace( '.' . $old_ext, '', $old_filename );
+		$noext_new_filename = $this->str_replace( '.' . $ext, '', $sanitized_media_title );
 
 		// Update the attachment meta
 		if ($meta) {
-			$meta['file'] = str_replace( $noext_old_filename, $noext_new_filename, $meta['file'] );
+			$meta['file'] = $this->str_replace( $noext_old_filename, $noext_new_filename, $meta['file'] );
 			if ( isset( $meta["url"] ) && $meta["url"] != "" && count( $meta["url"] ) > 4 )
-				$meta["url"] = str_replace( $noext_old_filename, $noext_new_filename, $meta["url"] );
+				$meta["url"] = $this->str_replace( $noext_old_filename, $noext_new_filename, $meta["url"] );
 			else
 				$meta["url"] = $noext_new_filename . "." . $ext;
 		}
@@ -890,40 +1057,46 @@ class Meow_MediaFileRenamer {
 			$orig_image_urls = array();
 			$orig_image_data = wp_get_attachment_image_src( $post['ID'], 'full' );
 			$orig_image_urls['full'] = $orig_image_data[0];
-			foreach ( $meta['sizes'] as $size => $meta_size ) {
-				$meta_old_filename = $meta['sizes'][$size]['file'];
-				$meta_old_filepath = trailingslashit( $directory ) . $meta_old_filename;
-				$meta_new_filename = str_replace( $noext_old_filename, $noext_new_filename, $meta_old_filename );
-				$meta_new_filepath = trailingslashit( $directory ) . $meta_new_filename;
-				$orig_image_data = wp_get_attachment_image_src( $post['ID'], $size );
-				$orig_image_urls[$size] = $orig_image_data[0];
-				// ak: Double check files exist before trying to rename.
-				if ( file_exists( $meta_old_filepath ) && ( ( !file_exists( $meta_new_filepath ) )
-					|| is_writable( $meta_new_filepath ) ) ) {
-					// WP Retina 2x is detected, let's rename those files as well
-					if ( function_exists( 'wr2x_generate_images' ) ) {
-						$wr2x_old_filepath = str_replace( '.' . $ext, '@2x.' . $ext, $meta_old_filepath );
-						$wr2x_new_filepath = str_replace( '.' . $ext, '@2x.' . $ext, $meta_new_filepath );
-						if ( file_exists( $wr2x_old_filepath ) && ( (!file_exists( $wr2x_new_filepath ) ) || is_writable( $wr2x_new_filepath ) ) ) {
-							rename( $wr2x_old_filepath, $wr2x_new_filepath );
-							$this->log( "Retina file $wr2x_old_filepath renamed to $wr2x_new_filepath." );
-							do_action( 'mfrh_path_renamed', $post, $wr2x_old_filepath, $wr2x_new_filepath );
+			if ( empty( $meta['sizes'] ) ) {
+				$this->log( "The WP metadata for attachment " . $post['ID'] . " does not exist.", true );
+			}
+			else {
+				foreach ( $meta['sizes'] as $size => $meta_size ) {
+					$meta_old_filename = $meta['sizes'][$size]['file'];
+					$meta_old_filepath = trailingslashit( $directory ) . $meta_old_filename;
+					$meta_new_filename = $this->str_replace( $noext_old_filename, $noext_new_filename, $meta_old_filename );
+					$meta_new_filepath = trailingslashit( $directory ) . $meta_new_filename;
+					$orig_image_data = wp_get_attachment_image_src( $post['ID'], $size );
+					$orig_image_urls[$size] = $orig_image_data[0];
+					// ak: Double check files exist before trying to rename.
+					if ( file_exists( $meta_old_filepath ) && ( ( !file_exists( $meta_new_filepath ) )
+						|| is_writable( $meta_new_filepath ) ) ) {
+						// WP Retina 2x is detected, let's rename those files as well
+						if ( function_exists( 'wr2x_generate_images' ) ) {
+							$wr2x_old_filepath = $this->str_replace( '.' . $ext, '@2x.' . $ext, $meta_old_filepath );
+							$wr2x_new_filepath = $this->str_replace( '.' . $ext, '@2x.' . $ext, $meta_new_filepath );
+							if ( file_exists( $wr2x_old_filepath ) && ( (!file_exists( $wr2x_new_filepath ) ) || is_writable( $wr2x_new_filepath ) ) ) {
+								rename( $wr2x_old_filepath, $wr2x_new_filepath );
+								$this->log( "Retina file $wr2x_old_filepath renamed to $wr2x_new_filepath." );
+								do_action( 'mfrh_path_renamed', $post, $wr2x_old_filepath, $wr2x_new_filepath );
+							}
 						}
+						rename( $meta_old_filepath, $meta_new_filepath );
+						$meta['sizes'][$size]['file'] = $meta_new_filename;
+						$this->log( "File $meta_old_filepath renamed to $meta_new_filepath." );
+						do_action( 'mfrh_path_renamed', $post, $meta_old_filepath, $meta_new_filepath );
 					}
-					rename( $meta_old_filepath, $meta_new_filepath );
-					$meta['sizes'][$size]['file'] = $meta_new_filename;
-					$this->log( "File $meta_old_filepath renamed to $meta_new_filepath." );
-					do_action( 'mfrh_path_renamed', $post, $meta_old_filepath, $meta_new_filepath );
 				}
 			}
-		} else {
+		}
+		else {
 			$orig_attachment_url = wp_get_attachment_url( $post['ID'] );
 		}
 
 		// This media doesn't require renaming anymore
 		delete_post_meta( $post['ID'], '_require_file_renaming' );
 		if ( $force ) {
-			add_post_meta( $post['ID'], '_manual_file_renaming', true );
+			add_post_meta( $post['ID'], '_manual_file_renaming', true, true );
 		}
 
 		// Update metadata
@@ -938,11 +1111,13 @@ class Meow_MediaFileRenamer {
 			$new_image_data = wp_get_attachment_image_src( $post['ID'], 'full' );
 			$new_image_url = $new_image_data[0];
 			do_action( 'mfrh_url_renamed', $post, $orig_image_url, $new_image_url );
-			foreach ( $meta['sizes'] as $size => $meta_size ) {
-				$orig_image_url = $orig_image_urls[$size];
-				$new_image_data = wp_get_attachment_image_src( $post['ID'], $size );
-				$new_image_url = $new_image_data[0];
-				do_action( 'mfrh_url_renamed', $post, $orig_image_url, $new_image_url );
+			if ( !empty( $meta['sizes'] ) ) {
+				foreach ( $meta['sizes'] as $size => $meta_size ) {
+					$orig_image_url = $orig_image_urls[$size];
+					$new_image_data = wp_get_attachment_image_src( $post['ID'], $size );
+					$new_image_url = $new_image_data[0];
+					do_action( 'mfrh_url_renamed', $post, $orig_image_url, $new_image_url );
+				}
 			}
 		}
 		else {
@@ -983,15 +1158,7 @@ class Meow_MediaFileRenamer {
 			add_action( 'mfrh_media_renamed', array( $this, 'action_sync_alt' ), 10, 3 );
 		if ( $this->getoption( "rename_guid", "mfrh_basics", false ) )
 			add_action( 'mfrh_media_renamed', array( $this, 'action_rename_guid' ), 10, 3 );
-
-		// Filter for testing:
-		//add_filter( 'mfrh_new_filename', array( $this, 'filter_filename' ), 10, 3 );
 	}
-
-	// This filter is very stupid, it append 'renamed-' in front of the new filename
-	// function filter_filename( $new, $old, $post ) {
-	// 	return "renamed-" . $new;;
-	// }
 
 	// Slug update
 	function action_update_slug( $post, $old_filepath, $new_filepath ) {
@@ -1054,4 +1221,5 @@ class Meow_MediaFileRenamer {
 
 if ( is_admin() ) {
 	$mfrh = new Meow_MediaFileRenamer();
+	include( 'mfrh_filters.php' );
 }

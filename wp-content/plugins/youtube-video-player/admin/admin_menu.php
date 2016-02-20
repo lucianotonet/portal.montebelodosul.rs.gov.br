@@ -12,8 +12,6 @@ class youtube_admin_menu{
 	
 	private $plugin_path;
 	
-	private $text_parametrs;
-	
 	public  $wdiget_default_params;
 	
 	public  $content_default_params;
@@ -21,33 +19,30 @@ class youtube_admin_menu{
 	public  $featured_plugins;
 	
 	function __construct($param){
-		$this->menu_name='YouTube Embed';
-		$this->text_parametrs=array(
-			''=>'',
-		);		
+		$this->menu_name='YouTube Embed';	
 		
 		$this->content_default_params  =new youtube_embed_content_default( array( 'plugin_url'=> $this->plugin_url, 'plugin_path' => $this->plugin_path));
 		$this->wdiget_default_params =new youtube_embed_widget_default( array( 'plugin_url' => $this->plugin_url, 'plugin_path' => $this->plugin_path));
 		$this->featured_plugins		=new youtube_embed_featured_plugins( array( 'plugin_url' => $this->plugin_url, 'plugin_path' => $this->plugin_path));
-		// set plugin url
+		// Set plugin url
 		if(isset($param['plugin_url']))
 			$this->plugin_url=$param['plugin_url'];
 		else
 			$this->plugin_url=trailingslashit(dirname(plugins_url('',__FILE__)));
-		// set plugin path
+		// Set plugin path
 		if(isset($param['plugin_path']))
 			$this->plugin_path=$param['plugin_path'];
 		else
 			$this->plugin_path=trailingslashit(dirname(plugin_dir_path(__FILE__)));
-		//add_button
+		//Add_button
 		add_filter('media_buttons_context', array($this,"editor_buttonn"));
 		
-		//added button window
+		//Added button window
 		add_action('wp_ajax_youtube_embed_window_manager',array($this,'window_for_inserting_contentt'));
 		
 
 	}
-	/// function for add new button
+	/// Function for add new button
 	function editor_buttonn($context)
 	{
 		 $img = plugins_url( '/images/icon-youtube_post.png' , __FILE__ );
@@ -86,9 +81,8 @@ class youtube_admin_menu{
 		else
 			$$key=$value;
 	}
-	?>
-		
-        <style>
+	?>		
+       <style>
 			.slider_parametrs{
 				padding-left:5px;
 				width:180px;
@@ -98,6 +92,9 @@ class youtube_admin_menu{
 			#TB_ajaxContent{
 				 width:initial !important;
 				 height:initial !important;
+			 }
+			 #TB_window{
+				overflow:auto !important;
 			 }
 			 #youtube_embed_initial_volume_span{
 				 padding-left:12px;

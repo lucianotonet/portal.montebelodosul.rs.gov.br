@@ -4,8 +4,8 @@ Contributors: NextScripts
 Donate link: http://www.nextscripts.com/social-networks-auto-poster-for-wordpress
 Tags: automation, autopost, auto-post, auto post, socialnetworks, socialnetwork, social networks, social network, facebook, Flipboard, google, google+, Flickr, twitter, google plus, pinterest, tumblr, blogger, blogspot, blogpost, linkedin, delicious, delicious.com, reddit, reddit.com, plugin, links, Post, posts, api, automatic, seo, scoop.it, integration, bookmark, bookmarks, admin, images, image, social, sharing, share, repost, re-post, wordpress.com, StumbleUpon, Diigo, vBulletin, Plurk, forums, vKontakte, open graph, LiveJournal, SETT, YouTube, Kippt, xing
 Requires at least: 3.4
-Tested up to: 4.2.2
-Stable tag: 3.4.21
+Tested up to: 4.4.1
+Stable tag: 3.4.31
 License: GPLv2 or later
 
 Automatically re-publishes blogposts to Facebook, Twitter, Google+, Pinterest, LinkedIn, Blogger, Tumblr, Delicious, Plurk, etc profiles and/or pages
@@ -167,6 +167,66 @@ Please see more <a href="http://www.nextscripts.com/faq/">Frequently asked quest
 4. Google+: Types of Post 
 
 == Changelog ==
+
+= 3.4.31 [01/14/2016] =
+
+* Bug Fix - "Show ALL Debug Info" was left "ON" in the 3.4.30 causeing all kind of "warnings", "notices" and "errors" to appear.
+
+= 3.4.30 [01/14/2016] =
+
+* New - New setting. It adds an ability to Force SSL/https or NON-SSL/http in all links. 
+* Improvement - Better support for Custom Post types. 
+* Improvement/Bug Fix Perfomance Improvement. 
+* Improvement/Bug Fix [vk.com] Update to the new API version.
+
+= 3.4.29 [11/24/2015] =
+
+* Bug Fix - [Critical] Fix for "Call to undefined function restore_current_blog()" error on some messed up WordPress installations.
+
+= 3.4.28 [11/23/2015] =
+
+* Improvement - Better compatibility with TinyMCE Advanced.
+* Bug Fix - get_the_excerpt was called with an argument that is deprecated
+* Bug Fix - [LinkedIn] Fix for: LinkedIn Groups - "Error: No posting form found on..." 
+* Improvement - LinkedIn is slowly rolling out new interface for groups. That new interface is bringing support for "Image" posts to groups. This release adds it to the SNAP as well. (Will work only if you already got new Interface)
+
+= 3.4.27 [11/02/2015] =
+
+* Bug Fix - [StumbleUpon] Fixed:  "BAD USER / PASS" error.
+* Improvement/Bug Fix - [Twitter] %TAGS% and %CATS% will just post a list of tags and categories without # sign. Please use %HTAGS% and %HCATS% to get hashtags.
+* Improvement/Bug Fix - [Twitter] Fixed "Status over 140 characters" error. Twitter increased the length of URL and image - cutting two characters from the available text space. 
+* Bug Fix - [Facebook] Fixed: [Error] => (#100) name parameter cannot be longer than 255 bytes.
+* Bug Fix - Fixed a rare issue with some users not being able to remove accounts.
+
+= 3.4.26 [10/20/2015] =
+
+* Improvement. (For all you impatient people) Plugin is now compatible with PHP 7
+* Improvement. Plugin is now fully compatible with PHP 5.6 (No more "Depreciated" notes)
+* Support for "Google+ My Business"
+* New/Bug Fix [Google+]  Fixed ability to post to Community as Page name if you have "Google+ My Business"
+* Improvement [Facebook] More optimized posting process. 
+* Minor bug fixes and improvements 
+
+= 3.4.25 [09/21/2015] =
+
+* SNAP has been selected to be added to translate.wordpress.org. This release brings compatibility with it. 
+
+= 3.4.24 [09/16/2015] =
+
+* Bug Fix - [Critical] Some users have "Log/History" and "New Post" tabs blank after 3.4.23 update. 
+
+= 3.4.23 [09/15/2015] =
+
+* New - Wordpress 4.3.1 Compatibility
+* New - New setting - How to separate hashtags.
+* New/Bug Fix [Facebook] Support for new automatic page naming structure (pagename-pageID, example: https://www.facebook.com/nextscripts-270851199672443/). It was causing #803 error. 
+* FYI - Facebook no longer allows posting to secret groups if you are not an admin. It is causing "Unsupported post request" error. More info: http://gd.is/fbe2
+
+= 3.4.22 [08/20/2015] =
+
+* New - New URL Shortener - u.to - Simple and anonymous use only. No accounts, no stats.
+* Bug Fix - Workaround for annoying Google Chrome "auto-fill" issue casing "ghost" accounts to be added on each "Settings Save" 
+* Bug Fix - Some minor code improvements. 
 
 = 3.4.21 [07/09/2015] =
 

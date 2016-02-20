@@ -5,16 +5,15 @@ if (!function_exists("nsFormatMessage")) { function nsFormatMessage($msg, $postI
   $post = get_post($postID); $options = $plgn_NS_SNAutoPoster->nxs_options;   
   if (!empty($options['brokenCntFilters'])) { $msg = str_replace('%FULLTITLE%','%TITLE%',$msg); $msg = str_replace('%PANNOUNCE%','%ANNOUNCE%',$msg); $msg = str_replace('%PANNOUNCER%','%ANNOUNCER%',$msg); 
     $msg = str_replace('%EXCERPT%','%RAWEXCERPT%',$msg);  $msg = str_replace('%FULLTEXT%','%RAWTEXT%',$msg);  
-  } if (!empty($options['nxsHTSpace'])) $htS = $options['nxsHTSpace']; else $htS = '';
+  } if (!empty($options['nxsHTSpace'])) $htS = $options['nxsHTSpace']; else $htS = ''; 
+  if (!empty($options['nxsHTSepar'])) $htSep = $options['nxsHTSepar']; else $htSep = ', '; $htSep = str_replace('_',' ',$htSep); $htSep = str_replace('c',',',$htSep);
   // if ($addURLParams=='' && $options['addURLParams']!='') $addURLParams = $options['addURLParams'];
   $msg = str_replace('%TEXT%','%EXCERPT%',$msg); $msg = str_replace('%RAWEXTEXT%','%RAWEXCERPT%',$msg);
   $msg = stripcslashes($msg); if (isset($ShownAds)) $ShownAdsL = $ShownAds; // $msg = htmlspecialchars(stripcslashes($msg)); 
   $msg = nxs_doSpin($msg);
-  if (preg_match('/%URL%/', $msg)) { $url = get_permalink($postID); if($addURLParams!='') $url .= (strpos($url,'?')!==false?'&':'?').$addURLParams;  $nxs_urlLen = nxs_strLen($url); $msg = str_ireplace("%URL%", $url, $msg);}
+  if (preg_match('/%URL%/', $msg)) { $oo=array(); $oo = nxs_getURL($oo, $postID, $addURLParams); $url = $oo['urlToUse']; $nxs_urlLen = nxs_strLen($url); $msg = str_ireplace("%URL%", $url, $msg);}
   if (preg_match('/%MYURL%/', $msg)) { $url =  get_post_meta($postID, 'snap_MYURL', true); if($addURLParams!='') $url .= (strpos($url,'?')!==false?'&':'?').$addURLParams;  $nxs_urlLen = nxs_strLen($url); $msg = str_ireplace("%MYURL%", $url, $msg);}// prr($msg);
-  if (preg_match('/%SURL%/', $msg)) { $url = get_permalink($postID); if($addURLParams!='') $url .= (strpos($url,'?')!==false?'&':'?').$addURLParams; 
-    $url = nxs_mkShortURL($url, $postID); $nxs_urlLen = nxs_strLen($url); $msg = str_ireplace("%SURL%", $url, $msg);
-  } 
+  if (preg_match('/%SURL%/', $msg)) { $oo=array(); $oo = nxs_getURL($oo, $postID, $addURLParams); $url = $oo['urlToUse']; $url = nxs_mkShortURL($url, $postID); $nxs_urlLen = nxs_strLen($url); $msg = str_ireplace("%SURL%", $url, $msg);} 
   if (preg_match('/%ORID%/', $msg)) { $msg = str_ireplace("%ORID%", $postID, $msg); } 
   if (preg_match('/%IMG%/', $msg)) { $imgURL = nxs_getPostImage($postID); $msg = str_ireplace("%IMG%", $imgURL, $msg); } 
   if (preg_match('/%TITLE%/', $msg)) { $title = nxs_doQTrans($post->post_title, $lng); $msg = str_ireplace("%TITLE%", $title, $msg); }                    
@@ -63,11 +62,11 @@ if (!function_exists("nsFormatMessage")) { function nsFormatMessage($msg, $postI
   }
   if (preg_match('/%HCATS%/', $msg)) { $t = wp_get_post_categories($postID); $cats = array();  
     foreach($t as $c){ $cat = get_category($c);  $cats[] = "#".trim(str_replace(' ',$htS, str_replace('  ', ' ', trim(str_ireplace('&','',str_ireplace('&amp;','',$cat->name)))))); } 
-    $ctts = implode(', ',$cats); $msg = str_ireplace("%HCATS%", $ctts, $msg);
+    $ctts = implode($htSep,$cats); $msg = str_ireplace("%HCATS%", $ctts, $msg);
   }  
   if (preg_match('/%HTAGS%/', $msg)) { $t = wp_get_object_terms($postID, 'product_tag'); if ( empty($t) || is_wp_error($pt) || !is_array($t) ) $t = wp_get_post_tags($postID);
     $tggs = array(); foreach ($t as $tagA){$tggs[] = "#".trim(str_replace(' ', $htS, preg_replace('/[^a-zA-Z0-9\p{L}\p{N}\s]/u', '', trim(nxs_ucwords(str_ireplace('&','',str_ireplace('&amp;','',$tagA->name)))))));} 
-    $tags = implode(', ',$tggs); $msg = str_ireplace("%HTAGS%", $tags, $msg);
+    $tags = implode($htSep,$tggs); $msg = str_ireplace("%HTAGS%", $tags, $msg);
   } 
   if (preg_match('/%+CF-[a-zA-Z0-9-_]+%/', $msg)) { $msgA = explode('%CF', $msg); $mout = '';
     foreach ($msgA as $mms) { 
@@ -106,6 +105,8 @@ if (!function_exists("nxs_getURL")){ function nxs_getURL($options, $postID, $add
   $options['urlToUse'] = $ssl?$gOptions['useSSLCert']:$options['urlToUse']; // $addURLParams = trim($gOptions['addURLParams']);  
   if($addURLParams!='') $options['urlToUse'] .= (strpos($options['urlToUse'],'?')!==false?'&':'?').$addURLParams;  $forceSURL = trim(get_post_meta($postID, '_snap_forceSURL', true));
   if (empty($forceSURL)) $forceSURL = !empty($options['forceSURL']); else $forceSURL = $forceSURL =='1'; if (!empty($options['suUName'])) $forceSURL = false; //## SU does not allow Shorteners
+  if ($gOptions['forcessl'] == 'N') $options['urlToUse'] = str_ireplace('https','http',$options['urlToUse']); 
+  if ($gOptions['forcessl'] == 'S') $options['urlToUse'] = str_ireplace('http','https',str_ireplace('https','http',$options['urlToUse']));
   if ($forceSURL) $options['urlToUse'] = nxs_mkShortURL($options['urlToUse'], $postID); return $options;
 }}
 
@@ -114,7 +115,7 @@ if (!function_exists('nxs_showListRow')){function nxs_showListRow($ntParams) { $
             <div class="nxs_box_header"> 
               <div class="nsx_iconedTitle" style="margin-bottom:1px;background-image:url(<?php echo $nxs_plurl;?>img/<?php echo $ntInfo['lcode']; ?>16.png);"><?php echo $ntInfo['name']; ?>
               <?php $cbo = count($ntOpts); ?> 
-              <?php if ($cbo>1){ ?><div class="nsBigText"><?php echo "(".($cbo=='0'?'No':$cbo)." "; _e('accounts', 'nxs_snap'); echo ")"; ?></div><?php } ?>
+              <?php if ($cbo>1){ ?><div class="nsBigText"><?php echo "(".($cbo=='0'?'No':$cbo)." "; _e('accounts', 'social-networks-auto-poster-facebook-twitter-g'); echo ")"; ?></div><?php } ?>
               </div>
             </div>
             <div class="nxs_box_inside">            
@@ -127,10 +128,10 @@ if (!function_exists('nxs_showListRow')){function nxs_showListRow($ntParams) { $
               <?php } ?>       
               <?php if (isset($pbo['catSel']) && (int)$pbo['catSel'] == 1) { ?> <span onmouseout="nxs_hidePopUpInfo('popOnlyCat');" onmouseover="nxs_showPopUpInfo('popOnlyCat', event);"><?php echo "*[".(substr_count($pbo['catSelEd'], ",")+1)."]*" ?></span><?php } ?>
               <?php if (isset($pbo['rpstOn']) && (int)$pbo['rpstOn'] == 1) { ?> <span onmouseout="nxs_hidePopUpInfo('popReActive');" onmouseover="nxs_showPopUpInfo('popReActive', event);"><?php echo "*[R]*" ?></span><?php } ?>
-              <strong><?php  _e('Auto-publish to', 'nxs_snap'); ?> <?php echo $ntInfo['name']; ?> <i style="color: #005800;"><?php if($pbo['nName']!='') echo "(".$pbo['nName'].")"; ?></i></strong>
-              &nbsp;&nbsp;<?php if ($ntInfo['tstReq'] && (!isset($pbo[$ntInfo['lcode'].'OK']) || $pbo[$ntInfo['lcode'].'OK']=='')){ ?><b style="color: #800000"><?php  _e('Attention requred. Unfinished setup', 'nxs_snap'); ?> ==&gt;</b><?php } ?>
-              <a id="do<?php echo $ntInfo['code'].$indx; ?>AG" href="#" onclick="doGetHideNTBlock('<?php echo $ntInfo['code'];?>' , '<?php echo $indx; ?>');return false;">[<?php  _e('Show Settings', 'nxs_snap'); ?>]</a>&nbsp;&nbsp;          
-              <a href="#" onclick="doDelAcct('<?php echo $ntInfo['lcode']; ?>', '<?php echo $indx; ?>', '<?php if (isset($pbo['bgBlogID'])) echo $pbo['nName']; ?>');return false;">[<?php  _e('Remove Account', 'nxs_snap'); ?>]</a>
+              <strong><?php  _e('Auto-publish to', 'social-networks-auto-poster-facebook-twitter-g'); ?> <?php echo $ntInfo['name']; ?> <i style="color: #005800;"><?php if($pbo['nName']!='') echo "(".$pbo['nName'].")"; ?></i></strong>
+              &nbsp;&nbsp;<?php if ($ntInfo['tstReq'] && (!isset($pbo[$ntInfo['lcode'].'OK']) || $pbo[$ntInfo['lcode'].'OK']=='')){ ?><b style="color: #800000"><?php  _e('Attention requred. Unfinished setup', 'social-networks-auto-poster-facebook-twitter-g'); ?> ==&gt;</b><?php } ?>
+              <a id="do<?php echo $ntInfo['code'].$indx; ?>AG" href="#" onclick="doGetHideNTBlock('<?php echo $ntInfo['code'];?>' , '<?php echo $indx; ?>');return false;">[<?php  _e('Show Settings', 'social-networks-auto-poster-facebook-twitter-g'); ?>]</a>&nbsp;&nbsp;          
+              <a href="#" onclick="doDelAcct('<?php echo $ntInfo['lcode']; ?>', '<?php echo $indx; ?>', '<?php if (isset($pbo['bgBlogID'])) echo $pbo['nName']; ?>');return false;">[<?php  _e('Remove Account', 'social-networks-auto-poster-facebook-twitter-g'); ?>]</a>
               </p><div id="nxsNTSetDiv<?php echo $ntInfo['code'].$indx; ?>"></div>
             <?php } ?>
             </div>
@@ -198,15 +199,15 @@ function nxs_show_noLibWrn($msg){ ?> <div style="border: 2px solid darkred; padd
           </div> <?php 
 }
 
-if (!function_exists("nxs_save_glbNtwrks")) { function nxs_save_glbNtwrks($nt, $ii, $ntOptsOrVal, $field='', $networks='')  { if (empty($networks)) {
+if (!function_exists("nxs_save_glbNtwrks")) { function nxs_save_glbNtwrks($nt, $ii, $ntOptsOrVal, $field='', $networks='')  { if (empty($networks)) { if ($field=='*') {$field=''; $merge = true;} else $merge = false;
     if (class_exists('NS_SNAutoPoster')) { global $plgn_NS_SNAutoPoster; if (!isset($plgn_NS_SNAutoPoster)) $plgn_NS_SNAutoPoster = new nxs_SNAP(); $networks = $plgn_NS_SNAutoPoster->nxs_options; } 
       elseif (function_exists("nxs_settings_open")) $networks = nxs_settings_open();
-  } if(!empty($field)) $networks[$nt][$ii][$field] = $ntOptsOrVal; else $networks[$nt][$ii] = $ntOptsOrVal; nxs_save_ntwrksOpts($networks);   
-  if (isset($plgn_NS_SNAutoPoster)) $plgn_NS_SNAutoPoster->nxs_options = $networks;
+  } if(!empty($field)) $networks[$nt][$ii][$field] = $ntOptsOrVal; else $networks[$nt][$ii] = $merge?(array_merge($networks[$nt][$ii],$ntOptsOrVal)):$ntOptsOrVal; nxs_save_ntwrksOpts($networks);   
+  if (isset($plgn_NS_SNAutoPoster)) $plgn_NS_SNAutoPoster->nxs_options = $networks;// prr($networks[$nt]); var_dump($merge);
 }}
 
 if (!function_exists("nxs_save_ntwrksOpts")) { function nxs_save_ntwrksOpts($networks) { if (function_exists('nxs_settings_save')) nxs_settings_save($networks);
-  if (function_exists('get_option')) { if (!empty($networks)) update_option('NS_SNAutoPoster', $networks);  }    
+  if (function_exists('get_option')) { if (!empty($networks)) update_option('NS_SNAutoPoster', $networks); }    
 }}
 
 function nxs_toolbar_link_to_mypage( $wp_admin_bar ) {

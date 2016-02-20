@@ -1,15 +1,16 @@
 <?php
 /*
 Plugin Name: Events Manager
-Version: 5.5.7.1
+Version: 5.6.2
 Plugin URI: http://wp-events-plugin.com
 Description: Event registration and booking management for WordPress. Recurring events, locations, google maps, rss, ical, booking registration and more!
 Author: Marcus Sykes
 Author URI: http://wp-events-plugin.com
+Text Domain: events-manager
 */
 
 /*
-Copyright (c) 2014, Marcus Sykes
+Copyright (c) 2015, Marcus Sykes
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -27,8 +28,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 // Setting constants
-define('EM_VERSION', 5.55); //self expanatory
-define('EM_PRO_MIN_VERSION', 2.377); //self expanatory
+define('EM_VERSION', 5.62); //self expanatory
+define('EM_PRO_MIN_VERSION', 2.392); //self expanatory
+define('EM_PRO_MIN_VERSION_CRITICAL', 2.377); //self expanatory
 define('EM_DIR', dirname( __FILE__ )); //an absolute path to this directory
 define('EM_DIR_URI', trailingslashit(plugins_url('',__FILE__))); //an absolute path to this directory
 define('EM_SLUG', plugin_basename( __FILE__ )); //for updates
@@ -73,7 +75,7 @@ include("em-functions.php");
 include("em-ical.php");
 include("em-shortcode.php");
 include("em-template-tags.php");
-include("em-ml.php");
+include("multilingual/em-ml.php");
 //Widgets
 include("widgets/em-events.php");
 if( get_option('dbem_locations_enabled') ){
@@ -293,9 +295,10 @@ class EM_Scripts_and_Styles {
 	}
 	
 	public static function admin_enqueue(){
-	    do_action('em_enqueue_admin_scripts');
 		wp_enqueue_script('events-manager', plugins_url('includes/js/events-manager.js',__FILE__), array('jquery', 'jquery-ui-core','jquery-ui-widget','jquery-ui-position','jquery-ui-sortable','jquery-ui-datepicker','jquery-ui-autocomplete','jquery-ui-dialog'), EM_VERSION);
+	    do_action('em_enqueue_admin_scripts');
 		wp_enqueue_style('events-manager-admin', plugins_url('includes/css/events_manager_admin.css',__FILE__), array(), EM_VERSION);
+		do_action('em_enqueue_admin_styles');
 		self::localize_script();
 	}
 
@@ -313,18 +316,21 @@ class EM_Scripts_and_Styles {
 			'firstDay' => get_option('start_of_week'),
 			'locale' => $locale_code,
 			'dateFormat' => $date_format,
-			'ui_css' => plugins_url('includes/css/ui-lightness.css', __FILE__),
+			'ui_css' => plugins_url('includes/css/jquery-ui.min.css', __FILE__),
 			'show24hours' => get_option('dbem_time_24h'),
 			'is_ssl' => is_ssl(),
 		);
+		//debug mode
+		if( defined('WP_DEBUG') && WP_DEBUG ) $em_localized_js['ui_css'] = plugins_url('includes/css/jquery-ui.css', __FILE__);
+		//booking-specific stuff
 		if( get_option('dbem_rsvp_enabled') ){
 		    $em_localized_js = array_merge($em_localized_js, array(
-				'bookingInProgress' => __('Please wait while the booking is being submitted.','dbem'),
-				'tickets_save' => __('Save Ticket','dbem'),
+				'bookingInProgress' => __('Please wait while the booking is being submitted.','events-manager'),
+				'tickets_save' => __('Save Ticket','events-manager'),
 				'bookingajaxurl' => admin_url('admin-ajax.php'),
-				'bookings_export_save' => __('Export Bookings','dbem'),
-				'bookings_settings_save' => __('Save Settings','dbem'),
-				'booking_delete' => __("Are you sure you want to delete?",'dbem'),
+				'bookings_export_save' => __('Export Bookings','events-manager'),
+				'bookings_settings_save' => __('Save Settings','events-manager'),
+				'booking_delete' => __("Are you sure you want to delete?",'events-manager'),
 				//booking button
 				'bb_full' =>  get_option('dbem_booking_button_msg_full'),
 				'bb_book' => get_option('dbem_booking_button_msg_book'),
@@ -337,20 +343,20 @@ class EM_Scripts_and_Styles {
 				'bb_cancel_error' => get_option('dbem_booking_button_msg_cancel_error')
 			));		
 		}
-		$em_localized_js['txt_search'] = get_option('dbem_search_form_text_label',__('Search','dbem'));
-		$em_localized_js['txt_searching'] = __('Searching...','dbem');
-		$em_localized_js['txt_loading'] = __('Loading...','dbem');
+		$em_localized_js['txt_search'] = get_option('dbem_search_form_text_label',__('Search','events-manager'));
+		$em_localized_js['txt_searching'] = __('Searching...','events-manager');
+		$em_localized_js['txt_loading'] = __('Loading...','events-manager');
 		
 		//logged in messages that visitors shouldn't need to see
 		if( is_user_logged_in() || is_page(get_option('dbem_edit_events_page')) ){
 		    if( get_option('dbem_recurrence_enabled') ){
-				$em_localized_js['event_reschedule_warning'] = __('Are you sure you want to reschedule this recurring event? If you do this, you will lose all booking information and the old recurring events will be deleted.', 'dbem');
-				$em_localized_js['event_detach_warning'] = __('Are you sure you want to detach this event? By doing so, this event will be independent of the recurring set of events.', 'dbem');
-				$delete_text = ( !EMPTY_TRASH_DAYS ) ? __('This cannot be undone.','dbem'):__('All events will be moved to trash.','dbem');
-				$em_localized_js['delete_recurrence_warning'] = __('Are you sure you want to delete all recurrences of this event?', 'dbem').' '.$delete_text;
+				$em_localized_js['event_reschedule_warning'] = __('Are you sure you want to reschedule this recurring event? If you do this, you will lose all booking information and the old recurring events will be deleted.', 'events-manager');
+				$em_localized_js['event_detach_warning'] = __('Are you sure you want to detach this event? By doing so, this event will be independent of the recurring set of events.', 'events-manager');
+				$delete_text = ( !EMPTY_TRASH_DAYS ) ? __('This cannot be undone.','events-manager'):__('All events will be moved to trash.','events-manager');
+				$em_localized_js['delete_recurrence_warning'] = __('Are you sure you want to delete all recurrences of this event?', 'events-manager').' '.$delete_text;
 		    }
 			if( get_option('dbem_rsvp_enabled') ){
-				$em_localized_js['disable_bookings_warning'] = __('Are you sure you want to disable bookings? If you do this and save, you will lose all previous bookings. If you wish to prevent further bookings, reduce the number of spaces available to the amount of bookings you currently have', 'dbem');
+				$em_localized_js['disable_bookings_warning'] = __('Are you sure you want to disable bookings? If you do this and save, you will lose all previous bookings. If you wish to prevent further bookings, reduce the number of spaces available to the amount of bookings you currently have', 'events-manager');
 				$em_localized_js['booking_warning_cancel'] = get_option('dbem_booking_warning_cancel');
 			}
 		}
@@ -359,8 +365,8 @@ class EM_Scripts_and_Styles {
 			$em_localized_js['event_post_type'] = EM_POST_TYPE_EVENT;
 			$em_localized_js['location_post_type'] = EM_POST_TYPE_LOCATION;
 			if( !empty($_GET['page']) && $_GET['page'] == 'events-manager-options' ){
-			    $em_localized_js['close_text'] = __('Collapse All','dbem');
-			    $em_localized_js['open_text'] = __('Expand All','dbem');
+			    $em_localized_js['close_text'] = __('Collapse All','events-manager');
+			    $em_localized_js['open_text'] = __('Expand All','events-manager');
 			}
 		}
 		//calendar translations
@@ -424,39 +430,39 @@ function em_plugins_loaded(){
 	global $em_capabilities_array;
 	$em_capabilities_array = apply_filters('em_capabilities_array', array(
 		/* Booking Capabilities */
-		'manage_others_bookings' => sprintf(__('You do not have permission to manage others %s','dbem'),__('bookings','dbem')),
-		'manage_bookings' => sprintf(__('You do not have permission to manage %s','dbem'),__('bookings','dbem')),
+		'manage_others_bookings' => sprintf(__('You do not have permission to manage others %s','events-manager'),__('bookings','events-manager')),
+		'manage_bookings' => sprintf(__('You do not have permission to manage %s','events-manager'),__('bookings','events-manager')),
 		/* Event Capabilities */
-		'publish_events' => sprintf(__('You do not have permission to publish %s','dbem'),__('events','dbem')),
-		'delete_others_events' => sprintf(__('You do not have permission to delete others %s','dbem'),__('events','dbem')),
-		'delete_events' => sprintf(__('You do not have permission to delete %s','dbem'),__('events','dbem')),
-		'edit_others_events' => sprintf(__('You do not have permission to edit others %s','dbem'),__('events','dbem')),
-		'edit_events' => sprintf(__('You do not have permission to edit %s','dbem'),__('events','dbem')),
-		'read_private_events' => sprintf(__('You cannot read private %s','dbem'),__('events','dbem')),
-		/*'read_events' => sprintf(__('You cannot view %s','dbem'),__('events','dbem')),*/
+		'publish_events' => sprintf(__('You do not have permission to publish %s','events-manager'),__('events','events-manager')),
+		'delete_others_events' => sprintf(__('You do not have permission to delete others %s','events-manager'),__('events','events-manager')),
+		'delete_events' => sprintf(__('You do not have permission to delete %s','events-manager'),__('events','events-manager')),
+		'edit_others_events' => sprintf(__('You do not have permission to edit others %s','events-manager'),__('events','events-manager')),
+		'edit_events' => sprintf(__('You do not have permission to edit %s','events-manager'),__('events','events-manager')),
+		'read_private_events' => sprintf(__('You cannot read private %s','events-manager'),__('events','events-manager')),
+		/*'read_events' => sprintf(__('You cannot view %s','events-manager'),__('events','events-manager')),*/
 		/* Recurring Event Capabilties */
-		'publish_recurring_events' => sprintf(__('You do not have permission to publish %s','dbem'),__('recurring events','dbem')),
-		'delete_others_recurring_events' => sprintf(__('You do not have permission to delete others %s','dbem'),__('recurring events','dbem')),
-		'delete_recurring_events' => sprintf(__('You do not have permission to delete %s','dbem'),__('recurring events','dbem')),
-		'edit_others_recurring_events' => sprintf(__('You do not have permission to edit others %s','dbem'),__('recurring events','dbem')),
-		'edit_recurring_events' => sprintf(__('You do not have permission to edit %s','dbem'),__('recurring events','dbem')),
+		'publish_recurring_events' => sprintf(__('You do not have permission to publish %s','events-manager'),__('recurring events','events-manager')),
+		'delete_others_recurring_events' => sprintf(__('You do not have permission to delete others %s','events-manager'),__('recurring events','events-manager')),
+		'delete_recurring_events' => sprintf(__('You do not have permission to delete %s','events-manager'),__('recurring events','events-manager')),
+		'edit_others_recurring_events' => sprintf(__('You do not have permission to edit others %s','events-manager'),__('recurring events','events-manager')),
+		'edit_recurring_events' => sprintf(__('You do not have permission to edit %s','events-manager'),__('recurring events','events-manager')),
 		/* Location Capabilities */
-		'publish_locations' => sprintf(__('You do not have permission to publish %s','dbem'),__('locations','dbem')),
-		'delete_others_locations' => sprintf(__('You do not have permission to delete others %s','dbem'),__('locations','dbem')),
-		'delete_locations' => sprintf(__('You do not have permission to delete %s','dbem'),__('locations','dbem')),
-		'edit_others_locations' => sprintf(__('You do not have permission to edit others %s','dbem'),__('locations','dbem')),
-		'edit_locations' => sprintf(__('You do not have permission to edit %s','dbem'),__('locations','dbem')),
-		'read_private_locations' => sprintf(__('You cannot read private %s','dbem'),__('locations','dbem')),
-		'read_others_locations' => sprintf(__('You cannot view others %s','dbem'),__('locations','dbem')),
-		/*'read_locations' => sprintf(__('You cannot view %s','dbem'),__('locations','dbem')),*/
+		'publish_locations' => sprintf(__('You do not have permission to publish %s','events-manager'),__('locations','events-manager')),
+		'delete_others_locations' => sprintf(__('You do not have permission to delete others %s','events-manager'),__('locations','events-manager')),
+		'delete_locations' => sprintf(__('You do not have permission to delete %s','events-manager'),__('locations','events-manager')),
+		'edit_others_locations' => sprintf(__('You do not have permission to edit others %s','events-manager'),__('locations','events-manager')),
+		'edit_locations' => sprintf(__('You do not have permission to edit %s','events-manager'),__('locations','events-manager')),
+		'read_private_locations' => sprintf(__('You cannot read private %s','events-manager'),__('locations','events-manager')),
+		'read_others_locations' => sprintf(__('You cannot view others %s','events-manager'),__('locations','events-manager')),
+		/*'read_locations' => sprintf(__('You cannot view %s','events-manager'),__('locations','events-manager')),*/
 		/* Category Capabilities */
-		'delete_event_categories' => sprintf(__('You do not have permission to delete %s','dbem'),__('categories','dbem')),
-		'edit_event_categories' => sprintf(__('You do not have permission to edit %s','dbem'),__('categories','dbem')),
+		'delete_event_categories' => sprintf(__('You do not have permission to delete %s','events-manager'),__('categories','events-manager')),
+		'edit_event_categories' => sprintf(__('You do not have permission to edit %s','events-manager'),__('categories','events-manager')),
 		/* Upload Capabilities */
-		'upload_event_images' => __('You do not have permission to upload images','dbem')
+		'upload_event_images' => __('You do not have permission to upload images','events-manager')
 	));
 	// LOCALIZATION
-	load_plugin_textdomain('dbem', false, dirname( plugin_basename( __FILE__ ) ).'/includes/langs');
+	load_plugin_textdomain('events-manager', false, dirname( plugin_basename( __FILE__ ) ).'/includes/langs');
 	//WPFC Integration
 	if( defined('WPFC_VERSION') ){
 		function load_em_wpfc_plugin(){
@@ -491,7 +497,7 @@ function em_init(){
 	}
 	$EM_Mailer = new EM_Mailer();
 	//Upgrade/Install Routine
-	if( is_admin() && current_user_can('list_users') ){
+	if( is_admin() && current_user_can('manage_options') ){
 		if( EM_VERSION > get_option('dbem_version', 0) || (is_multisite() && !EM_MS_GLOBAL && get_option('em_ms_global_install')) ){
 			require_once( dirname(__FILE__).'/em-install.php');
 			em_install();
@@ -720,7 +726,7 @@ function em_admin_bar_mod($wp_admin_bar){
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'network-admin',
 		'id'     => 'network-admin-em',
-		'title'  => __( 'Events Manager','dbem' ),
+		'title'  => __( 'Events Manager','events-manager'),
 		'href'   => network_admin_url('admin.php?page=events-manager-options'),
 	) );
 }
@@ -759,7 +765,7 @@ register_deactivation_hook( __FILE__,'em_deactivate');
  * Fail-safe compatibility checking of EM Pro 
  */
 function em_check_pro_compatability(){
-	if( defined('EMP_VERSION') && EMP_VERSION < EM_PRO_MIN_VERSION && (!defined('EMP_DISABLE_CRITICAL_WARNINGS') || !EMP_DISABLE_CRITICAL_WARNINGS) ){
+	if( defined('EMP_VERSION') && EMP_VERSION < EM_PRO_MIN_VERSION_CRITICAL && (!defined('EMP_DISABLE_CRITICAL_WARNINGS') || !EMP_DISABLE_CRITICAL_WARNINGS) ){
 		include('em-pro-compatibility.php');
 	}
 }

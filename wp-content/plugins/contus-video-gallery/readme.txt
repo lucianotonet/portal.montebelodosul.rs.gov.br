@@ -2,27 +2,29 @@
 Contributors: hdflvplayer
 Tags: WordPress video gallery, Wordpress video gallery Plugin, wordPress video sharing script, Youtube video gallery, Vimeo video gallery, WordPress HTML5 video gallery, WP video gallery, Wordpress video sharing website
 Requires at least: 2.8
-Tested up to: 4.0
-Stable tag: 2.8.1
+Tested up to: 4.4
+Stable tag: 3.0
 Get the most exciting Video Gallery for your WordPress site. Advanced features, Easy Install and timely support which makes this product irresistible
 
 == Description ==
 
-WordPress Video Gallery is a sturdy tool from Contus, that helps in erecting a video sharing website in WordPress quite effortlessly. Using this script managing a video sharing website becomes easy.
+Contus' Best WordPress Video Gallery Plugin has a whole set of utile features and options that make the product a versatile one. In addition to the quickly visible options such as recent Videos, popular Videos and featured Videos, the plugin also has the ability to control the number and order of these videos from back end.
 
 Video Gallery Demo - http://www.apptha-demo.com/template/videostream/
 
 Video Gallery Home Page - https://www.apptha.com/category/extension/Wordpress/Video-Gallery
 
-We're on GitHub! Engage now & fork us!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-https://github.com/Apptha/contus-video-gallery
+GitHub Repository - https://github.com/Apptha/contus-video-gallery
 
-This plugin has an inbuilt HD FLV Player which delivers video contents in crystal clear quality and support FLV & H.264 encoded video formats like MP4, M4V, M4A, MOV, Mp4v etc. HTML 5 support enables uninterrupted video viewing in mobile devices. Sharing of videos can be done from popular third-party websites like YouTube, Vimeo etc.
-
-Live events can be aired using RTMP, Live Telecast, Amazon S3 Live Streaming video support. Moreover, website owners can make additional revenue by monetizing through video ads. For creating an online reputation and improve brand awareness the player offers a space to promote the website's logo.
+FLV & H.264 encoded video including MP4, M4V, M4A, MOV, Mp4v, F4V, social networking comments from the gallery page (like for Facebook), provision to alter width, height, skin, theme, aspect ratio, volume, downloads etc. from the backend are few if the best features with this plugin. It also covers other regular and utile features which we could see in popular video sharing sites such as social media bookmark option (diggit, myspace, facebook, del.icio.us, spurl, furl, google), managing multiple playlists, views count for video and so forth.
 
 * Supports Lighttpd, RTMP, Live telecast and Amazon S3 Streaming
 * Facility to add YouTube, Vimeo, Viddler, Daily Motion videos and embed code videos from other sites
+* Facility to subscribe users channel
+* Facility to create playlist
+* Facility to add videos to watch later
+* Users can see their watch history
+* Facility to pause the videos to store in history
 * Supports ffmpeg which generates duration of the video uploaded from PC
 * Facility to monetize by displaying preroll, postroll, midroll, google adsense and IMA ads in the player
 * Simple to customize/manage widgets
@@ -85,17 +87,33 @@ Live events can be aired using RTMP, Live Telecast, Amazon S3 Live Streaming vid
 
 9. **Videos(recent,popular,feature, Video Categories)** - We are also displaying Popular, Recent, Featured, Related videos and Video Categories in content page under player.
 
+10. **Channel** - Channel will be created automatically when the user registered on the site. For the existing users, it will be created on the time of login. Also user can subscribe channel of other users
+
+11. **Playlist** - User can create playlist and add videos to the playlist
+
+12. **Watch later** - User can mark the videos to watch later section
+
+13. **Watch history** - History will be maintained here.
+
 == Changelog ==
 
+= 3.0 =
+
+* Provided channel feature for the registered users.
+* The option to subscribe channel
+* Notification to owner if someone subscribes the channel
+* Playlist feature like YouTube
+* Watch later feature like YouTube
+* Watch history feature like YouTube
+
+= 2.9 =
+
+* Compressed 5 widgets into 1
+* Optimized code using Sonar tool
+
 = 2.8 =
 
-* Fixed vulnerability issue in videosortorder, google_adsense, playlistsortorder, hd_ajax_add_playlist functions
-
-= 2.8 =
-
-* Fixed vulnerability issue in videogalleryrss.php file
-* Fixed deleted video from admin not deleting from folder issue
-* Fixed vulnerability issue in videosortorder, google_adsense, playlistsortorder, hd_ajax_add_playlist functions
+* Bug fixed version of 2.7
 
 = 2.7 =
 

@@ -3,14 +3,14 @@
 Plugin Name: Sub Categories Widget
 Description: This Widget lists the sub-categories for a given category.
 Author: BrokenCrust
-Version: 1.4.1
+Version: 1.5
 Author URI: http://brokencrust.com/
 Plugin URI: http://brokencrust.com/plugins/sub-categories-widget/
 License: GPLv2 or later
 Text Domain: sub-categories-widget
 */
 
-/*  Copyright 2010-14  BrokenCrust
+/*  Copyright 2010-15 BrokenCrust
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -45,6 +45,8 @@ class sub_categories_widget extends WP_Widget {
 		$sub_subs = empty($instance['sub_subs']) ? 0 : $instance['sub_subs'];
 		$dropdown = empty($instance['dropdown']) ? 0 : $instance['dropdown'];
 		$post_is_parent = empty($instance['post_is_parent']) ? 0 : $instance['post_is_parent'];
+		$dropdown_text = empty($instance['dropdown_text']) ? __('Select Sub-category', 'sub-categories-widget') : $instance['dropdown_text'];
+		$list_order = empty($instance['list_order']) ? 0 : $instance['list_order'];
 
 		if ($post_is_parent) {
 			$category = get_the_category();
@@ -59,9 +61,11 @@ class sub_categories_widget extends WP_Widget {
 
 		$parent = $sub_subs == 1 ? 'child_of' : 'parent';
 
+		$order = $list_order == 1 ? 'DESC' : 'ASC';
+
 		$no_sub_text = '<p>'.__('No sub-categories', 'sub-categories-widget').'</p>';
 
-		$subs = wp_list_categories(array($parent => $category_id, 'hide_empty' => $hide_empty_cats, 'show_count' => $show_post_count, 'exclude' => $excluded, 'title_li' => null, 'show_option_none' => '', 'echo' => 0));
+		$subs = wp_list_categories(array($parent => $category_id, 'hide_empty' => $hide_empty_cats, 'show_count' => $show_post_count, 'exclude' => $excluded, 'title_li' => null, 'show_option_none' => '', 'echo' => 0, 'order' => $order));
 
 		if (($post_is_parent == 0) || (($post_is_parent == 1) && (!empty($subs)))) {
 
@@ -80,7 +84,7 @@ class sub_categories_widget extends WP_Widget {
 					echo $no_sub_text;
 				}
 			} else {
-				$subs = wp_dropdown_categories(array('id' => 'sub-cat-'.$this->number, 'show_option_none' => 'Select Sub-category', $parent => $category_id, 'hide_empty' => $hide_empty_cats, 'show_count' => $show_post_count, 'exclude' => $excluded, 'hide_if_empty' => true, 'echo' => false, 'orderby' => 'NAME'));
+				$subs = wp_dropdown_categories(array('id' => 'sub-cat-'.$this->number, 'show_option_none' => $dropdown_text, $parent => $category_id, 'hide_empty' => $hide_empty_cats, 'show_count' => $show_post_count, 'exclude' => $excluded, 'hide_if_empty' => true, 'echo' => false, 'orderby' => 'NAME', 'order' => $order));
 				if (!empty($subs)) {
 					echo $subs;
 					echo '<script type="text/javascript">
@@ -114,13 +118,15 @@ class sub_categories_widget extends WP_Widget {
 		$instance['sub_subs'] = (int) $new_instance['sub_subs'];
 		$instance['dropdown'] = (int) $new_instance['dropdown'];
 		$instance['post_is_parent'] = (int) $new_instance['post_is_parent'];
+		$instance['dropdown_text'] = $new_instance['dropdown_text'];
+		$instance['list_order'] = (int) $new_instance['list_order'];
 
 		return $instance;
 	}
 
 	function form($instance) {
 
-		$instance = wp_parse_args((array) $instance, array('title' => __('Sub Categories', 'sub-categories-widget'), 'category_id' => 1, 'use_cat_title' => 0, 'hide_empty_cats' => 0, 'show_post_count' => 1, 'title_link' => 0, 'excluded' => '', 'sub_subs' => 0, 'dropdown' => 0, 'post_is_parent' => 0 ));
+		$instance = wp_parse_args((array) $instance, array('title' => __('Sub Categories', 'sub-categories-widget'), 'category_id' => 1, 'use_cat_title' => 0, 'hide_empty_cats' => 0, 'show_post_count' => 1, 'title_link' => 0, 'excluded' => '', 'sub_subs' => 0, 'dropdown' => 0, 'post_is_parent' => 0, 'dropdown_text' => __('Select Sub-category', 'sub-categories-widget') ,'list_order' => 0 ));
 
 		?>
 			<p>
@@ -154,11 +160,18 @@ class sub_categories_widget extends WP_Widget {
 				<input id="<?php echo $this->get_field_id('sub_subs'); ?>" name="<?php echo $this->get_field_name('sub_subs'); ?>" type="checkbox" value="1" <?php if ($instance['sub_subs']) echo 'checked="checked"'; ?>/>
 				<label for="<?php echo $this->get_field_id('sub_subs'); ?>"><?php _e('Show full sub-category tree', 'sub-categories-widget'); ?></label>
 				<br>
-				<input id="<?php echo $this->get_field_id('dropdown'); ?>" name="<?php echo $this->get_field_name('dropdown'); ?>" type="checkbox" value="1" <?php if ($instance['dropdown']) echo 'checked="checked"'; ?>/>
-				<label for="<?php echo $this->get_field_id('dropdown'); ?>"><?php _e('Display as dropdown', 'sub-categories-widget'); ?></label>
+				<input id="<?php echo $this->get_field_id('list_order'); ?>" name="<?php echo $this->get_field_name('list_order'); ?>" type="checkbox" value="1" <?php if ($instance['list_order']) echo 'checked="checked"'; ?>/>
+				<label for="<?php echo $this->get_field_id('list_order'); ?>"><?php _e('Display categories in reverse order', 'sub-categories-widget'); ?></label>
 				<br>
 				<input id="<?php echo $this->get_field_id('post_is_parent'); ?>" name="<?php echo $this->get_field_name('post_is_parent'); ?>" type="checkbox" value="1" <?php if ($instance['post_is_parent']) echo 'checked="checked"'; ?>/>
 				<label for="<?php echo $this->get_field_id('post_is_parent'); ?>"><?php _e('Use first category of post as parent', 'sub-categories-widget'); ?></label>
+			</p>
+			<p>
+				<input id="<?php echo $this->get_field_id('dropdown'); ?>" name="<?php echo $this->get_field_name('dropdown'); ?>" type="checkbox" value="1" <?php if ($instance['dropdown']) echo 'checked="checked"'; ?>/>
+				<label for="<?php echo $this->get_field_id('dropdown'); ?>"><?php _e('Display as dropdown', 'sub-categories-widget'); ?></label>
+				<br>
+				<label for="<?php echo $this->get_field_id('dropdown_text'); ?>"><?php _e('Dropdown label:', 'sub-categories-widget'); ?></label>
+				<input class="widefat" id="<?php echo $this->get_field_id('dropdown_text'); ?>" name="<?php echo $this->get_field_name('dropdown_text'); ?>" type="text" value="<?php echo esc_attr($instance['dropdown_text']) ?>" />
 			</p>
 			<p>
 				<label for="<?php echo $this->get_field_id('excluded'); ?>"> <?php _e('Categories to exclude:', 'sub-categories-widget') ?></label>

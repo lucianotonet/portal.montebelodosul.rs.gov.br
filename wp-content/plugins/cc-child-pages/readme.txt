@@ -3,12 +3,12 @@
 Plugin Name: CC Child Pages
 Contributors: caterhamcomputing
 Plugin URI: http://ccchildpages.ccplugins.co.uk/
-Author URI: http://www.caterhamcomputing.net/
+Author URI: https://caterhamcomputing.net/
 Donate Link: http://ccchildpages.ccplugins.co.uk/donate/
 Requires at least: 4.0
-Tested up to: 4.2.1
-Stable tag: 1.28
-Version: 1.28
+Tested up to: 4.4
+Stable tag: 1.32
+Version: 1.32
 Tags: child pages widget, child pages shortcode, child pages, child page, shortcode, widget, list, sub-pages, subpages, sub-page, subpage, sub page, responsive, child-page, child-pages, childpage, childpages, siblings, sibling pages
 
 Adds a responsive shortcode to list child and sibling pages. Pre-styled or specify your own CSS class for custom styling. Includes child pages widget.
@@ -57,6 +57,10 @@ You can add the `cols` parameter to choose the number of columns:
 You can also show the child pages of a specific page by adding the `ID` of the page as follows:
 
 `[child_pages id="42"]`
+
+... or you can specify multiple IDs in a comma-separated list (does not work when using `list="true"`)
+
+`[child_pages id="42,53,76"]`
 
 To exclude pages, use the `exclude` parameter. This allows you to specify a comma separated list of Page IDs to be exclude from the output of the shortcode.
 
@@ -109,6 +113,10 @@ You can stop Custom Excerpts from being truncated by seting the `truncate_excerp
 ... this will display custom excerpts exactly as entered without being shortened. (Especially useful if using the Rich Text Excerpts plugin, in which case all styling will be preserved.)
 
 When `truncate_excerpt` is set to `true`, excerpts will be truncated only if they exceed the specified word count (default 55). When custom excerpts are truncated, any HTML will be removed.
+
+If you have inserted `more` tags into your posts/pages, you may find that the `Continue reading` message is included in the excerpt. To hide this, set the `hide_wp_more` parameter to `true`:
+
+`[child_pages hide_wp_more="true"]`
 
 To change the order in which the child pages are listed, you can use the `orderby` and `order` parameters:
 
@@ -177,6 +185,33 @@ This can also be used with the `list` parameter
 
 `[child_pages siblings="true" list="true"]`
 
+By default, the shortcode will not display the current page when `siblings` is set to `true`. If you wish to include the current page, set the `show_current_page` parameter to `true`:
+
+`[child_pages siblings="true" show_current_page="true"]`
+
+`[child_pages siblings="true" list="true" show_current_page="true"]`
+
+= Custom Fields =
+
+You may wish to show a different title, excerpt or "Read more..." message on certain pages. To achieve this, you can set values in custom fields on specific pages - to tell the shortcode to use the custom value, set the `use_custom_excerpt`, `use_custom_title` or `use_custom_more` parameter to the name of the custom field to be used.
+
+If the field used is set for a page, its value will be used instead of the default excerpt/title/"Read more...". Pages on which the custom field is not populated will use the default value.
+
+`[child_pages use_custom_excerpt="custom_cc_excerpt"]`
+
+... will replace the standard excerpt with the value of the custom field "custom_cc_excerpt" (if it is set)
+
+`[child_pages use_custom_title="custom_cc_title"]`
+
+... will replace the standard title with the value of the custom field "custom_cc_title" (if it is set)
+
+`[child_pages use_custom_more="custom_cc_more"]`
+
+... will replace the standard "Read more..." message with the value of the custom field "custom_cc_more" (if it is set).
+
+**N.B.** `use_custom_excerpt`, `use_custom_title` and `use_custom_more` will not work when `list="true"`
+
+
 == Installation ==
 
 1. Upload the plugin to the `/wp-content/plugins/` directory
@@ -198,6 +233,26 @@ This can also be used with the `list` parameter
 12. CC Child Pages widget options
 
 == Changelog ==
+
+= 1.32 =
+* Bug fix - widget was displaying sibling pages instead of child pages under certain circumstances
+
+= 1.31 =
+* Added `siblings` option to the widget
+* Added `show_current_page` option for use with the shortcode when `siblings` is set to `true`
+* Added `hide_wp_more` to remove the standard "Continue reading..." message from excerpts
+* Added `use_custom_excerpt`, `use_custom_title` and `use_custom_more` to the shortcode
+* Added more filters and actions to widget and shortcode to allow extension of plugin
+
+= 1.30 =
+* Bug fix - internationalization now works correctly (translations need work though - currently only French, which is known to be poor)
+* Added more filters to widget, list and shortcode to allow extension of plugin
+
+= 1.29 =
+* Bug fix - widget will now show on all pages/posts if "All Pages" or a specific parent page is selected
+* Bug fix - shortcode now closes query correctly (was causing issues with some themes)
+* The shortcode will now work with custom post types
+* You can now specify multiple parent page IDs (when using `list="true"`, only a single parent ID can be specified)
 
 = 1.28 =
 * Further improvements to integration when used with Video Thumbnails plugin
@@ -312,6 +367,26 @@ This can also be used with the `list` parameter
 * Initial Release
 
 == Upgrade Notice ==
+
+= 1.32 =
+* Bug fix - widget was displaying sibling pages instead of child pages under certain circumstances
+
+= 1.31 =
+* Added `siblings` option to the widget
+* Added `show_current_page` option for use with the shortcode when `siblings` is set to `true`
+* Added `hide_wp_more` to remove the standard "Continue reading..." message from excerpts
+* Added `use_custom_excerpt`, `use_custom_title` and `use_custom_more` to the shortcode
+* Added more filters and actions to widget and shortcode to allow extension of plugin
+
+= 1.30 =
+* Bug fix - internationalization now works correctly (translations need work though - currently only French, which is known to be poor)
+* Added more filters to widget, list and shortcode to allow extension of plugin
+
+= 1.29 =
+* Bug fix - widget will now show on all pages/posts if "All Pages" or a specific parent page is selected
+* Bug fix - shortcode now closes query correctly (was causing issues with some themes)
+* The shortcode will now work with custom post types
+* You can now specify multiple parent page IDs (when using `list="true"`, only a single parent ID can be specified)
 
 = 1.28 =
 * Further improvements to integration when used with Video Thumbnails plugin

@@ -24,16 +24,24 @@ class ccchildpages_widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		// outputs the content of the widget
 		
-		if ( ! is_page() ) return; // If we are not viewing a page, give up
 
 		$sortby = empty( $instance['sortby'] ) ? 'menu_order' : $instance['sortby'];
 		$exclude = empty( $instance['exclude'] ) ? '' : $instance['exclude'];
 		$showall = empty( $instance['showall'] ) ? 'off' : $instance['showall'];
+		$siblings = empty( $instance['siblings'] ) ? 'off' : $instance['siblings'];
 		$parent_id = empty( $instance['parent'] ) ? -1 : $instance['parent'];
 		$depth = empty( $instance['depth'] ) ? 0 : $instance['depth'];
+		if ( $showall == 'off' && $siblings == 'off' && ( $parent_id == -1 ) && ( ! is_page() ) ) return; // If we are not viewing a page AND a parent page has not been specified AND  we are not viewing ALL pages, don't show widget at all ...	
 		
+		$exclude_tree = '';	
 		
-		if ( $showall != 'off' ) {
+		if ( $siblings != 'off' ) {
+			$parent_id = wp_get_post_parent_id(get_the_ID());
+			
+			// Add current page id to exclude tree list ...
+			$exclude_tree .= get_the_ID();
+		}
+		else if ( $showall != 'off' ) {
 			$parent_id = 0;
 		}
 		else if ( $parent_id == -1 ) $parent_id = get_the_ID();
@@ -41,25 +49,31 @@ class ccchildpages_widget extends WP_Widget {
 		if ( $sortby == 'menu_order' )
 			$sortby = 'menu_order, post_title';
 		
-		$out = wp_list_pages( apply_filters( 'widget_pages_args', array(
-			'title_li'    => '',
-			'child_of'    => $parent_id,
-			'echo'        => 0,
-			'depth'       => $depth,
-			'sort_column' => $sortby,
-			'exclude'     => $exclude
-		) ) );
+		$out = wp_list_pages( apply_filters( 'ccchildpages_widget_pages_args', array(
+			'title_li'        => '',
+			'child_of'        => $parent_id,
+			'echo'            => 0,
+			'depth'           => $depth,
+			'sort_column'     => $sortby,
+			'exclude'         => $exclude,
+			'exclude_tree'    => $exclude_tree
+		), $args, $instance ) );
 		
 		if ( empty($out) ) return; // Give up if the page has no children
 		
-		$out = '<ul>' . $out . '</ul>';
+		$ul_open = apply_filters( 'ccchildpages_widget_start_ul', '<ul>', $args, $instance );
+		$ul_close = apply_filters( 'ccchildpages_widget_end_ul', '</ul>', $args, $instance );
 		
-		echo $args['before_widget'];
+		$out = apply_filters( 'ccchildpages_widget_output', $ul_open . $out . $ul_close, $args, $instance );
+		
+		echo apply_filters( 'ccchildpages_before_widget', $args['before_widget'], $args, $instance );
 		if ( ! empty( $instance['title'] ) ) {
-			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
+			$before_title = apply_filters( 'ccchildpages_widget_before_title', $args['before_title'], $args, $instance );
+			$after_title = apply_filters( 'ccchildpages_widget_after_title', $args['after_title'], $args, $instance );
+			echo $before_title . apply_filters( 'widget_title', $instance['title'], $args, $instance ). $after_title;
 		}
 		echo $out;
-		echo $args['after_widget'];
+		echo apply_filters( 'ccchildpages_after_widget', $args['after_widget'], $args, $instance );
 	}
 
 	/**
@@ -74,6 +88,7 @@ class ccchildpages_widget extends WP_Widget {
 		$exclude = ( isset( $instance['exclude'] ) ? $instance['exclude'] : '' );
 		$sortby = ( isset( $instance['sortby'] ) ? $instance['sortby'] : '' );
 		$showall = ( isset( $instance['showall'] ) ? $instance['showall'] : 'off' );
+		$siblings = ( isset( $instance['siblings'] ) ? $instance['siblings'] : 'off' );
 		$parent_id = ( isset( $instance['parent'] ) ? intval($instance['parent']) : -1 );
 		$depth = ( isset( $instance['depth'] ) ? intval($instance['depth']) : 0 );
 		?>
@@ -98,6 +113,11 @@ class ccchildpages_widget extends WP_Widget {
 			<label for="<?php echo $this->get_field_id('showall'); ?>"><?php _e( 'Show All Pages:', 'cc-child-pages' ); ?></label> <input type="checkbox" <?php checked($showall, 'on'); ?> name="<?php echo $this->get_field_name('showall'); ?>" id="<?php echo $this->get_field_id('showall'); ?>" class="checkbox" />
 			<br />
 			<small><?php _e( 'Overrides the Parent field, shows all top-level pages.', 'cc-child-pages' ); ?></small>
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id('siblings'); ?>"><?php _e( 'Show Sibling Pages:', 'cc-child-pages' ); ?></label> <input type="checkbox" <?php checked($siblings, 'on'); ?> name="<?php echo $this->get_field_name('siblings'); ?>" id="<?php echo $this->get_field_id('siblings'); ?>" class="checkbox" />
+			<br />
+			<small><?php _e( 'Overrides the Parent and Show All field, shows sibling pages.', 'cc-child-pages' ); ?></small>
 		</p>
 		<p>
 <?php
@@ -152,6 +172,8 @@ $args = array(
 		$instance['exclude'] = strip_tags( $new_instance['exclude'] );
 
 		$instance['showall'] = $new_instance['showall'];
+
+		$instance['siblings'] = $new_instance['siblings'];
 
 		return $instance;
 	}

@@ -3,12 +3,14 @@
  * SGR_Widget_Custom_Taxonomies_Menu class
  *
  * @author Ade WALKER  (email : info@studiograsshopper.ch)
- * @copyright Copyright 2010-2013
+ * @copyright Copyright 2010-2015
  * @package custom_taxonomies_menu_widget
- * @version 1.3.1
+ * @version 1.4
  *
  * Defines widget class and registers widget
  * Any helper functions outside the class, but used by the class, are also defined here
+ *
+ * Since 1.4, Replaced PHP4 class constructor with PHP5 style constructor, in readiness for WP 4.3
  *
  * Since 1.3, the way terms are selected by the widget has changed, as described below.
  *
@@ -93,6 +95,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *
  * @since 1.0
+ * @updated 1.4
  */
 class SGR_Widget_Custom_Taxonomies_Menu extends WP_Widget {
 
@@ -111,7 +114,8 @@ class SGR_Widget_Custom_Taxonomies_Menu extends WP_Widget {
 			'height'  => 350,
 		);
 		
-		$this->WP_Widget( $id_base, __( 'Custom Taxonomies Menu Widget', 'sgr-ctmw'), $widget_ops, $control_ops );
+		// PHP5 Style Constructor
+		parent::__construct( $id_base, __( 'Custom Taxonomies Menu Widget', 'sgr-ctmw'), $widget_ops, $control_ops );
 	}
 	
 	

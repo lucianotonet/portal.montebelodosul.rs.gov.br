@@ -6,17 +6,17 @@ class youtube_embed_content_default{
 	
 	
 	function __construct($params){
-		// set plugin url
+		// Set plugin url
 		if(isset($params['plugin_url']))
 			$this->plugin_url=$params['plugin_url'];
 		else
 			$this->plugin_url=trailingslashit(dirname(plugins_url('',__FILE__)));
-		// set plugin path
+		// Set plugin path
 		if(isset($params['plugin_path']))
 			$this->plugin_path=$params['plugin_path'];
 		else
 			$this->plugin_path=trailingslashit(dirname(plugin_dir_path('',__FILE__)));
-		/*ajax parametrs*/
+		/*Ajax parameters*/
 		add_action( 'wp_ajax_youtube_embed_save_in_db', array($this,'save_parametrs') );
 	
 	}
@@ -58,9 +58,9 @@ class youtube_embed_content_default{
 		}
 		die('sax_normala');
 	}
-	/*#################### CONTROLERRR ########################*/
-	/*#################### CONTROLERRR ########################*/
-	/*#################### CONTROLERRR ########################*/
+	/*#################### CONTROLER ########################*/
+	/*#################### CONTROLER ########################*/
+	/*#################### CONTROLER ########################*/
 	public function controller_page(){
 		
 			$this->display_table_list_answers();
@@ -281,7 +281,7 @@ class youtube_embed_content_default{
 		
 		jQuery(document).ready(function(e) {
 			
-			/* #########INITIAL VOLUME#############*/
+			/* ######### INITIAL VOLUME #############*/
 			jQuery('#youtube_embed_set_initial_volume_checkbox').click(function(){
 				if(jQuery(this).prop('checked')==true){
 					jQuery('.youtube_embed_set_initial_volume').show('normal');
@@ -312,7 +312,7 @@ class youtube_embed_content_default{
 			jQuery( "#youtube_embed_initial_volume" ).val(jQuery( "#youtube_embed_initial_volume_div" ).slider( "value" ) );
 			jQuery( "#youtube_embed_initial_volume_span" ).html(jQuery( "#youtube_embed_initial_volume_div" ).slider( "value" ) +'%');
 	
-			// COLOR FOR COLOR PICKER
+			// COLOR PICKER
             jQuery("#like_box_border_color").wpColorPicker();
 			
 			 //

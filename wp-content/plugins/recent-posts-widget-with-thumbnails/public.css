@@ -1,7 +1,5 @@
-.recent-posts-widget-with-thumbnails ul { list-style: outside none none; }
-.recent-posts-widget-with-thumbnails ul li { overflow: hidden; margin: 0 0 1.5em; }
-.recent-posts-widget-with-thumbnails ul li img { display: inline; float: left; margin: .3em .75em .75em 0; }
-#recent-posts-widget-with-thumbnails-1 img { width: 75px; height: 75px; }
-#recent-posts-widget-with-thumbnails-3 img { width: 75px; height: 75px; }
-#recent-posts-widget-with-thumbnails-5 img { width: 75px; height: 75px; }
-#recent-posts-widget-with-thumbnails-7 img { max-width: 65px; width: 100%; height: auto; }
+.rpwwt-widget ul { list-style: outside none none; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
+.rpwwt-widget ul li { overflow: hidden; margin: 0 0 1.5em; }
+.rpwwt-widget ul li:last-child { margin: 0; }
+.rpwwt-widget ul li img { display: inline; float: left; margin: .3em .75em .75em 0; }
+.rpwwt-widget ul li img { width: 75px; height: 75px; }

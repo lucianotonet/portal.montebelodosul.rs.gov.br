@@ -1,23 +1,23 @@
 <?php 
 
-/*############ WIDGET CLASS FOR YOUTUBE ##################*/
+/*############ YOUTUBE EMBED WIDGET CLASS ##################*/
 class youtube_embed_widget extends WP_Widget {
 	// Constructor //	
 	function __construct() {		
 		$widget_ops = array( 'classname' => 'youtube_embed_widget', 'description' => 'YouTube Embed' ); // Widget Settings
 		$control_ops = array( 'id_base' => 'youtube_embed_widget' ); // Widget Control Settings
-		$this->WP_Widget( 'youtube_embed_widget', 'YouTube Embed', $widget_ops, $control_ops ); // Create the widget
+		parent::__construct( 'youtube_embed_widget', 'YouTube Embed', $widget_ops, $control_ops ); // Create the widget
 	}
 
-	/*poll display in front*/
+	/*YouTube Embed display in front-end*/
 	function widget($args, $instance) {
 		extract( $args );
-		// Before widget //
+		// Before widget part //
 		echo $before_widget;
-		
-		// Title of widget //
+		$title=$instance['title'];
+		// Widget Title part //
 		if ( isset($title) && $title ) { echo $before_title . $title . $after_title; }
-		// Widget output //
+		// Widget output part //
 		if(!$instance['youtube_embed_widget_video']){
 		 echo '<span style="color:red; font-size:16px">Set Vidio id</span>';	
 		 return;
@@ -45,7 +45,7 @@ class youtube_embed_widget extends WP_Widget {
 			'version' => '3',	
 		);
 		 if($instance['youtube_embed_widget_playlist']){
-			 $parametrs['youtube_embed_widget_list'] = $instance['youtube_embed_widget_playlist'];
+			 $parametrs['list'] = $instance['youtube_embed_widget_playlist'];
 			
 		 }else{
 		  if($instance['youtube_embed_widget_loop_video'])
@@ -64,7 +64,7 @@ class youtube_embed_widget extends WP_Widget {
 		echo $after_widget;
 	}
 
-	// Update Settings //
+	// Update Settings Part //
 		function update($new_instance, $old_instance) {
 		
 		
@@ -93,7 +93,7 @@ class youtube_embed_widget extends WP_Widget {
 		
 	}
 
-	/* admin page opions */
+	/* YouTube Embed plugin admin page opions */
 	function form($instance) {
 		global $wpdb;
 		$initial_values= array( 

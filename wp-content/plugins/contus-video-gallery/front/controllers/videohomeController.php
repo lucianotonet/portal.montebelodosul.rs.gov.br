@@ -4,149 +4,121 @@
  *
  * @category   Apptha
  * @package    Contus Video Gallery
- * @version    2.8.1
+ * @version    3.0
  * @author     Apptha Team <developers@contus.in>
- * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @copyright  Copyright (C) 2015 Apptha. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 
-include_once( $frontModelPath . 'videohome.php' );		 // including ContusVideo model file for get database information.
-if ( class_exists( 'ContusVideoController' ) != true ) {
+/** Including ContusVideo model file to get database information. */
+include_once ($frontModelPath . 'videohome.php');
 
-	class ContusVideoController extends ContusVideo {
-
-		public function __construct() {												
-			parent::__construct();
-		}																			
-        /**
-         * Function getting settings data.
-         */
-		function settings_data() {													
-			return $this->get_settingsdata();
-		}																			
- 		/**
- 		 * getting videos data function
- 		 */
-		function videos_data() {													
-			return $this->get_videosdata();
-		}																			
-        /**
-         * function  get more page id.
-         * @return $morepage.
-         */
-		function more_pageid() {													
-			return $this->get_more_pageid();
-		}																			
-        /**
-         * function get  video count
-         * @return type int.
-         */
-		function video_count() {													
-			return $this->get_video_count();
-		}																		
-        /**
-         * function get  player tag name.
-         * @param unknown $vid
-         * @return type string tagname
-         */
-		function tag_detail( $vid ) {												
-			return $this->get_tag_name( $vid );
-		}	
-		/**
-		 * Function get display number of related  videos  
-		 */												
-		function related_video_count(){
-			$related_video_count = $this->get_related_video_count();
-			if($related_video_count){
-				$related_video_count = $related_video_count;	
-			} else {
-				$related_video_count = 10;
-			}
-			return $related_video_count;
-		}						
-       /**
-        * function get playlists video
-        * @param unknown $thumImageorder
-        * @param unknown $dataLimit
-        */
-		function home_catthumbdata( $thumImageorder, $dataLimit ) {					
-			return $this->get_home_catthumbdata( $thumImageorder, $dataLimit );
-		}
-       /**
-        * function get home  thumb data.
-        * @param unknown $thumImageorder
-        * @param unknown $where
-        * @param unknown $dataLimit
-        */
-		function home_thumbdata( $thumImageorder, $where, $dataLimit ) {			
-			return $this->get_thumdata( $thumImageorder, $where, $dataLimit );
-		}
-
-		/**
-		 * get count of home thumb data
-		 * @param unknown $thumImageorder
-		 * @param unknown $where
-		 * @return number
-		 */
-		function countof_home_thumbdata( $thumImageorder, $where ) {				
-			return $this->get_countof_thumdata( $thumImageorder, $where );
-		}
-        /**
-         * function player related video.
-         * @param unknown $getVid
-         * @param unknown $thumImageorder
-         * @param unknown $where
-         * @param unknown $dataLimit
-         */
-		function home_playxmldata( $getVid, $thumImageorder, $where, $dataLimit ) { 
-			return $this->get_playxmldata( $getVid, $thumImageorder, $where, $dataLimit );
-		}
-        /**
-         * function get home categories thumb data.
-         * @param unknown $pagenum
-         * @param unknown $dataLimit
-         * @return Ambigous <type, mixed, NULL, multitype:, multitype:multitype: , multitype:Ambigous <multitype:, NULL> >
-         */
-		function home_categoriesthumbdata( $pagenum, $dataLimit ) {					
-			return $this->get_categoriesthumdata( $pagenum, $dataLimit );
-		}
-        /**
-         * function get count of video category
-         * @return type number.
-         */
-		function countof_videocategories() {										
-			return $this->get_countof_videocategories();
-		}
-        /**
-         * home player data.
-         * @return  type mixed 
-         */
-		function home_playerdata() {												
-			return $this->get_singlevideodata();
-		}
-        /**
-         * 
-         */
-		function home_featuredvideodata() {										
-			return $this->get_featuredvideodata();
-		}
+/** Check ContusVideoController class is exists */
+if ( !class_exists ( 'ContusVideoController' ) ) {
+  /**
+   * Class is used to get data for video home page
+   * 
+   * @author user
+   */
+  class ContusVideoController extends ContusVideo {         
       /**
+       * Function get playlists video
        * 
-       * @return type mixed
+       * @param unknown $thumImageorder          
+       * @param unknown $dataLimit          
        */
-		function home_featuredvideodata_banner() {									
-			return $this->get_featuredvideodata_banner();
-		}
-       /**
-        * function video detail /info under video player
-        * @param unknown $vid
-        */
-		function video_detail( $vid ) {												
-			return $this->get_video_detail( $vid );
-		}
-	}																				
+      function home_catthumbdata($thumImageorder, $dataLimit) {
+          /** Return home category thumb data with help of model */
+          return $this->get_home_catthumbdata ( $thumImageorder, $dataLimit );
+      }
+      
+      /**
+       * Function get home thumb data.
+       * 
+       * @param unknown $thumImageorder          
+       * @param unknown $where          
+       * @param unknown $dataLimit          
+       */
+      function home_thumbdata($thumImageorder, $where, $dataLimit) {
+          /** Return home thumb data with help of model */
+          return $this->get_thumdata ( $thumImageorder, $where, $dataLimit );
+      }
+  
+      /**
+       * Get count of home thumb data
+       * 
+       * @param unknown $thumImageorder          
+       * @param unknown $where          
+       * @return number
+       */
+      function countof_home_thumbdata($thumImageorder, $where) {
+          /** Return count of home thumb data with help of model */
+          return $this->get_countof_thumdata ( $thumImageorder, $where );
+      }
+
+      /**
+       * Function player related video.
+       * 
+       * @param unknown $getVid          
+       * @param unknown $thumImageorder          
+       * @param unknown $where          
+       * @param unknown $dataLimit          
+       */
+      function home_playxmldata($getVid, $thumImageorder, $where, $dataLimit) {
+          /** Return home play xml data with help of model */
+          return $this->get_playxmldata ( $getVid, $thumImageorder, $where, $dataLimit );
+      }
+      
+      /**
+       * Function get home categories thumb data 
+       * from plugin helper
+       * 
+       * @param unknown $pagenum          
+       * @param unknown $dataLimit          
+       * @return Ambigous <type, mixed, NULL, multitype:, multitype:multitype: , multitype:Ambigous <multitype:, NULL> >
+       */
+      function home_categoriesthumbdata($pagenum, $dataLimit) {
+          /** Set start and limit to get category thumbs */
+          $pagenum  = isset ( $pagenum ) ? absint ( $pagenum ) : 1;
+          /** Set the pagination limit */
+          $offset   = ($pagenum - 1) * $dataLimit;
+          $limit    = $offset . ',' . $dataLimit;
+          /** Return home categories data with help of model */
+          return getPlaylist (' playlist_order ASC ' , $limit);
+      }
+      
+      /**
+       * Function to get get featured video 
+       */
+      function home_featuredvideodata() {
+         /** Return home featured data with help of model */
+          return $this->get_featuredvideodata ();
+      }
+      
+      /**
+       * Function to get featured video
+       */
+      function home_featuredvideodata_banner() {
+          /** Return home featured data for videostream banner with help of model */
+          return $this->get_featuredvideodata_banner ();
+      }
+      
+      /**
+       * Function video detail /info under video player
+       * 
+       * @param unknown $vid          
+       */
+      function video_detail($vid) {
+          /** Return particular video details with help of model */
+          return $this->get_video_detail ( $vid );
+      }
+  /** contusVideo class ends */
+  }
+  /** Checking contusVideo class exist if ends */
 } else {
-	echo 'class contusVideo already exists';
+    /** Else display message */
+    echo 'class contusVideo already exists';
 }
-include_once( $frontViewPath . 'videohome.php' );									// including ContusVideo view file for get database information.
+/** Including ContusVideo view file to display data */
+include_once ($frontViewPath . 'videohome.php'); 
 ?>

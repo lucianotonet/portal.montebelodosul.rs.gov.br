@@ -2,13 +2,13 @@
 /*
 Plugin Name: Custom Taxonomies Menu Widget
 Plugin URI: http://www.studiograsshopper.ch/custom-taxonomies-menu-widget/
-Version: 1.3.1
+Version: 1.4
 Author: Ade Walker, Studiograsshopper
 Author URI: http://www.studiograsshopper.ch
 Description: Creates a simple menu of your custom taxonomies and their associated terms, ideal for sidebars. Highly customisable via widget control panel.
 */
 
-/*  Copyright 2010-2013  Ade WALKER  (email : info@studiograsshopper.ch) */
+/*  Copyright 2010-2015  Ade WALKER  (email : info@studiograsshopper.ch) */
 
 /*	License information
 This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,9 @@ Feature:	means new functionality has been added
 */
 
 /* Version History
+
+1.4
+Enhance: Replaced PHP4 class constructor with PHP5 style constructor, in readiness for WP 4.3
 
 1.3.1
 Bug fix: Tweaked admin CSS to fix new-look WP 3.8 Dashboard styles
@@ -131,7 +134,7 @@ function sgr_ctmw_init() {
 	// Define constants
 	define( 'SGR_CTMW_URL',				plugins_url( 'custom-taxonomies-menu-widget' ) );
 	define( 'SGR_CTMW_DIR',				plugin_dir_path( __FILE__ ) );
-	define( 'SGR_CTMW_VER',				'1.3.1' );
+	define( 'SGR_CTMW_VER',				'1.4' );
 	define( 'SGR_CTMW_FILE_NAME',		'custom-taxonomies-menu-widget/sgr-custom-taxonomies-menu-widget.php' );
 	define( 'SGR_CTMW_HOME',			'http://www.studiograsshopper.ch/custom-taxonomies-menu-widget/' );
 

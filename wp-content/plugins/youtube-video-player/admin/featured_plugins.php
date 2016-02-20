@@ -2,17 +2,17 @@
 class youtube_embed_featured_plugins{
 	
 	function __construct($params){
-		// set plugin url
+		// Set plugin url
 		if(isset($params['plugin_url']))
 			$this->plugin_url=$params['plugin_url'];
 		else
 			$this->plugin_url=trailingslashit(dirname(plugins_url('',__FILE__)));
-		// set plugin path
+		// Set plugin path
 		if(isset($params['plugin_path']))
 			$this->plugin_path=$params['plugin_path'];
 		else
 			$this->plugin_path=trailingslashit(dirname(plugin_dir_path('',__FILE__)));
-		/*ajax parametrs*/
+		/*Ajax parameters*/
 		
 	
 	}
@@ -30,24 +30,35 @@ class youtube_embed_featured_plugins{
 						'title'			=>	'Coming soon and Maintenance mode',
 						'description'	=>	'Coming soon and Maintenance mode plugin is an awesome tool to show your visitors that you are working on your website to make it better.'
 						),
-			'lightbox'=>array(
-						'image_url'		=>	$this->plugin_url.'admin/images/featured_plugins/lightbox.png',
-						'site_url'		=>	'http://wpdevart.com/wordpress-lightbox-plugin/',
-						'title'			=>	'WP Lightbox 2',
-						'description'	=>	'WP Lightbox 2 is awesome tool for adding responsive lightbox effect for images and also create lightbox for photo album/gallery on your WordPress blog.'
-						),
-			
+			'Booking Calendar'=>array(
+						'image_url'		=>	$this->plugin_url.'admin/images/featured_plugins/Booking_calendar_featured.png',
+						'site_url'		=>	'http://wpdevart.com/wordpress-booking-calendar-plugin/',
+						'title'			=>	'Booking Calendar',
+						'description'	=>	'WordPress Booking Calendar plugin is an awesome tool to create a booking system for your website. Create booking calendars in a few minutes.'
+						),	
 			'countdown'=>array(
 						'image_url'		=>	$this->plugin_url.'admin/images/featured_plugins/countdown.jpg',
 						'site_url'		=>	'http://wpdevart.com/wordpress-countdown-plugin/',
 						'title'			=>	'WordPress Countdown plugin',
 						'description'	=>	'WordPress Countdown plugin is an nice tool to create and insert countdown timers into your posts/pages and widgets.'
 						),
+			'lightbox'=>array(
+						'image_url'		=>	$this->plugin_url.'admin/images/featured_plugins/lightbox.png',
+						'site_url'		=>	'http://wpdevart.com/wordpress-lightbox-plugin',
+						'title'			=>	'WordPress Lightbox plugin',
+						'description'	=>	'WordPress lightbox plugin is an high customizable and responsive product for displaying images and videos in popup.'
+						),
+            'facebook-comments'=>array(
+						'image_url'		=>	$this->plugin_url.'admin/images/featured_plugins/facebook-comments-icon.png',
+						'site_url'		=>	'http://wpdevart.com/wordpress-facebook-comments-plugin/',
+						'title'			=>	'WordPress Facebook comments',
+						'description'	=>	'Our Facebook comments plugin will help you to display Facebook Comments on your website. You can use Facebook Comments on your pages/posts.'
+						),							
 			'facebook'=>array(
 						'image_url'		=>	$this->plugin_url.'admin/images/featured_plugins/facebook.jpg',
 						'site_url'		=>	'http://wpdevart.com/wordpress-facebook-like-box-plugin',
 						'title'			=>	'Facebook Like Box',
-						'description'	=>	'Our Facebook like box plugin will help you to display Facebook like box on your wesite, just add Facebook Like box widget to your sidebar and use it..'
+						'description'	=>	'Our Facebook like box plugin will help you to display Facebook like box on your wesite, just add Facebook Like box widget to your sidebar or insert it into your posts/pages and use it.'
 						),
 			'poll'=>array(
 						'image_url'		=>	$this->plugin_url.'admin/images/featured_plugins/poll.png',

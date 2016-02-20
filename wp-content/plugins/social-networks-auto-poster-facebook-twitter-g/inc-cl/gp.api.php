@@ -31,7 +31,8 @@ if (!class_exists("nxs_class_SNAP_GP")) { class nxs_class_SNAP_GP {
          if ($gpPostType=='A') $lnk = $message['url']; elseif ($gpPostType=='I') { $lnk = array(); if ($imgURL!='') $lnk['img'] = $imgURL;  if ($imgURL=='' && $message['noImg']===true) $lnk['img'] = '';
             if (!empty($message['videoURL'])) $lnk['video'] = $message['videoURL']; 
          } $pageID = ''; $comPgID = ''; $comPGCatID = '';
-         if (!empty($options['gpPageID']) && empty($options['gpCommID']))  $pageID = $options['gpPageID']; 
+         //if (!empty($options['gpPageID']) && empty($options['gpCommID']))  $pageID = $options['gpPageID']; 
+         if (!empty($options['gpPageID'])) $pageID = $options['gpPageID']; 
          if (!empty($options['gpCommID'])) {$comPgID = $options['gpCommID']; $comPGCatID = $options['gpCCat'];}
          $result = $nt -> postGP($msg, $lnk, $pageID, $comPgID, $comPGCatID);
       } else {  $badOut['Error'] = "Login/Connection Error: ". print_r($loginError, true); return $badOut; }       

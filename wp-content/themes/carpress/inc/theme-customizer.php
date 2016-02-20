@@ -515,7 +515,7 @@ class Carpress_Customize {
 			'carpress_navbar_position',
 			array(
 				'label'    => _x( 'Main navbar position' , 'backend', 'carpress_wp'),
-				'section'  => 'nav',
+				'section'  => 'other',
 				'settings' => 'navbar_position',
 				'type'     => 'radio',
 				'choices'  => array(
@@ -727,7 +727,7 @@ class Carpress_Customize {
 
 
 		<?php endif;
-			if( !empty( $theme_mods['navbar_clr'] ) && '#000000' !== $theme_mods['navbar_clr'] ) : ?>
+			if( !empty( $theme_mods['navbar_clr'] ) ) : ?>
 
 			.navbar .container {
 				background: <?php echo $theme_mods['navbar_clr']; ?>;

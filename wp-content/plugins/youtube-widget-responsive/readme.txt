@@ -1,17 +1,17 @@
 === Youtube Widget Responsive ===
 Contributors: stefanoai
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=stefanoai%40stefanoai%2ecom&lc=IS&item_name=StefanoAI&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest
-Tags: youtube, responsive, widget, autoplay, YouTube embed, YouTube plugin, embed youtube, embedding youtube, no-cookie, youtube plugin, sidebar, simple youtube, annotations, wordpress youtube widget, wordpress youtube embed, video plugin, video widget, shortcode youtube, shortcode
+Tags: youtube, responsive, widget, autoplay, YouTube embed, YouTube plugin, embed youtube, embedding youtube, no-cookie, youtube plugin, sidebar, simple youtube, annotations, wordpress youtube widget, wordpress youtube embed, video plugin, video widget, shortcode youtube, shortcode, youtube schema.org, youtube schemaorg, youtube schema.org/VideoObject, youtube schema.org VideoObject
 Requires at least: 3.0.1
-Tested up to: 4.2.2
-Stable tag: 1.1.3
+Tested up to: 4.4.2
+Stable tag: 1.2
 License: GPLv2 or later
 
-Widgets + ShortCode responsive to embed youtube in your sidebar or in your content [youtube video=...], with all available options.
+Widgets + ShortCode responsive to embed youtube in your sidebar or in your content [youtube video=...], with SEO http://schema.org/VideoObject fields.
 
 == Description ==
 
-Widgets + ShortCode responsive to embed youtube in your sidebar or in your content [youtube video=...], with all available options.
+Widgets + ShortCode responsive to embed youtube in your sidebar or in your content [youtube video=...], with all available options and http://schema.org/VideoObject fields.
 Among the various options you can choose:
 <ul>
 <li>- Choosing minutes and seconds of the start and end of the video</li>
@@ -29,8 +29,12 @@ Among the various options you can choose:
 <li>- Enable the suggested videos at the end of playback On/Off</li>
 <li>- Can be set max-width</li>
 <li>- Tracking playing for each video on analytics event</li>
+<li>- Use the fields http://schema.org/VideoObject to improve the SEO on video</li>
 </ul>
-Languages: EN, IT, AR, DE, ES, FR, HE, HI, RU, ZH, PT (thanks to Amlugil, quadbox, Ksenia, Dietz, Daniel Severo Estrázulas and google Translate)
+Languages: EN, IT, AR, DE, ES, FR, HE, HI, RU, ZH, PT, DA (thanks to Amlugil, quadbox, Ksenia, Dietz, Daniel Severo Estrázulas, Ole Lyager and google Translate)
+
+== Help me to keep the software up to date ==
+Donate just 1 coffe <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=stefanoai%40stefanoai%2ecom&lc=IS&item_name=StefanoAI&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest">here</a>
 
 == Installation ==
 
@@ -39,6 +43,9 @@ Upload the Youtube Widget Responsive plugin to your blog, Activate it, Add in yo
 You're done!
 
 == Frequently Asked Questions ==
+
+= Help me to keep the software up to date =
+Donate just 1 coffe <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=stefanoai%40stefanoai%2ecom&lc=IS&item_name=StefanoAI&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest">here</a>
 
 = What should I put in the video field? =
 
@@ -98,20 +105,52 @@ Show suggested videos show When the video finishes [Suggested... in your languag
 
 YouTube Responsive enable you to place a widget with youtube video. Among the various options there is Also The Possibility to start the video automatically [YouTube... in your language]
 
-Thank you.
+Default [Default in your language]
 
-= I can make a donation to help keep the software up to date? =
-Sure just press <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=stefanoai%40stefanoai%2ecom&lc=IS&item_name=StefanoAI&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest">here</a>
+Hide video progress bar after video starts playing [Hide video... in your language]
+
+Show always [Show always... in your language]
+
+Dark [Dark in your language]
+
+Light [Light in your language]
+
+Red [Red in your language]
+
+White [White in your language]
+
+Always [Always in your language]
+
+On video playback [On video... in your language]
+
+Never [Never in your language]
+
+Resolution [Resolution in your language]
+
+Thank you.
 
 Thank you so much.
 
 
 == Screenshots ==
 
-1. The Widget.
-2. The widget on sidebar auto resized 
+1. The Widget video options.
+2. The Widget schema.org/VideoObjects fields.
+3. The Widget shortcode.
+4. The widget on page auto resized and with image preview
+5. The widget on page auto resized after click on image preview (starting playing video)
 
 == Changelog ==
+
+= 1.2 =
+* Language translated on Poedit
+* Added the mute option, to start the video mute mode
+* Preview added with an image instead of the video display
+* Added schema.org fields
+* Added TAB "shortcode" on widget to copy and paste in your text
+
+= 1.1.4 =
+* Added Danish - Dansk language
 
 = 1.1.3 =
 * Added embed url
@@ -203,6 +242,13 @@ Thank you so much.
         <ul>
             <li>
     <p>Values: 0 or 1. Default is 0. Sets whether or not the initial video will autoplay when the player loads.</p>
+            </li>
+        </ul>
+    </li>
+    <li><strong>mute</strong> (supported players: AS3, HTML5)
+        <ul>
+            <li>
+    <p>Values: 0 or 1. Default is 0. Sets whether or not the video mute when the player loads.</p>
             </li>
         </ul>
     </li>

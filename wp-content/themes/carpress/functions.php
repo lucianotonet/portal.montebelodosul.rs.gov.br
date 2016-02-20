@@ -82,6 +82,9 @@ if( ! function_exists( 'carpress_setup' ) ) {
 		// Add default posts and comments RSS feed links to head.
 		add_theme_support( 'automatic-feed-links' );
 
+		// Add title tag support
+		add_theme_support( 'title-tag' );
+
 		// WooCommerce basic support
 		add_theme_support( 'woocommerce' );
 

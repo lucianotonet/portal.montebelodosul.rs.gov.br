@@ -66,7 +66,7 @@
 /* Icons
 ----------------------------------*/
 
-/* states and images */
+/* States and images */
 .ui-icon {
 	display: block;
 	text-indent: -99999px;
@@ -127,7 +127,7 @@
 	cursor: pointer;
 	vertical-align: middle;
 	text-align: center;
-	overflow: visible; /* removes extra width in IE */
+	overflow: visible; /* Removes extra width in IE */
 }
 .ui-button,
 .ui-button:link,
@@ -136,11 +136,11 @@
 .ui-button:active {
 	text-decoration: none;
 }
-/* to make room for the icon, a width needs to be set here */
+/* To make room for the icon, a width needs to be set here */
 .ui-button-icon-only {
 	width: 2.2em;
 }
-/* button elements seem to need a little more width */
+/* Button elements seem to need a little more width */
 button.ui-button-icon-only {
 	width: 2.4em;
 }

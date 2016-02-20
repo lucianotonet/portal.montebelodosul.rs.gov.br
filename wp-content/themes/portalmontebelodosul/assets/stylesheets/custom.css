@@ -1,0 +1,149 @@
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1;    
+    font-family:  'proxima_novablack', sans-serif;
+    text-transform: uppercase;
+}
+h1 .light, h2 .light, h3 .light, h4 .light, h5 .light, h6 .light,
+.sidebar-item h5 {
+    font-family:  'proxima_novalight', sans-serif;
+}
+.lined h5, .lined .meta-data {  
+   font-family:  'proxima_novalight', sans-serif;
+}
+h2 a, h4 a {
+  font-family: inherit;
+}
+
+.navbar .nav > li a {
+  font-family:  'proxima_nova_rgregular', "Dosis", sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #777777;
+  font-size: 14px;
+  padding-left: 14px;
+  padding-right: 14px;
+  -webkit-filter: none;
+  filter: none;
+}
+.sidebar-item.widget_nav_menu .nav-pills > li.active > a:after, .sidebar-item.widget_nav_menu .nav-pills > li.active > a:hover:after, .sidebar-item.widget_nav_menu .nav-pills > li.current-menu-ancestor > a:after, .sidebar-item.widget_nav_menu .nav-pills > li.current-menu-ancestor > a:hover:after {
+  position: absolute;
+  z-index: 3;
+  content: " ";
+  right: 0;
+  top: 0;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+  border-width: 0 0 45px 10px;
+}
+
+.title-area {
+background-color: #5E1321;
+}
+.title-area h1 {
+  font-family:  'proxima_novablack', sans-serif;  
+  font-size: 50px;
+}
+
+
+.sidebar-item.widget_text {
+    background-color: #fafafa;
+    background: -webkit-gradient(linear, left top, right top, from(white), to(#f7f7f7));
+    background: -webkit-linear-gradient(left, white, #f7f7f7);
+    background: linear-gradient(left, white, #f7f7f7);
+    -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    padding: 24px 26px;
+}
+
+.sidebar-item.widget_text h3 {
+    margin: 0 0 15px;
+}
+
+.sidebar-item.widget_text .nav-pills {
+    margin-bottom: 0;
+}
+
+.sidebar-item.widget_text .nav-pills > li > a {
+    position: relative;
+    margin-left: -26px;
+    margin-right: -38px;
+    border-radius: 0;
+    padding-left: 26px;
+    font-weight: bold;
+    color: #727272;
+}
+
+.sidebar-item.widget_text .nav-pills > li > a:hover {
+    color: #305088;
+    background: none;
+}
+
+.sidebar-item.widget_text .nav-pills > li.active > a,
+.sidebar-item.widget_text .nav-pills > li.active > a:hover,
+.sidebar-item.widget_text .nav-pills > li.current-menu-ancestor > a,
+.sidebar-item.widget_text .nav-pills > li.current-menu-ancestor > a:hover {
+    background-color: #f68c24;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f7993c), to(#de7209));
+    background: -webkit-linear-gradient(top, #f7993c, #de7209);
+    background: linear-gradient(to bottom, #f7993c, #de7209);
+    color: white;
+}
+
+.sidebar-item.widget_text .nav-pills > li.active > a:after,
+.sidebar-item.widget_text .nav-pills > li.active > a:hover:after,
+.sidebar-item.widget_text .nav-pills > li.current-menu-ancestor > a:after,
+.sidebar-item.widget_text .nav-pills > li.current-menu-ancestor > a:hover:after {
+    position: absolute;
+    z-index: 3;
+    content: " ";
+    right: 0;
+    top: 0;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+    border-width: 0 0 44px 12px;
+}
+
+.sidebar-item.widget_text .nav-pills .dropdown-menu > li > a {
+    color: #727272 !important;
+}
+
+.sidebar-item.widget_text .nav-pills .dropdown-menu > li > a:hover {
+    background: none !important;
+    color: #305088 !important;
+}
+
+.sidebar-item.widget_text .current-menu-ancestor > a {
+    font-weight: normal;
+}
+
+
+
+
+.jumbotron .bottom-widgets h3 {
+    color: white;
+    font-size: 18px;
+    text-transform: uppercase;
+    margin: 0;
+}
+.jumbotron .bottom-widgets h1 {
+    color: white;
+    font-size: 30px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+
+/*  CC CHILD PAGES  */
+.simple .ccchildpage {
+  background: #FFF;
+  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.3)), color-stop(100%, rgba(0, 0, 0, 0.1)));
+  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+  background: -o-linear-gradient(top, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+  background: linear-gradient(to bottom, rgba(244, 244, 244, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 0px;
+  color: #333;
+}

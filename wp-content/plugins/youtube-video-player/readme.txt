@@ -1,11 +1,11 @@
 === WordPress YouTube Embed ===
 Contributors: wpdevart
 Donate link: http://wpdevart.com/wordpress-youtube-embed-plugin
-Tags:  youtube, youtube playlist, youtube gallery, Youtube channel, youtube plugin, youtube player, youtube widget, you tube, youtube videos, youtube embed, embed youtube, youtube analytics, youtube shortcode, YouTube API, youtube slider, Youtube-video, simple youtube, youtube Video Player, YouTube Live, youtube html5, youtube search, video gallery, smart youtube playback, manage youtube, youtube subscribers, channel, youtube audio, embedplus youtube, YouTube URL, wordpress youtube, youtube subscribe, youtube video feed, youtube post, lightbox youtube, youtube button,  youtube analytics dashboard, lite youtube embeds, youtube subscribe button, youtube thumbs, unlock content youtube, youtube wordpress, youtube posts, youtube post type,  youtube share, bulk youtube posts, random youtube video, youtube sidebar widget, outube status, embed youtube videos, youtube subscription box, Youtube Album, YouTube channels, youtube box, youtube for WordPress, youtube galleries, YouTube Live Stream, youtube views, youtube usage, youtube icon, YouTube Sidebar, lock video youtube, video youtube, youtube embed hide controls, playlists, unlock video youtube, video plugin, embed videos,  view count, YouTube White Label, video widget, import youtube videos, playlist, video, video analytics, embed video, video player, video embed, videos
-Requires at least: 3.4.0
-Tested up to: 4.2.3
-Stable tag: 1.0.6
-License: GPLv2 or later
+Tags:  youtube, youtube playlist, youtube gallery, Youtube channel, youtube plugin, youtube player, youtube widget, youtube videos, youtube embed, embed youtube, youtube analytics, youtube shortcode, YouTube API, youtube slider, youtube video, simple youtube, youtube Video Player, YouTube Live, youtube html5, video gallery, smart youtube playback, manage youtube, youtube subscribers, youtube audio, embedplus youtube, wordpress youtube, youtube subscribe, youtube video feed, youtube post, lightbox youtube, youtube button, youtube thumbs, youtube wordpress, youtube posts, youtube share, random youtube video, embed youtube videos, youtube subscription box, Youtube Album, YouTube channels, youtube for WordPress, youtube galleries, YouTube Live Stream, youtube views, youtube icon, YouTube Sidebar, video youtube, youtube embed hide controls, video plugin, embed videos, YouTube White Label, video widget, import youtube videos, embed video, video player 
+Requires at least: 3.2.0
+Tested up to: 4.3.1
+Stable tag: 1.2.7
+License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 YouTube Embed plugin is an convenient tool for adding video to your website. 
@@ -58,7 +58,11 @@ You can upgrade WordPress YouTube Embed plugin to [YouTube Embed Pro](http://wpd
 
 Our WordPress YouTube Embed plugin have a good functionality. You can set a lot of parameters for your YouTube player.
 
-We also recommend you to take a look for this useful plugins - [WordPress Coming Soon plugin](https://wordpress.org/plugins/coming-soon-page/), [WordPress Facebook like box](https://wordpress.org/plugins/like-box/),  [WordPress Lightbox plugin](https://wordpress.org/plugins/wp-lightbox-2), [WordPress Poll](http://wordpress.org/plugins/polls-widget), [WordPress Countdown](https://wordpress.org/plugins/widget-countdown) .
+### The Best Offer From WpDevArt
+
+**You can check the best offer page here - [Best Price](http://wpdevart.com/the-best-offer-from-wpdevart)**
+
+We also recommend you to take a look for this useful plugins - [WordPress Coming Soon plugin](https://wordpress.org/plugins/coming-soon-page/), [WordPress booking](https://wordpress.org/plugins/booking-calendar), [WordPress Facebook like box](https://wordpress.org/plugins/like-box/), [WordPress Poll](http://wordpress.org/plugins/polls-widget), [WordPress Countdown](https://wordpress.org/plugins/widget-countdown), [Facebook comments WordPress](https://wordpress.org/plugins/comments-from-facebook), [WordPress lightbox plugin](https://wordpress.org/plugins/lightbox-popup) .
 
 == Installation ==
 
@@ -68,12 +72,16 @@ Installing the **WordPress YouTube Embed plugin**
 1. First log in to your website admin panel.   
 2. Then go to Plugins page Add New > Upload Plugin.    
 3. Click "Choose file" then select YouTube Embed plugin zip file. 
-4. Click Install and activate the plugin.     
+4. Install and activate the plugin.     
 5. From the left panel of Dashboard, click on the **YouTube Embed** plugin icon to edit options.
 	  
 That's all, now you can insert YouTube videos in your posts, pages, widgets. If any problem occurs, contact us at [support@wpdevart.com](mailto:support@wpdevart.com).
 
-We also recommend you to take a look for this useful plugins - [WordPress Coming Soon plugin](https://wordpress.org/plugins/coming-soon-page/), [WordPress Facebook like box](https://wordpress.org/plugins/like-box/),  [WordPress Lightbox plugin](https://wordpress.org/plugins/wp-lightbox-2), [WordPress Poll](http://wordpress.org/plugins/polls-widget), [WordPress Countdown](https://wordpress.org/plugins/widget-countdown) .
+### The Best Offer From WpDevArt
+
+**You can check the best offer page here - [Best Price](http://wpdevart.com/the-best-offer-from-wpdevart)**
+
+We also recommend you to take a look for this useful plugins - [WordPress Coming Soon plugin](https://wordpress.org/plugins/coming-soon-page/), [WordPress booking](https://wordpress.org/plugins/booking-calendar), [WordPress Facebook like box](https://wordpress.org/plugins/like-box/), [WordPress Poll](http://wordpress.org/plugins/polls-widget), [WordPress Countdown](https://wordpress.org/plugins/widget-countdown), [Facebook comments WordPress](https://wordpress.org/plugins/comments-from-facebook), [WordPress lightbox plugin](https://wordpress.org/plugins/lightbox-popup) .
 
 == Frequently Asked Questions ==
 
@@ -124,7 +132,11 @@ Initial Volume is the default volume for your YouTube videos.
 
 Dear users, unfortunately YouTube API doesn't allow us to do this.
 
-We also recommend you to take a look for this useful plugins - [WordPress Coming Soon plugin](https://wordpress.org/plugins/coming-soon-page/), [WordPress Facebook like box](https://wordpress.org/plugins/like-box/),  [WordPress Lightbox](https://wordpress.org/plugins/wp-lightbox-2), [WordPress Poll](http://wordpress.org/plugins/polls-widget), [WordPress Countdown](https://wordpress.org/plugins/widget-countdown) .
+### The Best Offer From WpDevArt
+
+**You can check the best offer page here - [Best Price](http://wpdevart.com/the-best-offer-from-wpdevart)**
+
+We also recommend you to take a look for this useful plugins - [WordPress Coming Soon plugin](https://wordpress.org/plugins/coming-soon-page/), [WordPress booking](https://wordpress.org/plugins/booking-calendar), [WordPress Facebook like box](https://wordpress.org/plugins/like-box/), [WordPress Poll](http://wordpress.org/plugins/polls-widget), [WordPress Countdown](https://wordpress.org/plugins/widget-countdown), [Facebook comments WordPress](https://wordpress.org/plugins/comments-from-facebook), [WordPress lightbox plugin](https://wordpress.org/plugins/lightbox-popup) .
 
 == Screenshots ==
 
@@ -154,11 +166,87 @@ We also recommend you to take a look for this useful plugins - [WordPress Coming
 
 = 1.0.4 =
 
-*  Bug fixed on admin_menu.php line 28 .
+*  Bug fixed on admin_menu.php line 28.
 
 = 1.0.5 =
 
-*  Added featured plugins .
+*  Added featured plugins to the list.
+
+= 1.0.7 =
+
+* Bug fixed .
+
+= 1.1.0 =
+
+* Added new featured plugin.
+
+= 1.1.1 =
+
+* Added code comments.
+
+= 1.1.2 =
+
+* made some chages.
+
+= 1.1.3 =
+
+* Bug fixed .
+
+= 1.1.4 =
+
+* Added comments.
+
+= 1.1.5 =
+
+* Fixed some notices.
+
+= 1.1.6 =
+
+* Bug fixed .
+
+= 1.1.7 =
+
+* made chages .
+
+= 1.1.8 =
+
+* Added some code.
+
+= 1.1.9 =
+
+* Added new featured plugin.
+
+= 1.2.0 =
+
+* made chages.
+
+= 1.2.1 =
+
+* Added new featured plugin.
+
+= 1.2.2 =
+
+* Fixed notices.
+
+= 1.2.3 =
+
+* Change some comments for developers.
+
+= 1.2.4 =
+
+*  Bug fixed.
+
+= 1.2.5 =
+
+*  added notices.
+
+= 1.2.6 =
+
+*  added some comments in code for YouTube Embed.
+
+= 1.2.7 =
+
+*  Fixed notices.
 
 == Other Notes ==
 
@@ -182,7 +270,7 @@ We also recommend you to take a look for this useful plugins - [WordPress Coming
 *   Initial Volume - Set Initial Volume for YouTube videos.
 *   Disable keyboard - Set this option if you want to Enable/Disable keyboard for YouTube videos.
 
-### Adding YouTube videos in posts/pages
+### Adding YouTube videos into posts/pages
 
 Go to your website admin panel, click on the "YouTube Embed" plugin icon from your admin panel left menu.
 On YouTube Embed Page/post default Settings page you can set default options for your YouTube videos that you will add in pages and posts.
@@ -190,12 +278,16 @@ On YouTube Embed Page/post default Settings page you can set default options for
 After you set the options for pages/posts and widgets you just need to click on "Add Youtube Video" shortcode button, 
 type only the video URL(other options are disabled in free version) and click on Insert video. 
 
-### Adding YouTube videos to widget
+### Adding YouTube videos into widget
 
 On YouTube Embed Widget default Settings page you can set default options for your widgets YouTube videos.
-Then go to your widgets page and add YouTube Embed widget to your sidebar.
+Then go to your widgets page and add YouTube Embed widget into your sidebar.
 Type the video url(in free version you can't change the default options in widget) and save.
 
 ### If you found any bug in our WordPress YouTube Embed plugin or have a question contact us at support@wpdevart.com.
 
-We also recommend you to take a look for this useful plugins too - [WordPress Coming Soon plugin](https://wordpress.org/plugins/coming-soon-page/), [WordPress Facebook like box](https://wordpress.org/plugins/like-box/),  [WordPress Lightbox](https://wordpress.org/plugins/wp-lightbox-2), [WordPress Poll](http://wordpress.org/plugins/polls-widget), [WordPress Countdown](https://wordpress.org/plugins/widget-countdown) .
+We also recommend you to take a look for this useful plugins too - [WordPress Coming Soon plugin](https://wordpress.org/plugins/coming-soon-page/), [WordPress booking](https://wordpress.org/plugins/booking-calendar), [WordPress Facebook like box](https://wordpress.org/plugins/like-box/), [WordPress Poll](http://wordpress.org/plugins/polls-widget), [WordPress Countdown](https://wordpress.org/plugins/widget-countdown), [Facebook comments WordPress](https://wordpress.org/plugins/comments-from-facebook), [WordPress lightbox plugin](https://wordpress.org/plugins/lightbox-popup) .
+
+### The Best Offer From WpDevArt
+
+**You can check the best offer page here - [Best Price](http://wpdevart.com/the-best-offer-from-wpdevart)**

@@ -134,6 +134,18 @@ msgstr "Članek objavil %s"
 msgid "Page"
 msgstr "Stran"
 
+#: inc/ot-meta-boxes.php:40
+msgid "Revolution Slider alias"
+msgstr ""
+
+#: inc/ot-meta-boxes.php:41
+msgid ""
+"Only applies to the template \"Front Page with Revolution Slider\". Paste "
+"the alias of the slider you created in the Revolution Slider plugin to this "
+"box (only <a href=\"https://www.diigo.com/item/image/3rli1/s9bj?size=o\" "
+"target=\"_blank\">alias</a>, not the whole shortcode)."
+msgstr ""
+
 #: inc/post-types.php:12 titlearea.php:60
 msgid "Services"
 msgstr "Storitve"
@@ -181,6 +193,23 @@ msgstr "Beri dalje"
 #: inc/theme-widgets.php:337 inc/theme-widgets.php:457
 msgid "READ MORE"
 msgstr "BERI DALJE"
+
+#: inc/woocommerce.php:81
+msgid "%s has been added to your cart."
+msgid_plural "%s have been added to your cart."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: inc/woocommerce.php:86
+msgid "Continue Shopping"
+msgstr ""
+
+#: inc/woocommerce.php:88
+#, fuzzy
+msgid "View Cart"
+msgstr "Nova galerija"
 
 #: index.php:41 single.php:40
 msgid "Author"
@@ -291,6 +320,10 @@ msgid "Front Page Template With Content"
 msgstr ""
 
 #. Template Name of the plugin/theme
+msgid "Front Page with Revolution Slider"
+msgstr ""
+
+#. Template Name of the plugin/theme
 msgid "Front Page Template With Widgets &amp; Slider"
 msgstr ""
 
@@ -332,71 +365,71 @@ msgctxt "backend"
 msgid "Click here to see online documentation of the theme!"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:14 inc/ot-meta-boxes.php:48 inc/ot-meta-boxes.php:134
+#: inc/ot-meta-boxes.php:14 inc/ot-meta-boxes.php:54 inc/ot-meta-boxes.php:140
 msgctxt "backend"
 msgid "Carpress Options"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:15 inc/ot-meta-boxes.php:49 inc/ot-meta-boxes.php:135
+#: inc/ot-meta-boxes.php:15 inc/ot-meta-boxes.php:55 inc/ot-meta-boxes.php:141
 msgctxt "backend"
 msgid "Options specific to Carpress theme"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:22 inc/ot-meta-boxes.php:56 inc/ot-meta-boxes.php:142
-#: inc/theme-widgets.php:1501
+#: inc/ot-meta-boxes.php:22 inc/ot-meta-boxes.php:62 inc/ot-meta-boxes.php:148
+#: inc/theme-widgets.php:1503
 msgctxt "backend"
 msgid "Subtitle"
 msgstr "Podnaslov"
 
-#: inc/ot-meta-boxes.php:23 inc/ot-meta-boxes.php:57 inc/ot-meta-boxes.php:143
+#: inc/ot-meta-boxes.php:23 inc/ot-meta-boxes.php:63 inc/ot-meta-boxes.php:149
 msgctxt "backend"
 msgid ""
 "Subtitle of this page (shown right below the main title). Leave blank if you "
 "don't want to show."
 msgstr ""
 
-#: inc/ot-meta-boxes.php:31 inc/ot-meta-boxes.php:85
+#: inc/ot-meta-boxes.php:31 inc/ot-meta-boxes.php:91
 msgctxt "backend"
 msgid "Background Image for Title Area"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:32 inc/ot-meta-boxes.php:86
+#: inc/ot-meta-boxes.php:32 inc/ot-meta-boxes.php:92
 msgctxt "backend"
 msgid ""
 "You can upload a custom image for the background of the title area for "
 "individual page."
 msgstr ""
 
-#: inc/ot-meta-boxes.php:65
+#: inc/ot-meta-boxes.php:71
 msgctxt "backend"
 msgid "Show on front page"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:66
+#: inc/ot-meta-boxes.php:72
 msgctxt "backend"
 msgid "Show this service on the front page?"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:73 inc/ot-meta-boxes.php:156
+#: inc/ot-meta-boxes.php:79 inc/ot-meta-boxes.php:162
 #: inc/theme-customizer.php:212 inc/theme-customizer.php:345
 #: inc/theme-customizer.php:359 inc/theme-customizer.php:506
 msgctxt "backend"
 msgid "Yes"
 msgstr "Da"
 
-#: inc/ot-meta-boxes.php:78 inc/ot-meta-boxes.php:161
+#: inc/ot-meta-boxes.php:84 inc/ot-meta-boxes.php:167
 #: inc/theme-customizer.php:213 inc/theme-customizer.php:344
 #: inc/theme-customizer.php:360 inc/theme-customizer.php:507
 msgctxt "backend"
 msgid "No"
 msgstr "Ne"
 
-#: inc/ot-meta-boxes.php:94
+#: inc/ot-meta-boxes.php:100
 msgctxt "backend"
 msgid "Optional link for the front page services widget"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:95
+#: inc/ot-meta-boxes.php:101
 msgctxt "backend"
 msgid ""
 "By default (if you leave this blank) each &quot;READ MORE&quot; link will "
@@ -404,33 +437,33 @@ msgid ""
 "your custom link in this field."
 msgstr ""
 
-#: inc/ot-meta-boxes.php:110
+#: inc/ot-meta-boxes.php:116
 msgctxt "backend"
 msgid "Testimonial Options"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:118
+#: inc/ot-meta-boxes.php:124
 msgctxt "backend"
 msgid "Title of the author for this testimonial"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:149
+#: inc/ot-meta-boxes.php:155
 msgctxt "backend"
 msgid "Disply in the widget?"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:150
+#: inc/ot-meta-boxes.php:156
 msgctxt "backend"
 msgid ""
 "If you select here yes, this team member will be shown in the widget The Team"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:168
+#: inc/ot-meta-boxes.php:174
 msgctxt "backend"
 msgid "Team Member Custom Fields"
 msgstr ""
 
-#: inc/ot-meta-boxes.php:169
+#: inc/ot-meta-boxes.php:175
 msgctxt "backend"
 msgid ""
 "You can here define properties of the team member such as Age, Style, "
@@ -1157,9 +1190,9 @@ msgid "Opening Time Widget for placing it into the sidebar or above the slider"
 msgstr ""
 
 #: inc/theme-widgets.php:225 inc/theme-widgets.php:517
-#: inc/theme-widgets.php:701 inc/theme-widgets.php:846
-#: inc/theme-widgets.php:968 inc/theme-widgets.php:1072
-#: inc/theme-widgets.php:1223 inc/theme-widgets.php:1390
+#: inc/theme-widgets.php:701 inc/theme-widgets.php:848
+#: inc/theme-widgets.php:970 inc/theme-widgets.php:1074
+#: inc/theme-widgets.php:1225 inc/theme-widgets.php:1392
 #, fuzzy
 msgctxt "backend"
 msgid "Title:"
@@ -1199,8 +1232,8 @@ msgstr ""
 
 #: inc/theme-widgets.php:281 inc/theme-widgets.php:413
 #: inc/theme-widgets.php:556 inc/theme-widgets.php:754
-#: inc/theme-widgets.php:881 inc/theme-widgets.php:1113
-#: inc/theme-widgets.php:1260
+#: inc/theme-widgets.php:883 inc/theme-widgets.php:1115
+#: inc/theme-widgets.php:1262
 msgctxt "backend"
 msgid "Use this widget only on the home page of the Carpress theme"
 msgstr ""
@@ -1261,12 +1294,12 @@ msgctxt "backend"
 msgid "Image"
 msgstr ""
 
-#: inc/theme-widgets.php:722 inc/theme-widgets.php:1228
+#: inc/theme-widgets.php:722 inc/theme-widgets.php:1230
 msgctxt "backend"
 msgid "Interval:"
 msgstr ""
 
-#: inc/theme-widgets.php:723 inc/theme-widgets.php:1229
+#: inc/theme-widgets.php:723 inc/theme-widgets.php:1231
 msgctxt "backend"
 msgid ""
 "In miliseconds (1s = 1000ms). Set to <code>0</code> to disable auto-scroll."
@@ -1278,105 +1311,105 @@ msgctxt "backend"
 msgid "Carpress: Meet The Team"
 msgstr "Spoznaj ekipo"
 
-#: inc/theme-widgets.php:850
+#: inc/theme-widgets.php:852
 msgctxt "backend"
 msgid "Text for the link to all members (leave empty if don't want to show):"
 msgstr ""
 
-#: inc/theme-widgets.php:879
+#: inc/theme-widgets.php:881
 msgctxt "backend"
 msgid "Carpress: Text with Link"
 msgstr ""
 
-#: inc/theme-widgets.php:972
+#: inc/theme-widgets.php:974
 msgctxt "backend"
 msgid "Link text"
 msgstr ""
 
-#: inc/theme-widgets.php:976 inc/theme-widgets.php:1505
+#: inc/theme-widgets.php:978 inc/theme-widgets.php:1507
 msgctxt "backend"
 msgid "Link"
 msgstr ""
 
-#: inc/theme-widgets.php:981
+#: inc/theme-widgets.php:983
 msgctxt "backend"
 msgid "Text block"
 msgstr ""
 
-#: inc/theme-widgets.php:1006
+#: inc/theme-widgets.php:1008
 msgctxt "backend"
 msgid "Carpress: Custom Width Text For Home Page"
 msgstr ""
 
-#: inc/theme-widgets.php:1008
+#: inc/theme-widgets.php:1010
 msgctxt "backend"
 msgid ""
 "Use this widget only on the home page of the Carpress theme. With this "
 "widget you can specify custom width of the text."
 msgstr ""
 
-#: inc/theme-widgets.php:1076
+#: inc/theme-widgets.php:1078
 msgctxt "backend"
 msgid "Number of columns:"
 msgstr ""
 
-#: inc/theme-widgets.php:1085
+#: inc/theme-widgets.php:1087
 msgctxt "backend"
 msgid "Automatically add paragraphs"
 msgstr ""
 
-#: inc/theme-widgets.php:1111
+#: inc/theme-widgets.php:1113
 msgctxt "backend"
 msgid "Carpress: Testimonials"
 msgstr ""
 
-#: inc/theme-widgets.php:1258
+#: inc/theme-widgets.php:1260
 msgctxt "backend"
 msgid "Carpress: Divider"
 msgstr ""
 
-#: inc/theme-widgets.php:1310
+#: inc/theme-widgets.php:1312
 msgctxt "backend"
 msgid "Carpress: Facebook"
 msgstr ""
 
-#: inc/theme-widgets.php:1312
+#: inc/theme-widgets.php:1314
 msgctxt "backend"
 msgid "Use this widget only in the footer of the Carpress theme"
 msgstr ""
 
-#: inc/theme-widgets.php:1394
+#: inc/theme-widgets.php:1396
 msgctxt "backend"
 msgid "FB Page to like"
 msgstr ""
 
-#: inc/theme-widgets.php:1421
+#: inc/theme-widgets.php:1423
 msgctxt "backend"
 msgid "Carpress: Title with Icon"
 msgstr ""
 
-#: inc/theme-widgets.php:1423
+#: inc/theme-widgets.php:1425
 msgctxt "backend"
 msgid "Widget for the front page in the head - select title, subtitle and icon"
 msgstr ""
 
-#: inc/theme-widgets.php:1497
+#: inc/theme-widgets.php:1499
 #, fuzzy
 msgctxt "backend"
 msgid "Title"
 msgstr "Naslov"
 
-#: inc/theme-widgets.php:1515
+#: inc/theme-widgets.php:1517
 msgctxt "backend"
 msgid "Text Color:"
 msgstr ""
 
-#: inc/theme-widgets.php:1520
+#: inc/theme-widgets.php:1522
 msgctxt "backend"
 msgid "Icon"
 msgstr ""
 
-#: inc/theme-widgets.php:1521
+#: inc/theme-widgets.php:1523
 msgctxt "backend"
 msgid "Click on the icon below or manually select from the %s website"
 msgstr ""

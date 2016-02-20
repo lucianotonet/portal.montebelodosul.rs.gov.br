@@ -2,11 +2,12 @@
 Contributors: BrokenCrust
 Tags: widget, category, sub-category, list
 Requires at least: 2.9
-Tested up to: 4.2.2
-Stable tag: 1.4.1
+Tested up to: 4.4
+Stable tag: 1.5
 License: GPLv2 or later
 
-This Widget lists the sub-categories as links or in a drop-down menu for a given category.
+This Widget lists the sub-categories for a given category.
+
 
 == Description ==
 
@@ -24,22 +25,34 @@ You can display and filter sub-categories in various ways:
 * Display the list as dropdown rather than as links
 * Use the first category of the current post as the parent
 * Exclude one or more sub-categories from the list
+* List the categories in reverse order
+
 
 == Installation ==
 
 Installing is pretty easy takes only a minute or two.
 
-1. Upload `sub-category-widget` directory to your `/wp-content/plugins/` directory.
-1. Activate the plugin through the Plugins screen in WordPress.
-1. On the Widgets sub-menu of Appearance you will find a new widget type called Sub Category.
-1. Add one or more of these to your themes widget display areas.
-1. For each widget you add, decide what and how you'd like it to display.
-1. Save your settings.
+1. Upload 'sub-category-widget' directory to your '/wp-content/plugins/' directory.
+
+2. Activate the plugin through the 'Plugins' screen in WordPress.
+
+3. On the 'Widgets' sub-menu of 'Appearance' you will find a new widget type called 'Sub Category'.
+
+4. Add one or more of these to your themes widget display areas.
+
+5. For each widget you add, decide what and how you'd like it to display.
+
+6. Save your settings.
+
 
 == Changelog ==
 
+= 1.5 =
+* Added an option to display the categories in reverse order
+* Added the ability to change the selection label text of the dropdown list
+
 = 1.4.1 =
-* Fixed missing parent category notice on pages when using first post category option
+* Fixed missing parent category notice on pages when using irst category of the post option
 
 = 1.4 =
 * Added an option to use the first category of the post as the parent

@@ -3,9 +3,13 @@
   Plugin Name: YouTube widget responsive
   Description: Widgets responsive and shorcode to embed youtube in your sidebar or in your content, with all available options.
   Author: StefanoAI
-  Version: 1.1.3
+  Version: 1.2
   Author URI: http://www.stefanoai.com
+  Text Domain: youtube-widget-responsive
+  Domain Path: /lang
  */
+
+//todo http://blog.cmstutorials.org/tutorials/how-to-add-buttons-to-the-wordpress-editor
 
 class YouTubeResponsive extends \WP_Widget {
 
@@ -14,8 +18,9 @@ class YouTubeResponsive extends \WP_Widget {
     public function __construct() {
         parent::__construct(
                 'youtube_responsive', // Base ID
-                YOUTUBE_name, // Name
-                array('description' => YOUTUBE_description,) // Args
+                'Youtube widget responsive', // Name
+                array('description' => __('YouTube Responsive enable you to place a widget with youtube video.
+Among the various options there is also the possibility to start the video automatically', 'youtube-widget-responsive')) // Args
         );
     }
 
@@ -26,53 +31,60 @@ class YouTubeResponsive extends \WP_Widget {
 
     static function wp_footer() {
         ?><script type="text/javascript">
-                    function AI_responsive_widget() {
-                        jQuery('iframe.StefanoAI-youtube-responsive').each(function () {
-                            var width = jQuery(this).parent().innerWidth();
-                            var maxwidth = jQuery(this).css('max-width').replace(/px/, '');
-                            var pl = parseInt(jQuery(this).parent().css('padding-left').replace(/px/, ''));
-                            var pr = parseInt(jQuery(this).parent().css('padding-right').replace(/px/, ''));
-                            width = width - pl - pr;
-                            if (maxwidth < width) {
-                                width = maxwidth;
-                            }
-                            jQuery(this).css('width', width + "px");
-                            jQuery(this).css('height', width / (16 / 9) + "px");
-                        });
+            function AI_responsive_widget() {
+                jQuery('object.StefanoAI-youtube-responsive').each(function () {
+                    var width = jQuery(this).parent().innerWidth();
+                    var maxwidth = jQuery(this).css('max-width').replace(/px/, '');
+                    var pl = parseInt(jQuery(this).parent().css('padding-left').replace(/px/, ''));
+                    var pr = parseInt(jQuery(this).parent().css('padding-right').replace(/px/, ''));
+                    width = width - pl - pr;
+                    if (maxwidth < width) {
+                        width = maxwidth;
                     }
-                    if (typeof jQuery !== 'undefined') {
-                        jQuery(document).ready(function () {
-                            AI_responsive_widget();
-                        });
-                        jQuery(window).resize(function () {
-                            AI_responsive_widget();
-                        });
-                    }
+                    jQuery(this).css('width', width + "px");
+                    jQuery(this).css('height', width / (16 / 9) + "px");
+                    jQuery(this).children('iframe').css('width', width + "px");
+                    jQuery(this).children('iframe').css('height', width / (16 / 9) + "px");
+                });
+            }
+            if (typeof jQuery !== 'undefined') {
+                jQuery(document).ready(function () {
+                    var tag = document.createElement('script');
+                    tag.src = "https://www.youtube.com/iframe_api";
+                    var firstScriptTag = document.getElementsByTagName('script')[0];
+                    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                    AI_responsive_widget();
+                });
+                jQuery(window).resize(function () {
+                    AI_responsive_widget();
+                });
+            }
         <?php if (!empty(YouTubeResponsive::$footer)) { ?>
-                        function onYouTubeIframeAPIReady() {
+
+                function onYouTubeIframeAPIReady() {
             <?php echo YouTubeResponsive::$footer; ?>
-                        }
-                        function StefanoAI_trackYoutubeVideo(state, video) {
-                            if (typeof _config !== 'undefined') {
-                                var forceSyntax = _config.forceSyntax || 0;
-                            } else {
-                                var forceSyntax = 0;
+                }
+                function StefanoAI_trackYoutubeVideo(state, video) {
+                    if (typeof _config !== 'undefined') {
+                        var forceSyntax = _config.forceSyntax || 0;
+                    } else {
+                        var forceSyntax = 0;
+                    }
+                    if (typeof window.dataLayer !== 'undefined' && !forceSyntax) {
+                        window.dataLayer.push({
+                            'event': 'youTubeTrack',
+                            'attributes': {
+                                'videoUrl': video,
+                                'videoAction': state
                             }
-                            if (typeof window.dataLayer !== 'undefined' && !forceSyntax) {
-                                window.dataLayer.push({
-                                    'event': 'youTubeTrack',
-                                    'attributes': {
-                                        'videoUrl': video,
-                                        'videoAction': state
-                                    }
-                                });
-                            }
-                            if (typeof window.ga === 'function' && typeof window.ga.getAll === 'function' && forceSyntax !== 2) {
-                                window.ga('send', 'event', 'YoutubeWidgetResponsive', state, video, 0);
-                            } else if (typeof window._gaq !== 'undefined' && forceSyntax !== 1) {
-                                window._gaq.push(['_trackEvent', 'YoutubeWidgetResponsive', state, video]);
-                            }
-                        }
+                        });
+                    }
+                    if (typeof window.ga === 'function' && typeof window.ga.getAll === 'function' && forceSyntax !== 2) {
+                        window.ga('send', 'event', 'YoutubeWidgetResponsive', state, video, 0);
+                    } else if (typeof window._gaq !== 'undefined' && forceSyntax !== 1) {
+                        window._gaq.push(['_trackEvent', 'YoutubeWidgetResponsive', state, video]);
+                    }
+                }
         <?php } ?>
         </script><?php
     }
@@ -147,43 +159,104 @@ class YouTubeResponsive extends \WP_Widget {
             $maxw = !empty($params['maxw']) ? 'max-width:' . intval($params['maxw']) . 'px;' : '';
             @$id = ++$youtube_id;
 
-            $track = !empty($params['track']) ? $and . "enablejsapi=1" . $and . "playerapiid=$id" : "";
+            $jsapi = !empty($params['track']) || !empty($params['mute']) || !empty($params['image_preview']) ? $and . "enablejsapi=1" : "";
 
-            @$urlembed = "<iframe id='$id' class='StefanoAI-youtube-responsive $class' width='160' height='90' src='$url$idvideo?$idlist$autohide$autoplay$cc_load$cc_lang$color$controls$disablekb$end$fs$iv_load_policy$loop$modestbranding$rel$showinfo$start$theme$quality$wmode$track' frameborder='0' $allowfullscreen style='$maxw$style'></iframe>";
-            if (!empty($params['track'])) {
-                YouTubeResponsive::$footer.=<<<SCRIPT
-                var player_$id;
-                player_$id = new YT.Player('$id', {
-                    events: {
-                        'onStateChange': function () {
-                            var d = player_$id.getVideoData();
-                            switch (player_$id.getPlayerState()) {
-                                case -1:
-                                    //unstarted
-                                    break;
-                                case 0:
-                                    //ended
-                                    //StefanoAI_trackYoutubeVideo('Ended', d.title + " | " + d.video_id + " (" + d.author + ")");
-                                    break;
-                                case 1:
-                                    //playing
-                                    StefanoAI_trackYoutubeVideo('Playing', d.title + " | " + d.video_id + " (" + d.author + ")");
-                                    break;
-                                case 2:
-                                    //paused
-                                    //StefanoAI_trackYoutubeVideo('Paused', d.title + " | " + d.video_id + " (" + d.author + ")");
-                                    break;
-                                case 3:
-                                    //buffering
-                                    break;
-                                case 5:
-                                    //video cued (When a video is queued and ready for playback)
-                                    break;
-                            }
-                        }
-                    }
-                });
+            $image_preview = !empty($params['image_preview']) ? $params['image_preview'] : NULL;
+
+            $schemaorg_name = !empty($params['schemaorg_name']) ? $params['schemaorg_name'] : NULL;
+            $schemaorg_description = !empty($params['schemaorg_description']) ? $params['schemaorg_description'] : NULL;
+            $schemaorg_uploaddate = !empty($params['schemaorg_uploaddate']) ? $params['schemaorg_uploaddate'] : NULL;
+            $schemaorg_thumbnail = !empty($params['schemaorg_thumbnail']) ? $params['schemaorg_thumbnail'] : NULL;
+            $schemaorg_durationm = !empty($params['schemaorg_durationm']) ? $params['schemaorg_durationm'] : 0;
+            $schemaorg_durations = !empty($params['schemaorg_durations']) ? $params['schemaorg_durations'] : 0;
+
+
+            $schema = !empty($schemaorg_name) && !empty($schemaorg_uploaddate) && !empty($schemaorg_description) && !empty($schemaorg_thumbnail) ? ' itemscope itemtype="http://schema.org/VideoObject"' : '';
+            @$urlembed = "<object $schema class='StefanoAI-youtube-responsive $class' width='160' height='90' style='$maxw$style'>";
+            @$urlembed.="<iframe id='StefanoAI-youtube-$id' class='StefanoAI-youtube-responsive $class' width='160' height='90' src='$url$idvideo?$idlist$autohide$autoplay$cc_load$cc_lang$color$controls$disablekb$end$fs$iv_load_policy$loop$modestbranding$rel$showinfo$start$theme$quality$wmode$jsapi' frameborder='0' $allowfullscreen style='AISTYLENONE$maxw$style'></iframe>";
+            if (!empty($schema)) {
+                @$urlembed.="<meta itemprop='name' content=\"" . esc_attr($schemaorg_name) . "\" />";
+                @$urlembed.="<meta itemprop='description' content=\"" . esc_attr($schemaorg_description) . "\" />";
+                @$urlembed.="<meta itemprop='uploadDate' content=\"" . esc_attr($schemaorg_uploaddate) . "\" />";
+                @$urlembed.="<meta itemprop='thumbnailUrl' content=\"" . esc_attr($schemaorg_thumbnail) . "\" />";
+                @$urlembed.="<meta itemprop='embedUrl' content=\"http://youtube.be/" . esc_attr($idvideo) . "\" />";
+                if (!empty($schemaorg_durationm) || !empty($schemaorg_durations)) {
+                    @$urlembed.="<meta itemprop='duration' content='PT" . intval($schemaorg_durationm) . "M" . intval($schemaorg_durations) . "S' />";
+                }
+            }
+            @$urlembed.="</object>";
+            if (!empty($params['track']) || !empty($params['mute']) || !empty($image_preview)) {
+                $onStateChange = $onReady = '';
+                if (!empty($params['mute'])) {
+                    $onReady = "'onReady': function (event) {
+                                        event.target.mute();
+                                    },";
+                }
+                if (!empty($params['track'])) {
+                    $onStateChange = <<<SCRIPT
+                            
+                                    'onStateChange': function () {
+                                        var d = player_$id.getVideoData();
+                                        switch (player_$id.getPlayerState()) {
+                                            case -1:
+                                                //unstarted
+                                                break;
+                                            case 0:
+                                                //ended
+                                                //StefanoAI_trackYoutubeVideo('Ended', d.title + " | " + d.video_id + " (" + d.author + ")");
+                                                break;
+                                            case 1:
+                                                //playing
+                                                StefanoAI_trackYoutubeVideo('Playing', d.title + " | " + d.video_id + " (" + d.author + ")");
+                                                break;
+                                            case 2:
+                                                //paused
+                                                //StefanoAI_trackYoutubeVideo('Paused', d.title + " | " + d.video_id + " (" + d.author + ")");
+                                                break;
+                                            case 3:
+                                                //buffering
+                                                break;
+                                            case 5:
+                                                //video cued (When a video is queued and ready for playback)
+                                                break;
+                                        }
+                                    },
 SCRIPT;
+                }
+                YouTubeResponsive::$footer.=<<<SCRIPT
+                        
+                            var player_$id;
+                            player_$id = new YT.Player('StefanoAI-youtube-$id', {
+                                events: {
+                                    $onReady
+                                    $onStateChange
+                                }
+                            });
+SCRIPT;
+            }
+            if (!empty($image_preview)) {
+                if (preg_match('/^[0-9]+$/', $image_preview)) {
+                    $img = wp_get_attachment_image_src($image_preview, array(320, 180));
+                    $src = $img[0];
+                    $alt = get_post_meta($image_preview, '_wp_attachment_image_alt', true);
+                } else {
+                    $src = $image_preview;
+                    $alt = !empty($params['altimg']) ? $params['altimg'] : '';
+                }
+                YouTubeResponsive::$footer.="
+                    
+                            jQuery('#StefanoAI-youtube-$id').fadeOut(0);
+                            jQuery('#StefanoAI-Youtube-image_preview-$id').click(function(){
+                                jQuery(this).fadeOut(0);
+                                jQuery('#StefanoAI-youtube-$id').fadeIn('fast');
+                                player_$id.playVideo();
+                                AI_responsive_widget();
+                            });
+";
+                $urlembed .= "\n<img src='$src' alt='" . esc_attr($alt) . "' id='StefanoAI-Youtube-image_preview-$id' />";
+                $urlembed = preg_replace('/AISTYLENONE/', 'display:none;', $urlembed);
+            } else {
+                $urlembed = preg_replace('/AISTYLENONE/', '', $urlembed);
             }
             return apply_filters('youtube_iframe', $urlembed);
         }
@@ -210,6 +283,7 @@ SCRIPT;
         $instance['video'] = strip_tags($new_instance['video']);
         $instance['autohide'] = isset($new_instance['autohide']) && ($new_instance['autohide'] == 1 || $new_instance['autohide'] == 0) ? $new_instance['autohide'] : 2;
         $instance['autoplay'] = !empty($new_instance['autoplay']) ? 1 : 0;
+        $instance['mute'] = !empty($new_instance['mute']) ? 1 : 0;
         $instance['cc_load'] = !empty($new_instance['cc_load']) ? 1 : 0;
         $instance['cc_lang'] = strip_tags($new_instance['cc_lang']);
         $instance['color'] = !empty($new_instance['color']) && $new_instance['color'] == "white" ? 'white' : 'red';
@@ -234,14 +308,27 @@ SCRIPT;
         $instance['privacy'] = !empty($new_instance['privacy']) ? $new_instance['privacy'] : 0;
         $instance['wmode'] = !empty($new_instance['wmode']) ? $new_instance['wmode'] : 0;
         $instance['track'] = !empty($new_instance['track']) ? $new_instance['track'] : 0;
+        $instance['image_preview'] = !empty($new_instance['image_preview']) ? $new_instance['image_preview'] : '';
+        $instance['schemaorg_name'] = !empty($new_instance['schemaorg_name']) ? $new_instance['schemaorg_name'] : '';
+        $instance['schemaorg_description'] = !empty($new_instance['schemaorg_description']) ? $new_instance['schemaorg_description'] : '';
+        $instance['schemaorg_durationm'] = !empty($new_instance['schemaorg_durationm']) ? $new_instance['schemaorg_durationm'] : '';
+        $instance['schemaorg_durations'] = !empty($new_instance['schemaorg_durations']) ? $new_instance['schemaorg_durations'] : '';
+        $instance['schemaorg_uploaddate'] = !empty($new_instance['schemaorg_uploaddate']) && preg_match('/^[0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}$/', $new_instance['schemaorg_uploaddate']) ? date('Y-m-d', strtotime($new_instance['schemaorg_uploaddate'])) : '';
+        $instance['schemaorg_thumbnail'] = !empty($new_instance['schemaorg_thumbnail']) ? $new_instance['schemaorg_thumbnail'] : '';
         return $instance;
     }
 
     function form($instance) {
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('jquery-ui-core');
+        wp_enqueue_script('jquery-ui-tabs');
+        wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/smoothness/jquery-ui.css', NULL, NULL);
+        wp_enqueue_media();
         $title = (isset($instance['title'])) ? $instance['title'] : '';
         $video = (isset($instance['video'])) ? $instance['video'] : '';
         $autohide = (isset($instance['autohide'])) ? $instance['autohide'] : 2;
         $autoplay = (isset($instance['autoplay'])) ? $instance['autoplay'] : 0;
+        $mute = (isset($instance['mute'])) ? $instance['mute'] : 0;
         $cc_load = (isset($instance['cc_load'])) ? $instance['cc_load'] : 0;
         $cc_lang = (isset($instance['cc_lang'])) ? $instance['cc_lang'] : '';
         $color = !empty($instance['color']) && $instance['color'] == "white" ? 'white' : 'red';
@@ -266,133 +353,285 @@ SCRIPT;
         $privacy = !empty($instance['privacy']) ? $instance['privacy'] : 0;
         $wmode = !empty($instance['wmode']) ? $instance['wmode'] : 0;
         $track = !empty($instance['track']) ? $instance['track'] : 0;
+        $image_preview = !empty($instance['image_preview']) ? $instance['image_preview'] : 0;
+
+
+        $schemaorg_name = !empty($instance['schemaorg_name']) ? $instance['schemaorg_name'] : '';
+        $schemaorg_description = !empty($instance['schemaorg_description']) ? $instance['schemaorg_description'] : '';
+        $schemaorg_durationm = !empty($instance['schemaorg_durationm']) ? $instance['schemaorg_durationm'] : '';
+        $schemaorg_durations = !empty($instance['schemaorg_durations']) ? $instance['schemaorg_durations'] : '';
+        $schemaorg_uploaddate = !empty($instance['schemaorg_uploaddate']) ? $instance['schemaorg_uploaddate'] : '';
+        $schemaorg_thumbnail = !empty($instance['schemaorg_thumbnail']) ? $instance['schemaorg_thumbnail'] : '';
+
+        $src = '';
+        if (!empty($image_preview)) {
+            $img = wp_get_attachment_image_src($image_preview, array(320, 180));
+            $src = $img[0];
+        }
         ?>
-        <p>
-            <label for="<?php echo $this->get_field_id('title'); ?>"><?php echo YOUTUBE_title ?>: </label> 
-            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('video'); ?>"><?php echo YOUTUBE_video ?>: </label> 
-            <input class="widefat" id="<?php echo $this->get_field_id('video'); ?>" name="<?php echo $this->get_field_name('video'); ?>" type="text" value="<?php echo esc_attr($video); ?>" />
-        </p>
-        <p>
-            <label><?php echo YOUTUBE_start_time ?>: </label> 
-            <input class="widefat" style="width:30px;display: inline-block;" id="<?php echo $this->get_field_id('start_m'); ?>" name="<?php echo $this->get_field_name('start_m'); ?>" type="text" value="<?php echo esc_attr($start_m); ?>" /> <?php echo YOUTUBE_minutes ?>
-            <input class="widefat" style="width:30px;display: inline-block;" id="<?php echo $this->get_field_id('start_s'); ?>" name="<?php echo $this->get_field_name('start_s'); ?>" type="text" value="<?php echo esc_attr($start_s); ?>" /> <?php echo YOUTUBE_seconds ?>
-        </p>
-        <p>
-            <label><?php echo YOUTUBE_end_time ?>: </label> 
-            <input class="widefat" style="width:30px;display: inline-block;" id="<?php echo $this->get_field_id('end_m'); ?>" name="<?php echo $this->get_field_name('end_m'); ?>" type="text" value="<?php echo esc_attr($end_m); ?>" /> <?php echo YOUTUBE_minutes ?>
-            <input class="widefat" style="width:30px;display: inline-block;" id="<?php echo $this->get_field_id('end_s'); ?>" name="<?php echo $this->get_field_name('end_s'); ?>" type="text" value="<?php echo esc_attr($end_s); ?>" /> <?php echo YOUTUBE_seconds ?>
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('cc_load'); ?>" name="<?php echo $this->get_field_name('cc_load'); ?>" type="checkbox" value="1" <?php echo esc_attr($cc_load) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('cc_load'); ?>"><?php echo YOUTUBE_cc_load ?> </label> <br/>
-            <label for="<?php echo $this->get_field_id('cc_lang'); ?>"><?php echo YOUTUBE_cc_lang ?>: </label> 
-            <input maxlength="2" style="width:30px" class="widefat" id="<?php echo $this->get_field_id('cc_lang'); ?>" name="<?php echo $this->get_field_name('cc_lang'); ?>" type="text" value="<?php echo esc_attr($cc_lang); ?>" />
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('autohide'); ?>"><?php echo YOUTUBE_autohide ?> </label> 
-            <select id="<?php echo $this->get_field_id('autohide'); ?>" name="<?php echo $this->get_field_name('autohide'); ?>">
-                <option value="2" <?php echo $autohide == 2 ? 'selected' : '' ?>><?php echo YOUTUBE_autohide_default ?></option>
-                <option value="1" <?php echo $autohide == 1 ? 'selected' : '' ?>><?php echo YOUTUBE_autohide_hide_video_progress_bar_after_the_video_starts_playing ?></option>
-                <option value="0" <?php echo $autohide == 0 ? 'selected' : '' ?>><?php echo YOUTUBE_autohide_show_always ?></option>
-            </select>
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('theme'); ?>"><?php echo YOUTUBE_theme ?> </label> 
-            <select id="<?php echo $this->get_field_id('theme'); ?>" name="<?php echo $this->get_field_name('theme'); ?>">
-                <option value="dark" <?php echo $theme == 'dark' ? 'selected' : '' ?>><?php echo YOUTUBE_theme_dark ?></option>
-                <option value="light" <?php echo $theme == 'light' ? 'selected' : '' ?>><?php echo YOUTUBE_theme_light ?></option>
-            </select>
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('color'); ?>"><?php echo YOUTUBE_color ?> </label> 
-            <select id="<?php echo $this->get_field_id('color'); ?>" name="<?php echo $this->get_field_name('color'); ?>">
-                <option value="red" <?php echo $color == 'red' ? 'selected' : '' ?>><?php echo YOUTUBE_color_red ?></option>
-                <option value="white" <?php echo $color == 'white' ? 'selected' : '' ?>><?php echo YOUTUBE_color_white ?></option>
-            </select>
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('controls'); ?>"><?php echo YOUTUBE_controls ?> </label> 
-            <select id="<?php echo $this->get_field_id('controls'); ?>" name="<?php echo $this->get_field_name('controls'); ?>">
-                <option value="1" <?php echo $controls == 1 ? 'selected' : '' ?>><?php echo YOUTUBE_controls_always ?></option>
-                <option value="2" <?php echo $controls == 2 ? 'selected' : '' ?>><?php echo YOUTUBE_controls_on_video_playback ?></option>
-                <option value="0" <?php echo $controls == 0 ? 'selected' : '' ?>><?php echo YOUTUBE_controls_never ?></option>
-            </select>
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('quality'); ?>"><?php echo YOUTUBE_resolution ?> </label> 
-            <select id="<?php echo $this->get_field_id('quality'); ?>" name="<?php echo $this->get_field_name('quality'); ?>">
-                <option value="default" <?php echo empty($quality) || $quality == 'default' ? 'selected' : '' ?>><?php echo YOUTUBE_autohide_default ?></option>
-                <option value="small" <?php echo $quality == 'small' ? 'selected' : '' ?>>240px</option>
-                <option value="medium" <?php echo $quality == 'medium' ? 'selected' : '' ?>>360px</option>
-                <option value="large" <?php echo $quality == 'large' ? 'selected' : '' ?>>480px</option>
-                <option value="hd720" <?php echo $quality == 'hd720' ? 'selected' : '' ?>>720px</option>
-                <option value="hd1080" <?php echo $quality == 'hd1080' ? 'selected' : '' ?>>1080px</option>
-                <option value="highres" <?php echo $quality == 'highres' ? 'selected' : '' ?>> &gt; 1080px</option>
-            </select>
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('class'); ?>">class: </label> 
-            <input class="widefat" id="<?php echo $this->get_field_id('class'); ?>" name="<?php echo $this->get_field_name('class'); ?>" type="text" value="<?php echo esc_attr($class); ?>" />
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('style'); ?>">style: </label> 
-            <input style="widefat" id="<?php echo $this->get_field_id('style'); ?>" name="<?php echo $this->get_field_name('style'); ?>" type="text" value="<?php echo esc_attr($style); ?>" />
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('maxw'); ?>">max-width: </label> 
-            <input id="<?php echo $this->get_field_id('maxw'); ?>" name="<?php echo $this->get_field_name('maxw'); ?>" type="text" value="<?php echo esc_attr($maxw); ?>" style="width: 4em" /> px
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('loop'); ?>" name="<?php echo $this->get_field_name('loop'); ?>" type="checkbox" value="1" <?php echo esc_attr($loop) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('loop'); ?>">Loop</label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('allowfullscreen'); ?>" name="<?php echo $this->get_field_name('allowfullscreen'); ?>" type="checkbox" value="1" <?php echo esc_attr($allowfullscreen) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('allowfullscreen'); ?>"><?php echo YOUTUBE_allowfullscreen ?> </label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('disablekb'); ?>" name="<?php echo $this->get_field_name('disablekb'); ?>" type="checkbox" value="1" <?php echo esc_attr($disablekb) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('disablekb'); ?>"><?php echo YOUTUBE_disablekb ?> </label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('iv_load_policy'); ?>" name="<?php echo $this->get_field_name('iv_load_policy'); ?>" type="checkbox" value="3" <?php echo esc_attr($iv_load_policy) == "3" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('iv_load_policy'); ?>"><?php echo YOUTUBE_hide_iv_load_policy ?> </label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('autoplay'); ?>" name="<?php echo $this->get_field_name('autoplay'); ?>" type="checkbox" value="1" <?php echo esc_attr($autoplay) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('autoplay'); ?>"><?php echo YOUTUBE_autoplay ?> </label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('modestbranding'); ?>" name="<?php echo $this->get_field_name('modestbranding'); ?>" type="checkbox" value="1" <?php echo esc_attr($modestbranding) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('modestbranding'); ?>"><?php echo YOUTUBE_modestbranding ?> </label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('showinfo'); ?>" name="<?php echo $this->get_field_name('showinfo'); ?>" type="checkbox" value="0" <?php echo esc_attr($showinfo) == "0" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('showinfo'); ?>"><?php echo YOUTUBE_hide_showinfo ?> </label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('w3c'); ?>" name="<?php echo $this->get_field_name('w3c'); ?>" type="checkbox" value="1" <?php echo esc_attr($w3c) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('w3c'); ?>">W3C standard </label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('privacy'); ?>" name="<?php echo $this->get_field_name('privacy'); ?>" type="checkbox" value="1" <?php echo esc_attr($privacy) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('privacy'); ?>"><?php echo YOUTUBE_privacy ?> </label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('suggested'); ?>" name="<?php echo $this->get_field_name('suggested'); ?>" type="checkbox" value="1" <?php echo esc_attr($suggested) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('suggested'); ?>"><?php echo YOUTUBE_suggested ?> </label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('wmode'); ?>" name="<?php echo $this->get_field_name('wmode'); ?>" type="checkbox" value="1" <?php echo esc_attr($wmode) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('wmode'); ?>">wmode transparent</label> 
-        </p>
-        <p>
-            <input  id="<?php echo $this->get_field_id('track'); ?>" name="<?php echo $this->get_field_name('track'); ?>" type="checkbox" value="1" <?php echo esc_attr($track) == "1" ? 'checked' : ''; ?> />
-            <label for="<?php echo $this->get_field_id('track'); ?>">Track video (Google Analytics/Universal Analytics)</label> 
-        </p>
+        <div id='<?php echo $this->get_field_id('video') ?>-tabs' class='StefanoAI_YoutubeVideo-tabs'>
+            <ul>
+                <li>
+                    <a href="#<?php echo $this->get_field_id('video') ?>-tab-video">Video</a>
+                </li>
+                <li>
+                    <a href="#<?php echo $this->get_field_id('video') ?>-tab-schemaorg">Schema.org</a>
+                </li>
+                <li>
+                    <a href="#<?php echo $this->get_field_id('video') ?>-tab-shortcode">ShortCode</a>
+                </li>
+            </ul>
+            <div id="<?php echo $this->get_field_id('video') ?>-tab-video">
+                <div id="<?php echo $this->get_field_id('video'); ?>-StefanoAI_YoutubeVideo_preview" class='StefanoAI_YoutubeVideo_preview'>
+                    <p>
+                        <label>Preview image:</label><br/>
+                        <span style="text-align: center;display: block;">
+                            <img src="<?php echo esc_attr($src); ?>" alt="" style="width:90%;background-color: #eee;<?php echo empty($src) ? 'display:none' : ''; ?>"/>
+                        </span>
+                        <input type="hidden" class="image_preview" name="<?php echo $this->get_field_name('image_preview'); ?>" value="<?php echo $image_preview; ?>" />
+                    </p>
+                    <div style="text-align: center;display: block;width: 100%;">
+                        <input type="button" class="button-primary upload" value="Upload preview" style="width: 45%;" />
+                        <input type="button" class="button-secondary noimage" value="No preview" style="width: 45%;" />
+                    </div>
+                </div>
+                <p>
+                    <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'youtube-widget-responsive') ?>: </label> 
+                    <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('video'); ?>"><?php _e('Video', 'youtube-widget-responsive') ?>: </label> 
+                    <input class="widefat" id="<?php echo $this->get_field_id('video'); ?>" name="<?php echo $this->get_field_name('video'); ?>" type="text" value="<?php echo esc_attr($video); ?>" />
+                </p>
+                <p>
+                    <label><?php _e('Start from', 'youtube-widget-responsive') ?>: </label> 
+                    <input class="widefat" style="width:30px;display: inline-block;" id="<?php echo $this->get_field_id('start_m'); ?>" name="<?php echo $this->get_field_name('start_m'); ?>" type="text" value="<?php echo esc_attr($start_m); ?>" /> <?php _e('min', 'youtube-widget-responsive') ?>
+                    <input class="widefat" style="width:30px;display: inline-block;" id="<?php echo $this->get_field_id('start_s'); ?>" name="<?php echo $this->get_field_name('start_s'); ?>" type="text" value="<?php echo esc_attr($start_s); ?>" /> <?php _e('sec', 'youtube-widget-responsive') ?>
+                </p>
+                <p>
+                    <label><?php _e('End to', 'youtube-widget-responsive') ?>: </label> 
+                    <input class="widefat" style="width:30px;display: inline-block;" id="<?php echo $this->get_field_id('end_m'); ?>" name="<?php echo $this->get_field_name('end_m'); ?>" type="text" value="<?php echo esc_attr($end_m); ?>" /> <?php _e('min', 'youtube-widget-responsive') ?>
+                    <input class="widefat" style="width:30px;display: inline-block;" id="<?php echo $this->get_field_id('end_s'); ?>" name="<?php echo $this->get_field_name('end_s'); ?>" type="text" value="<?php echo esc_attr($end_s); ?>" /> <?php _e('sec', 'youtube-widget-responsive') ?>
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('cc_load'); ?>" name="<?php echo $this->get_field_name('cc_load'); ?>" type="checkbox" value="1" <?php echo esc_attr($cc_load) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('cc_load'); ?>"><?php _e('Enable substitles automatically', 'youtube-widget-responsive') ?> </label> <br/>
+                    <label for="<?php echo $this->get_field_id('cc_lang'); ?>"><?php _e('language [en]', 'youtube-widget-responsive') ?>: </label> 
+                    <input maxlength="2" style="width:30px" class="widefat" id="<?php echo $this->get_field_id('cc_lang'); ?>" name="<?php echo $this->get_field_name('cc_lang'); ?>" type="text" value="<?php echo esc_attr($cc_lang); ?>" />
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('autohide'); ?>"><?php _e('Auto hide Video progress bar', 'youtube-widget-responsive') ?> </label> 
+                    <select class='widefat' id="<?php echo $this->get_field_id('autohide'); ?>" name="<?php echo $this->get_field_name('autohide'); ?>">
+                        <option value="2" <?php echo $autohide == 2 ? 'selected' : '' ?>><?php _e('Default', 'youtube-widget-responsive') ?></option>
+                        <option value="1" <?php echo $autohide == 1 ? 'selected' : '' ?>><?php _e('Hide video progress bar after video starts playing', 'youtube-widget-responsive') ?></option>
+                        <option value="0" <?php echo $autohide == 0 ? 'selected' : '' ?>><?php _e('Show always', 'youtube-widget-responsive') ?></option>
+                    </select>
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('theme'); ?>"><?php _e('Theme of control bar', 'youtube-widget-responsive') ?> </label> 
+                    <select class='widefat' id="<?php echo $this->get_field_id('theme'); ?>" name="<?php echo $this->get_field_name('theme'); ?>">
+                        <option value="dark" <?php echo $theme == 'dark' ? 'selected' : '' ?>><?php _e('Dark', 'youtube-widget-responsive') ?></option>
+                        <option value="light" <?php echo $theme == 'light' ? 'selected' : '' ?>><?php _e('Light', 'youtube-widget-responsive') ?></option>
+                    </select>
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('color'); ?>"><?php _e('Select color of progress bar', 'youtube-widget-responsive') ?> </label> 
+                    <select id="<?php echo $this->get_field_id('color'); ?>" name="<?php echo $this->get_field_name('color'); ?>">
+                        <option value="red" <?php echo $color == 'red' ? 'selected' : '' ?>><?php _e('Red', 'youtube-widget-responsive') ?></option>
+                        <option value="white" <?php echo $color == 'white' ? 'selected' : '' ?>><?php _e('White', 'youtube-widget-responsive') ?></option>
+                    </select>
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('controls'); ?>"><?php _e('Show controls bar', 'youtube-widget-responsive') ?> </label> 
+                    <select class='widefat' id="<?php echo $this->get_field_id('controls'); ?>" name="<?php echo $this->get_field_name('controls'); ?>">
+                        <option value="1" <?php echo $controls == 1 ? 'selected' : '' ?>><?php _e('Always', 'youtube-widget-responsive') ?></option>
+                        <option value="2" <?php echo $controls == 2 ? 'selected' : '' ?>><?php _e('On video playback', 'youtube-widget-responsive') ?></option>
+                        <option value="0" <?php echo $controls == 0 ? 'selected' : '' ?>><?php _e('Never', 'youtube-widget-responsive') ?></option>
+                    </select>
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('quality'); ?>"><?php _e('Resolution', 'youtube-widget-responsive') ?> </label> 
+                    <select class='widefat' id="<?php echo $this->get_field_id('quality'); ?>" name="<?php echo $this->get_field_name('quality'); ?>">
+                        <option value="default" <?php echo empty($quality) || $quality == 'default' ? 'selected' : '' ?>><?php _e('Default', 'youtube-widget-responsive') ?></option>
+                        <option value="small" <?php echo $quality == 'small' ? 'selected' : '' ?>>240px</option>
+                        <option value="medium" <?php echo $quality == 'medium' ? 'selected' : '' ?>>360px</option>
+                        <option value="large" <?php echo $quality == 'large' ? 'selected' : '' ?>>480px</option>
+                        <option value="hd720" <?php echo $quality == 'hd720' ? 'selected' : '' ?>>720px</option>
+                        <option value="hd1080" <?php echo $quality == 'hd1080' ? 'selected' : '' ?>>1080px</option>
+                        <option value="highres" <?php echo $quality == 'highres' ? 'selected' : '' ?>> &gt; 1080px</option>
+                    </select>
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('class'); ?>">class: </label> 
+                    <input class="widefat" id="<?php echo $this->get_field_id('class'); ?>" name="<?php echo $this->get_field_name('class'); ?>" type="text" value="<?php echo esc_attr($class); ?>" />
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('style'); ?>">style: </label> 
+                    <input style="widefat" id="<?php echo $this->get_field_id('style'); ?>" name="<?php echo $this->get_field_name('style'); ?>" type="text" value="<?php echo esc_attr($style); ?>" />
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('maxw'); ?>">max-width: </label> 
+                    <input id="<?php echo $this->get_field_id('maxw'); ?>" name="<?php echo $this->get_field_name('maxw'); ?>" type="text" value="<?php echo esc_attr($maxw); ?>" style="width: 4em" /> px
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('loop'); ?>" name="<?php echo $this->get_field_name('loop'); ?>" type="checkbox" value="1" <?php echo esc_attr($loop) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('loop'); ?>">Loop</label> 
+                </p>
+                <p>
+                    <input id="<?php echo $this->get_field_id('allowfullscreen'); ?>" name="<?php echo $this->get_field_name('allowfullscreen'); ?>" type="checkbox" value="1" <?php echo esc_attr($allowfullscreen) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('allowfullscreen'); ?>"><?php _e('Allow fullscreen', 'youtube-widget-responsive') ?> </label> 
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('disablekb'); ?>" name="<?php echo $this->get_field_name('disablekb'); ?>" type="checkbox" value="1" <?php echo esc_attr($disablekb) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('disablekb'); ?>"><?php _e('Disable the player Keyboard controls', 'youtube-widget-responsive') ?> </label> 
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('iv_load_policy'); ?>" name="<?php echo $this->get_field_name('iv_load_policy'); ?>" type="checkbox" value="3" <?php echo esc_attr($iv_load_policy) == "3" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('iv_load_policy'); ?>"><?php _e('Hide video annotations', 'youtube-widget-responsive') ?> </label> 
+                </p>
+                <p>
+                    <input <?php echo (!empty($image_preview)) ? 'disabled="disabled"' : ''; ?>  id="<?php echo $this->get_field_id('autoplay'); ?>" name="<?php echo $this->get_field_name('autoplay'); ?>" type="checkbox" value="1" <?php echo esc_attr($autoplay) == "1" ? 'checked' : ''; ?> class='autoplay' />
+                    <label for="<?php echo $this->get_field_id('autoplay'); ?>"><?php _e('Start video automatically', 'youtube-widget-responsive') ?> </label> 
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('mute'); ?>" name="<?php echo $this->get_field_name('mute'); ?>" type="checkbox" value="1" <?php echo esc_attr($mute) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('mute'); ?>"><?php _e('Mute video', 'youtube-widget-responsive') ?> </label> 
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('modestbranding'); ?>" name="<?php echo $this->get_field_name('modestbranding'); ?>" type="checkbox" value="1" <?php echo esc_attr($modestbranding) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('modestbranding'); ?>"><?php _e('Hide YouTube logo on controls bar', 'youtube-widget-responsive') ?> </label> 
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('showinfo'); ?>" name="<?php echo $this->get_field_name('showinfo'); ?>" type="checkbox" value="0" <?php echo esc_attr($showinfo) == "0" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('showinfo'); ?>"><?php _e('Hide the video title and uploader before the video starts playing', 'youtube-widget-responsive') ?> </label> 
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('w3c'); ?>" name="<?php echo $this->get_field_name('w3c'); ?>" type="checkbox" value="1" <?php echo esc_attr($w3c) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('w3c'); ?>">W3C standard </label> 
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('privacy'); ?>" name="<?php echo $this->get_field_name('privacy'); ?>" type="checkbox" value="1" <?php echo esc_attr($privacy) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('privacy'); ?>"><?php _e('Enable privacy-enhanced mode [<a target="_blank" href="http://www.google.com/support/youtube/bin/answer.py?answer=171780&expand=PrivacyEnhancedMode#privacy">?</a>]', 'youtube-widget-responsive') ?> </label> 
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('suggested'); ?>" name="<?php echo $this->get_field_name('suggested'); ?>" type="checkbox" value="1" <?php echo esc_attr($suggested) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('suggested'); ?>"><?php _e('Show suggested videos when the video finishes', 'youtube-widget-responsive') ?> </label> 
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('wmode'); ?>" name="<?php echo $this->get_field_name('wmode'); ?>" type="checkbox" value="1" <?php echo esc_attr($wmode) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('wmode'); ?>"><?php _e('wmode transparent', 'youtube-widget-responsive') ?></label> 
+                </p>
+                <p>
+                    <input  id="<?php echo $this->get_field_id('track'); ?>" name="<?php echo $this->get_field_name('track'); ?>" type="checkbox" value="1" <?php echo esc_attr($track) == "1" ? 'checked' : ''; ?> />
+                    <label for="<?php echo $this->get_field_id('track'); ?>"><?php _e('Track video (Google Analytics/Universal Analytics)', 'youtube-widget-responsive') ?></label> 
+                </p>
+            </div>
+            <div id="<?php echo $this->get_field_id('video') ?>-tab-schemaorg">
+                <p>
+                    <label for="<?php echo $this->get_field_id('schemaorg_name'); ?>"><?php _e('Name', 'youtube-widget-responsive') ?>*: </label> 
+                    <input class="widefat" id="<?php echo $this->get_field_id('schemaorg_name'); ?>" name="<?php echo $this->get_field_name('schemaorg_name'); ?>" type="text" value="<?php echo esc_attr($schemaorg_name); ?>" />
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('schemaorg_thumbnail'); ?>"><?php _e('Thumbnail Url', 'youtube-widget-responsive') ?>*: </label> 
+                    <input class="widefat" id="<?php echo $this->get_field_id('schemaorg_thumbnail'); ?>" name="<?php echo $this->get_field_name('schemaorg_thumbnail'); ?>" type="text" value="<?php echo esc_attr($schemaorg_thumbnail); ?>" />
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('schemaorg_uploaddate'); ?>"><?php _e('Upload date', 'youtube-widget-responsive') ?>*: </label> 
+                    <input class="widefat" id="<?php echo $this->get_field_id('schemaorg_uploaddate'); ?>" name="<?php echo $this->get_field_name('schemaorg_uploaddate'); ?>" type='text' value="<?php echo esc_textarea($schemaorg_uploaddate); ?>" pattern='[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}' maxlength="10" placeholder="<?php echo date('Y-m-d'); ?>" />
+                </p>
+                <p>
+                    <label for="<?php echo $this->get_field_id('schemaorg_description'); ?>"><?php _e('Description', 'youtube-widget-responsive') ?>*: </label> 
+                    <textarea class="widefat" style="min-height: 90px;" id="<?php echo $this->get_field_id('schemaorg_description'); ?>" name="<?php echo $this->get_field_name('schemaorg_description'); ?>"><?php echo esc_textarea($schemaorg_description); ?></textarea>
+                </p>
+                <p>
+                    <?php _e('Duration', 'youtube-widget-responsive') ?>
+                <table class='widefat'>
+                    <thead>
+                        <tr>
+                            <th><label for="<?php echo $this->get_field_id('schemaorg_durationm'); ?>"><?php _e('min', 'youtube-widget-responsive') ?>: </label></th>
+                            <th><label for="<?php echo $this->get_field_id('schemaorg_durations'); ?>"><?php _e('sec', 'youtube-widget-responsive') ?>: </label></th>
+                        </tr>
+                    </thead>
+                    <tr class='alternate'>
+                        <td>
+                            <input class="widefat" id="<?php echo $this->get_field_id('schemaorg_durationm'); ?>" name="<?php echo $this->get_field_name('schemaorg_durationm'); ?>" type='number' value="<?php echo esc_textarea($schemaorg_durationm); ?>" pattern='[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}' maxlength="10"/>
+                        </td>
+                        <td>
+                            <input class="widefat" id="<?php echo $this->get_field_id('schemaorg_durations'); ?>" name="<?php echo $this->get_field_name('schemaorg_durations'); ?>" type='number' value="<?php echo esc_textarea($schemaorg_durations); ?>" pattern='[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}' maxlength="2" style="width: 70px;" />
+                        </td>
+                    </tr>
+                </table>
+                </p>
+                <tiny style='color:gray;font-size:0.8em;'>*field required to print schema.org</tiny>
+            </div>
+            <div id="<?php echo $this->get_field_id('video') ?>-tab-shortcode">
+                <tiny style='color:gray;font-size:0.8em;'><?php _e('Save to display the new shortcode', 'youtube-widget-responsive'); ?></tiny>
+                <textarea class='widefat' style="min-height: 300px;">[youtube <?php
+                    foreach ($instance as $k => $v) {
+                        if (!empty($v)) {
+                            echo " $k=\"" . esc_textarea(esc_attr($v)) . '"';
+                        }
+                    }
+                    ?>]</textarea>
+            </div>
+        </div>
+        <script type="text/javascript">
+            jQuery(document).ready(function () {
+                jQuery(".StefanoAI_YoutubeVideo-tabs").each(function () {
+                    if (jQuery(this).closest('form').children('.widget-content').children("#widget-youtube_responsive-__i__-video-tabs").length === 0) {
+                        if (jQuery(this).attr('jsAIon') != "1") {
+                            jQuery(this).attr('jsAIon', '1');
+                            jQuery(this).tabs();
+                        }
+                    }
+                });
+
+                jQuery('.StefanoAI_YoutubeVideo_preview input.noimage').each(function () {
+                    if (jQuery(this).closest('form').children('.widget-content').children("#widget-youtube_responsive-__i__-video-tabs").length === 0) {
+                        if (jQuery(this).attr('jsAIon') != "1") {
+                            jQuery(this).attr('jsAIon', '1');
+                            var div = jQuery(this).closest('div.StefanoAI_YoutubeVideo_preview');
+                            jQuery(this).click(function () {
+                                jQuery(div).find("input.image_preview").val("");
+                                jQuery(div).find("img").attr("src", '');
+                                jQuery(div).closest('form').find('.autoplay').removeAttr('disabled');
+                                jQuery(div).find("img").css("display", 'none');
+                            });
+                        }
+                    }
+                });
+
+                jQuery('.StefanoAI_YoutubeVideo_preview input.upload').each(function () {
+                    if (jQuery(this).closest('form').children('.widget-content').children("#widget-youtube_responsive-__i__-video-tabs").length === 0) {
+                        if (jQuery(this).attr('jsAIon') != "1") {
+                            jQuery(this).attr('jsAIon', '1');
+                            var div = jQuery(this).closest('div.StefanoAI_YoutubeVideo_preview');
+                            jQuery(this).click(function () {
+                                var image = wp.media({
+                                    title: 'Upload Image',
+                                    // mutiple: true if you want to upload multiple files at once
+                                    multiple: false
+                                }).open()
+                                        .on('select', function (e) {
+                                            // This will return the selected image from the Media Uploader, the result is an object
+                                            var uploaded_image = image.state().get('selection').first();
+                                            // We convert uploaded_image to a JSON object to make accessing it easier
+                                            // Output to the console uploaded_image
+                                            //console.log(uploaded_image);
+                                            var image_url = uploaded_image.toJSON().url;
+                                            var image_id = uploaded_image.toJSON().id;
+                                            // Let's assign the url value to the input field
+                                            jQuery(div).find('img').attr('src', image_url);
+                                            jQuery(div).find('img').css('display', 'initial');
+                                            jQuery(div).find('input.image_preview').val(image_id);
+                                            jQuery(div).closest('form').find('.autoplay').attr('disabled', 'disabled');
+                                        });
+                            });
+                        }
+                    }
+                });
+            });
+        </script>
         <?php
     }
 
@@ -404,12 +643,6 @@ SCRIPT;
 
 }
 
-if (file_exists(plugin_dir_path(__FILE__) . "lang/" . get_locale() . '.php')) {
-    include_once plugin_dir_path(__FILE__) . "lang/" . get_locale() . '.php';
-} else {
-    include_once plugin_dir_path(__FILE__) . "lang/en_US.php";
-}
-
 function register_youtuberesponsive_widgets() {
     register_widget('YouTubeResponsive');
 }
@@ -417,3 +650,8 @@ function register_youtuberesponsive_widgets() {
 add_action('widgets_init', 'register_youtuberesponsive_widgets');
 add_action('wp_footer', array('YouTubeResponsive', 'wp_footer'), 99);
 add_action('wp_head', array('YouTubeResponsive', 'wp_head'), 99);
+add_action('plugins_loaded', 'youtube_widget_responsive_load_textdomain');
+
+function youtube_widget_responsive_load_textdomain() {
+    load_plugin_textdomain('youtube-widget-responsive', FALSE, plugin_dir_path('/youtube-widget-responsive/youtube-widget-responsive.php') . 'lang/');
+}

@@ -92,14 +92,13 @@ console.log('added ' + qarr[j] + ' to search array');
 console.log('testing area: ' + hlst_areas[s]);
 */
 		    if (area.length != 0){
-			  for (var l = 0; l < area.length; l++) {
 				for (i in hlst_query){
 /*
 console.log('searching for: ' + hlst_query[i]);
 */
-				    $(hlst_areas[s] + ' *').highlight(hlst_query[i], true, t, 'hilite term-' + i);
+				    area.highlight(hlst_query[i], true, t, 'hilite term-' + i);
+				    area.find('*').highlight(hlst_query[i], true, t, 'hilite term-' + i)
 				}
-			  }
 			  break;
 		    }
 		}

@@ -4,24 +4,23 @@
  *
  * @category   Apptha
  * @package    Contus video Gallery
- * @version    2.8.1
+ * @version    3.0
  * @author     Apptha Team <developers@contus.in>
- * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @copyright  Copyright (C) 2015 Apptha. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 
-if ( class_exists( 'AjaxPlaylistModel' ) != true ) {		## checks the VideoadModel class has been defined if starts
-
-	class AjaxPlaylistModel {							## PlaylistModel class starts
-
-		public $_playListId;
-
-		public function __construct() {					## contructor starts
-			global $wpdb;
-			$this->_wpdb		  = $wpdb;
-			$this->_playlisttable = $this->_wpdb->prefix . 'hdflvvideoshare_playlist';
-			$this->_playListId    = filter_input( INPUT_GET, 'playlistId' );
-		}												## contructor ends
-	}													## PlaylistModel class ends
-}														## checks the PlaylistModel class has been defined if ends
+/**
+ * Checks the AjaxPlaylistModel class 
+ * has been defined if starts
+ */
+    /**
+     * AjaxPlaylistModel class starts
+     * 
+     * @author user
+     */ 
+    class AjaxPlaylistModel { 
+        public function __construct() {}
+    }
+/** Check AjaxPlaylistModel if ends  */ 
 ?>

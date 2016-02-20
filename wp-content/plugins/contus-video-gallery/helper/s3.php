@@ -32,8 +32,7 @@
 *
 * @link http://undesigned.org.za/2007/10/22/amazon-s3-php-class
 * @version 0.2.3
-*/
-ini_set('max_execution_time', 120);
+*/ 
 class S3 {
 	// ACL flags
 	const ACL_PRIVATE = 'private';

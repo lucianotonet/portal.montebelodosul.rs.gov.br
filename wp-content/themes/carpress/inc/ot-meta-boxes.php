@@ -35,6 +35,12 @@ function custom_meta_boxes() {
 				'class'       => '',
 				'choices'     => array()
 			),
+			array(
+				'id'          => 'revo_slider_alias',
+				'label'       => __( 'Revolution Slider alias' , 'carpress_wp'),
+				'desc'        => __( 'Only applies to the template "Front Page with Revolution Slider". Paste the alias of the slider you created in the Revolution Slider plugin to this box (only <a href="https://www.diigo.com/item/image/3rli1/s9bj?size=o" target="_blank">alias</a>, not the whole shortcode).' , 'carpress_wp'),
+				'type'        => 'text',
+			),
 		)
 	);
 	if ( function_exists( 'ot_get_option' ) )

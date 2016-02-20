@@ -2,9 +2,9 @@
  * Skins css file
  * @category   Apptha
  * @package    Contus video Gallery
- * @version    2.8.1
+ * @version    3.0
  * @author     Apptha Team <developers@contus.in>
- * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @copyright  Copyright (C) 2015 Apptha. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 .jcarousel-skin-tango {clear: both;margin-top: 15px;}
@@ -16,7 +16,7 @@ padding: 5px;
 -moz-box-shadow: 0px 0px 3px #999;
 -webkit-box-shadow: 0px 0px 3px #999;
 box-shadow: 0px 0px 3px #999;}
-.jcarousel-skin-tango .vid_info{float: left;clear: both;width:100%;}
+.jcarousel-skin-tango .vid_info{float: left;clear: both;width:100%;height: 50px}
 .jcarousel-skin-tango .jcarousel-clip-vertical {    width:  80px;    height: auto;    margin-top:15px;}
 .jcarousel-skin-tango .jcarousel-item {width: 130px;
 height: auto;
