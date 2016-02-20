@@ -1,0 +1,55 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "dedbc949afdde11dcec7f244f7bba28b",
+    "packages": [
+        {
+            "name": "primozcigler/wordpress-one-click-demo-install",
+            "version": "v0.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/primozcigler/wordpress-one-click-demo-install.git",
+                "reference": "4e1f8509f18007e6cdb2751d4c830f9149fafb0c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/primozcigler/wordpress-one-click-demo-install/zipball/4e1f8509f18007e6cdb2751d4c830f9149fafb0c",
+                "reference": "4e1f8509f18007e6cdb2751d4c830f9149fafb0c",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "importer/radium-importer.php"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank Gitonga"
+                },
+                {
+                    "name": "Primoz Cigler",
+                    "email": "primoz@proteusnet.com"
+                }
+            ],
+            "description": "Once Click Demo Content Install for WordPress.",
+            "support": {
+                "source": "https://github.com/primozcigler/wordpress-one-click-demo-install/tree/v0.2.4"
+            },
+            "time": "2014-10-20 08:20:26"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "platform": [],
+    "platform-dev": []
+}
