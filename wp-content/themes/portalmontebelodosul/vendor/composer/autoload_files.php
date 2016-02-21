@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    $vendorDir . '/primozcigler/wordpress-one-click-demo-install/importer/radium-importer.php',
+    'e878807e18b3f57d57727210fdf4cefd' => $vendorDir . '/primozcigler/wordpress-one-click-demo-install/importer/radium-importer.php',
 );
