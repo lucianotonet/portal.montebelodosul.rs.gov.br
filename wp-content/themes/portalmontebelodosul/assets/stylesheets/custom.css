@@ -1,21 +1,24 @@
 h1, h2, h3, h4, h5, h6 {
 	line-height: 1;    
-	font-family:  'proxima_novablack', sans-serif;
+	font-family:  'Lato', sans-serif;
 	text-transform: uppercase;
+	font-weight: 700;
 }
 h1 .light, h2 .light, h3 .light, h4 .light, h5 .light, h6 .light,
 .sidebar-item h5 {
-	font-family:  'proxima_novalight', sans-serif;
+	font-family:  'Lato', sans-serif;
+	font-weight: 300;
 }
 .lined h5, .lined .meta-data {  
-	font-family:  'proxima_novalight', sans-serif;
+	font-family:  'Lato', sans-serif;
+	font-weight: 300;
 }
 h2 a, h4 a {
 	font-family: inherit;
 }
 
 .navbar .nav > li a {
-	font-family:  'proxima_nova_rgregular', "Dosis", sans-serif;
+	font-family:  'Open Sans', "Dosis", sans-serif;
 	font-weight: bold;
 	text-transform: uppercase;
 	color: #777777;
@@ -40,7 +43,7 @@ h2 a, h4 a {
 	background-color: #5E1321;
 }
 .title-area h1 {
-	font-family:  'proxima_novablack', sans-serif;  
+	font-family:  'Lato', sans-serif;  
 	font-size: 50px;
 }
 
@@ -150,9 +153,48 @@ h2 a, h4 a {
 
 
 .navbar-fixed-top.more-down {
-	top: 15px;
+	top: 0px;
 }
 
 .ytc-promotion, .ytc-youtubelink{
 	display: none;
+}
+
+.jumbotron--slider .carousel img {
+    /* min-height: 600px; */
+}
+
+.jumbotron--slider {
+    min-height: 365px;
+    padding-top: 180px;
+}
+.jumbotron--slider .carousel-inner {
+}
+
+.align-bottom {
+    vertical-align: bottom;
+    display: inline-table;
+    bottom: 0;
+    height: 400px;
+}
+.align-bottom div{
+    vertical-align: bottom;
+    /* float: none; */
+    display: inline-block;
+    bottom: 0;
+    position: relative;
+    /* height: 100%; */
+}
+.jumbotron .header-padding {
+    margin-left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 30px;
+    border-radius: 3px;
+}
+.jumbotron .jumbotron-title { color: #fff; font-size: 60px; font-weight: normal; margin-top: 0; }
+.align-bottom {
+    display: inline-block;
+    vertical-align: bottom;
+    float: none;
+    height: 362px;
 }

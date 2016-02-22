@@ -1,30 +1,35 @@
 <?php
 /*
 Template Name: Front Page Template With Widgets
-*/
+ */
 ?>
 
-<?php get_header(); ?>
+<?php get_header();?>
 
-	<?php get_template_part( 'jumbotron' ); ?>
+	<?php get_template_part('jumbotron');?>
 
 	<div class="main-content">
 		<div class="container">
 			<div class="row">
-				<?php dynamic_sidebar( 'home-above-map' ); ?>
+				<?php dynamic_sidebar('home-above-map');?>
 			</div>
 		</div><!-- /container -->
 
-		<?php if ( 'yes' === get_theme_mod( 'maps_front_page', 'yes' ) ) {
-			echo '<div id="gmaps-wide-container" class="with-margin"></div>';
-		} ?>
+		<?php if ('yes' === get_theme_mod('maps_front_page', 'yes')) {
+	echo '<div id="gmaps-wide-container" class="with-margin"></div>';
+}
+?>
 
 		<div class="container">
 			<div class="row">
-				<?php dynamic_sidebar( 'home-under-map' ); ?>
+				<?php dynamic_sidebar('home-under-map');?>
 			</div>
 		</div><!-- /container -->
+
+		<div class="bottom-widgets  clearfix">
+			<?php dynamic_sidebar('jumbotron-bottom');?>
+		</div><!-- /.bottom-buttons -->
 	</div>
 
 
-<?php get_footer(); ?>
+<?php get_footer();?>
