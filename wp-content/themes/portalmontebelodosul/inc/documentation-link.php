@@ -7,7 +7,7 @@ if ( ! function_exists( 'pt_add_docs_page' ) ) {
 	function pt_add_docs_page() {
 		add_theme_page(
 			_x( 'Documentation', 'backend', 'carpress_wp' ),
-			_x( 'Documentation', 'backend', 'cappress_wp' ),
+			_x( 'Documentation', 'backend', 'carpress_wp' ),
 			'',
 			'proteusthemes-theme-docs',
 			'pt_docs_page_output'

@@ -3,8 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Carpress WP Theme 1.8.0\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tags/carpress\n"
-"POT-Creation-Date: 2014-10-14 08:03:10+00:00\n"
+"Report-Msgid-Bugs-To: http://support.proteusthemes.com/\n"
+"POT-Creation-Date: 2015-04-01 12:39:31+00:00\n"
 "PO-Revision-Date: 2014-12-16 08:50+0100\n"
 "Last-Translator: \n"
 "Language-Team: Silvercode <kontakt@silvercode.pl>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: ..\n"
 "X-Poedit-SearchPath-1: .\n"
 
-#: 404.php:9 inc/helpers.php:133
+#: 404.php:9 inc/helpers.php:141
 msgid "Error 404"
 msgstr "Błąd 404"
 
@@ -92,11 +92,6 @@ msgstr "Adres email"
 msgid "Website"
 msgstr "Strona internetowa"
 
-#: comments.php:88
-msgctxt "noun"
-msgid "Your comment"
-msgstr "Twój komentarz"
-
 #: comments.php:90
 msgid "Post A Comment"
 msgstr "Napisz komentarz"
@@ -110,60 +105,289 @@ msgstr "<p class=\"name\"><span>%s</span> pisze:</p>"
 msgid "%1$s at %2$s"
 msgstr "%1$s o %2$s"
 
+#: inc/custom-comments.php:65
+msgid "Your comment is awaiting moderation."
+msgstr "Twój komentarz oczekuje na moderację."
+
+#: inc/helpers.php:98
+msgid "Page %s"
+msgstr "Strona %s"
+
+#: inc/helpers.php:136
+msgid "Home Page"
+msgstr "Strona domowa"
+
+#: inc/helpers.php:137
+msgid "Archive by Category &quot;%s&quot;"
+msgstr "Archiwum kategorii &quot;%s&quot;"
+
+#: inc/helpers.php:138
+msgid "Search Results for &quot;%s&quot; Query"
+msgstr "Wyniki wyszukiwania dla zapytania &quot;%s&quot;"
+
+#: inc/helpers.php:139
+msgid "Posts Tagged &quot;%s&quot;"
+msgstr "Wpisy otagowane &quot;%s&quot;"
+
+#: inc/helpers.php:140
+msgid "Articles Posted by %s"
+msgstr "Artykuły napisane przez %s"
+
+#: inc/helpers.php:262
+msgid "Page"
+msgstr "Strona"
+
+#: inc/ot-meta-boxes.php:40
+msgid "Revolution Slider alias"
+msgstr ""
+
+#: inc/ot-meta-boxes.php:41
+msgid ""
+"Only applies to the template \"Front Page with Revolution Slider\". Paste "
+"the alias of the slider you created in the Revolution Slider plugin to this "
+"box (only <a href=\"https://www.diigo.com/item/image/3rli1/s9bj?size=o\" "
+"target=\"_blank\">alias</a>, not the whole shortcode)."
+msgstr ""
+
+#: inc/post-types.php:12 titlearea.php:60
+msgid "Services"
+msgstr "Usługi"
+
+#: inc/post-types.php:41
+msgid "Galleries"
+msgstr "Galerie"
+
+#: inc/post-types.php:126
+msgid "Team"
+msgstr "Załoga"
+
+#: inc/theme-widgets.php:38
+msgid "Sunday"
+msgstr "Niedziela"
+
+#: inc/theme-widgets.php:39
+msgid "Monday"
+msgstr "Poniedziałek"
+
+#: inc/theme-widgets.php:40
+msgid "Tuesday"
+msgstr "Wtorek"
+
+#: inc/theme-widgets.php:41
+msgid "Wednesday"
+msgstr "Środa"
+
+#: inc/theme-widgets.php:42
+msgid "Thursday"
+msgstr "Czwartek"
+
+#: inc/theme-widgets.php:43
+msgid "Friday"
+msgstr "Piątek"
+
+#: inc/theme-widgets.php:44
+msgid "Saturday"
+msgstr "Sobota"
+
+#: inc/theme-widgets.php:327
+msgid "Read more"
+msgstr "Czytaj więcej"
+
+#: inc/theme-widgets.php:337 inc/theme-widgets.php:457
+msgid "READ MORE"
+msgstr "CZYTAJ WIĘCEJ"
+
+#: inc/woocommerce.php:81
+msgid "%s has been added to your cart."
+msgid_plural "%s have been added to your cart."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: inc/woocommerce.php:86
+msgid "Continue Shopping"
+msgstr ""
+
+#: inc/woocommerce.php:88
+#, fuzzy
+msgid "View Cart"
+msgstr "Pokaż galerię"
+
+#: index.php:41 single.php:40
+msgid "Author"
+msgstr "Autor"
+
+#: index.php:42 single.php:41
+msgid "No comments"
+msgstr "Brak komentarzy"
+
+#: index.php:42 single.php:41
+msgid "One comment"
+msgstr "Jeden komentarz"
+
+#. translators: % represents the number, you must include it
+#: index.php:42 single.php:41
+msgid "% comments"
+msgstr "%c komentarzy"
+
+#: index.php:43 single.php:42
+msgid "Categories"
+msgstr "Kategorie"
+
+#: index.php:43 single.php:42
+msgid "Tags"
+msgstr "Tagi"
+
+#: index.php:53
+msgid "Read More"
+msgstr "Czytaj Więcej"
+
+#: index.php:55
+msgid "Link to this post"
+msgstr "Odnośnik do tego posta"
+
+#: index.php:73
+msgid "No posts found, sorry."
+msgstr "Przepraszamy, nie znaleziono postów."
+
+#: searchform.php:4
+msgid "Go"
+msgstr "Idź"
+
+#: single-services.php:66
+msgid "Back to services"
+msgstr "Powrót do usług."
+
+#: single.php:51
+msgid "Pages:"
+msgstr "Strony:"
+
+#: titlearea.php:54
+msgid "Category"
+msgstr "Kategoria"
+
+#: titlearea.php:56
+msgid "Tag"
+msgstr "Tag"
+
+#: titlearea.php:58
+msgid "Search Results For"
+msgstr "Szukaj wyników dla"
+
+#: titlearea.php:62
+msgid "Gallery"
+msgstr "Galeria"
+
+#: titlearea.php:64
+msgid "Meet the Team"
+msgstr "Poznaj załogę"
+
+#. Theme Name of the plugin/theme
+msgid "Carpress WP Theme"
+msgstr "Skórka Carpress WP"
+
+#. Theme URI of the plugin/theme
+msgid "http://carpress.demo.proteusthemes.com/"
+msgstr "http://carpress.demo.proteusthemes.com/"
+
+#. Description of the plugin/theme
+msgid ""
+"Carpress WP Theme is perfect for car mechanics, car wash, handymans and "
+"other local business, but it serves as good for any other type of website as "
+"well."
+msgstr ""
+"Skórka Carpress WP Themejest doskonała dla mechaników samochodowych, myjni "
+"samochodowych, złotych rączek i innych lokalnych biznesów, ale nadaje się "
+"również do innego typu stron internetowych."
+
+#. Author of the plugin/theme
+msgid "ProteusThemes"
+msgstr "ProteusThemes"
+
+#. Author URI of the plugin/theme
+msgid "http://www.proteusthemes.com/"
+msgstr "http://www.proteusthemes.com/"
+
+#. Template Name of the plugin/theme
+msgid "Appointment Page"
+msgstr "Strona wizyty"
+
+#. Template Name of the plugin/theme
+msgid "Contact Page without Sidebar"
+msgstr "Strona kontaktowa bez paska bocznego"
+
+#. Template Name of the plugin/theme
+msgid "Contact Page Template"
+msgstr "Szablon strony kontaktowej"
+
+#. Template Name of the plugin/theme
+msgid "Front Page Template With Content"
+msgstr "Szablon strony głównej z treścią"
+
+#. Template Name of the plugin/theme
+#, fuzzy
+msgid "Front Page with Revolution Slider"
+msgstr "Strona kontaktowa bez paska bocznego"
+
+#. Template Name of the plugin/theme
+msgid "Front Page Template With Widgets &amp; Slider"
+msgstr "Strona główna ze slajderem widget"
+
+#. Template Name of the plugin/theme
+msgid "Front Page Template With Widgets"
+msgstr "Szablon strony głównej z widgetami"
+
+#. Template Name of the plugin/theme
+msgid "Regular Page without Sidebar"
+msgstr "Standardowa strona główna bez paska bocznego"
+
+#. Template Name of the plugin/theme
+msgid "Regular Page with a Sidebar on the Right"
+msgstr "Standardowa strona z paskiem bocznym po prawej"
+
+#. Template Name of the plugin/theme
+msgid "Services Layout"
+msgstr "Układ usług"
+
+#: comments.php:88
+msgctxt "noun"
+msgid "Your comment"
+msgstr "Twój komentarz"
+
 #: inc/custom-comments.php:57
 msgctxt "backend"
 msgid "(Edit)"
 msgstr "Edytuj"
 
-#: inc/custom-comments.php:65
-msgid "Your comment is awaiting moderation."
-msgstr "Twój komentarz oczekuje na moderację."
+#: inc/documentation-link.php:9 inc/documentation-link.php:10
+#: inc/documentation-link.php:21
+#, fuzzy
+msgctxt "backend"
+msgid "Documentation"
+msgstr "Dokumentacja"
 
-#: inc/helpers.php:90
-msgid "Page %s"
-msgstr "Strona %s"
+#: inc/documentation-link.php:24
+msgctxt "backend"
+msgid "Click here to see online documentation of the theme!"
+msgstr ""
 
-#: inc/helpers.php:128
-msgid "Home Page"
-msgstr "Strona domowa"
-
-#: inc/helpers.php:129
-msgid "Archive by Category &quot;%s&quot;"
-msgstr "Archiwum kategorii &quot;%s&quot;"
-
-#: inc/helpers.php:130
-msgid "Search Results for &quot;%s&quot; Query"
-msgstr "Wyniki wyszukiwania dla zapytania &quot;%s&quot;"
-
-#: inc/helpers.php:131
-msgid "Posts Tagged &quot;%s&quot;"
-msgstr "Wpisy otagowane &quot;%s&quot;"
-
-#: inc/helpers.php:132
-msgid "Articles Posted by %s"
-msgstr "Artykuły napisane przez %s"
-
-#: inc/helpers.php:254
-msgid "Page"
-msgstr "Strona"
-
-#: inc/ot-meta-boxes.php:14 inc/ot-meta-boxes.php:48 inc/ot-meta-boxes.php:134
+#: inc/ot-meta-boxes.php:14 inc/ot-meta-boxes.php:54 inc/ot-meta-boxes.php:140
 msgctxt "backend"
 msgid "Carpress Options"
 msgstr "Opcje Carpress"
 
-#: inc/ot-meta-boxes.php:15 inc/ot-meta-boxes.php:49 inc/ot-meta-boxes.php:135
+#: inc/ot-meta-boxes.php:15 inc/ot-meta-boxes.php:55 inc/ot-meta-boxes.php:141
 msgctxt "backend"
 msgid "Options specific to Carpress theme"
 msgstr "Opcje specyficzne dla skórki carpress"
 
-#: inc/ot-meta-boxes.php:22 inc/ot-meta-boxes.php:56 inc/ot-meta-boxes.php:142
-#: inc/theme-widgets.php:1500
+#: inc/ot-meta-boxes.php:22 inc/ot-meta-boxes.php:62 inc/ot-meta-boxes.php:148
+#: inc/theme-widgets.php:1503
 msgctxt "backend"
 msgid "Subtitle"
 msgstr "Podtytuł"
 
-#: inc/ot-meta-boxes.php:23 inc/ot-meta-boxes.php:57 inc/ot-meta-boxes.php:143
+#: inc/ot-meta-boxes.php:23 inc/ot-meta-boxes.php:63 inc/ot-meta-boxes.php:149
 msgctxt "backend"
 msgid ""
 "Subtitle of this page (shown right below the main title). Leave blank if you "
@@ -172,48 +396,48 @@ msgstr ""
 "Podtytuł strony (widoczny pod głównym tytułem). Zostaw to pole puste jeżeli "
 "nie chcesz wyświetlać podtytułu."
 
-#: inc/ot-meta-boxes.php:31 inc/ot-meta-boxes.php:85
+#: inc/ot-meta-boxes.php:31 inc/ot-meta-boxes.php:91
 msgctxt "backend"
 msgid "Background Image for Title Area"
 msgstr "Miejsce na obrazek tła dla nagłówka"
 
-#: inc/ot-meta-boxes.php:32 inc/ot-meta-boxes.php:86
+#: inc/ot-meta-boxes.php:32 inc/ot-meta-boxes.php:92
 msgctxt "backend"
 msgid ""
 "You can upload a custom image for the background of the title area for "
 "individual page."
 msgstr "Możesz załadować różne obrazki dla tła każdej strony."
 
-#: inc/ot-meta-boxes.php:65
+#: inc/ot-meta-boxes.php:71
 msgctxt "backend"
 msgid "Show on front page"
 msgstr "Pokaż na stronie głównej"
 
-#: inc/ot-meta-boxes.php:66
+#: inc/ot-meta-boxes.php:72
 msgctxt "backend"
 msgid "Show this service on the front page?"
 msgstr "Czy pokazać usługę na stronie głównej?"
 
-#: inc/ot-meta-boxes.php:73 inc/ot-meta-boxes.php:156
+#: inc/ot-meta-boxes.php:79 inc/ot-meta-boxes.php:162
 #: inc/theme-customizer.php:212 inc/theme-customizer.php:345
 #: inc/theme-customizer.php:359 inc/theme-customizer.php:506
 msgctxt "backend"
 msgid "Yes"
 msgstr "Tak"
 
-#: inc/ot-meta-boxes.php:78 inc/ot-meta-boxes.php:161
+#: inc/ot-meta-boxes.php:84 inc/ot-meta-boxes.php:167
 #: inc/theme-customizer.php:213 inc/theme-customizer.php:344
 #: inc/theme-customizer.php:360 inc/theme-customizer.php:507
 msgctxt "backend"
 msgid "No"
 msgstr "Nie"
 
-#: inc/ot-meta-boxes.php:94
+#: inc/ot-meta-boxes.php:100
 msgctxt "backend"
 msgid "Optional link for the front page services widget"
 msgstr "Opcjonalny odnośnik dla widgety usług na stronie głównej."
 
-#: inc/ot-meta-boxes.php:95
+#: inc/ot-meta-boxes.php:101
 msgctxt "backend"
 msgid ""
 "By default (if you leave this blank) each &quot;READ MORE&quot; link will "
@@ -224,34 +448,34 @@ msgstr ""
 "odnośnik prowadzi do usługi. Możesz zdefiniować swój własny odnośnik poprzez "
 "wpisanie adresu."
 
-#: inc/ot-meta-boxes.php:110
+#: inc/ot-meta-boxes.php:116
 msgctxt "backend"
 msgid "Testimonial Options"
 msgstr "Opcje referencji"
 
-#: inc/ot-meta-boxes.php:118
+#: inc/ot-meta-boxes.php:124
 msgctxt "backend"
 msgid "Title of the author for this testimonial"
 msgstr "Tytuł autora tej referencji"
 
-#: inc/ot-meta-boxes.php:149
+#: inc/ot-meta-boxes.php:155
 msgctxt "backend"
 msgid "Disply in the widget?"
 msgstr "Wyświetlić widgetę?"
 
-#: inc/ot-meta-boxes.php:150
+#: inc/ot-meta-boxes.php:156
 msgctxt "backend"
 msgid ""
 "If you select here yes, this team member will be shown in the widget The Team"
 msgstr ""
 "Jeżeli zaznaczysz tak, członek załogi będzie pokazany we widgecie ZAŁOGI"
 
-#: inc/ot-meta-boxes.php:168
+#: inc/ot-meta-boxes.php:174
 msgctxt "backend"
 msgid "Team Member Custom Fields"
 msgstr "Niestandardowe pola Załogi"
 
-#: inc/ot-meta-boxes.php:169
+#: inc/ot-meta-boxes.php:175
 msgctxt "backend"
 msgid ""
 "You can here define properties of the team member such as Age, Style, "
@@ -259,10 +483,6 @@ msgid ""
 msgstr ""
 "Możesz zdefiniować właściwości dla każdego członka załogi tj. wiek, styl, "
 "wytkształcenie itd"
-
-#: inc/post-types.php:12 titlearea.php:60
-msgid "Services"
-msgstr "Usługi"
 
 #: inc/post-types.php:13
 msgctxt "backend"
@@ -319,10 +539,6 @@ msgstr "Nie ma żadnych usług w koszu"
 msgctxt "backend"
 msgid "Services"
 msgstr "Usługi"
-
-#: inc/post-types.php:41
-msgid "Galleries"
-msgstr "Galerie"
 
 #: inc/post-types.php:42 inc/post-types.php:52
 msgctxt "backend"
@@ -468,10 +684,6 @@ msgstr "Nie znaleziono referencji"
 msgctxt "backend"
 msgid "No testimonial found in Trash"
 msgstr "Nie ma żadnych referencji w koszu"
-
-#: inc/post-types.php:126
-msgid "Team"
-msgstr "Załoga"
 
 #: inc/post-types.php:127
 msgctxt "backend"
@@ -970,38 +1182,10 @@ msgctxt "backend"
 msgid "Opening Time Widget for placing it into the sidebar or above the slider"
 msgstr "Widgeta godzin otwarcia umieszczona na pasku bocznym lub na slajderze"
 
-#: inc/theme-widgets.php:38
-msgid "Sunday"
-msgstr "Niedziela"
-
-#: inc/theme-widgets.php:39
-msgid "Monday"
-msgstr "Poniedziałek"
-
-#: inc/theme-widgets.php:40
-msgid "Tuesday"
-msgstr "Wtorek"
-
-#: inc/theme-widgets.php:41
-msgid "Wednesday"
-msgstr "Środa"
-
-#: inc/theme-widgets.php:42
-msgid "Thursday"
-msgstr "Czwartek"
-
-#: inc/theme-widgets.php:43
-msgid "Friday"
-msgstr "Piątek"
-
-#: inc/theme-widgets.php:44
-msgid "Saturday"
-msgstr "Sobota"
-
 #: inc/theme-widgets.php:225 inc/theme-widgets.php:517
-#: inc/theme-widgets.php:701 inc/theme-widgets.php:846
-#: inc/theme-widgets.php:968 inc/theme-widgets.php:1072
-#: inc/theme-widgets.php:1223 inc/theme-widgets.php:1390
+#: inc/theme-widgets.php:701 inc/theme-widgets.php:848
+#: inc/theme-widgets.php:970 inc/theme-widgets.php:1074
+#: inc/theme-widgets.php:1225 inc/theme-widgets.php:1392
 msgctxt "backend"
 msgid "Title:"
 msgstr "Tytuł"
@@ -1038,19 +1222,11 @@ msgstr "Carpress: Nasze usługi"
 
 #: inc/theme-widgets.php:281 inc/theme-widgets.php:413
 #: inc/theme-widgets.php:556 inc/theme-widgets.php:754
-#: inc/theme-widgets.php:881 inc/theme-widgets.php:1113
-#: inc/theme-widgets.php:1260
+#: inc/theme-widgets.php:883 inc/theme-widgets.php:1115
+#: inc/theme-widgets.php:1262
 msgctxt "backend"
 msgid "Use this widget only on the home page of the Carpress theme"
 msgstr "Używaj tej widgety tylko na stronie głównej Carpress"
-
-#: inc/theme-widgets.php:327
-msgid "Read more"
-msgstr "Czytaj więcej"
-
-#: inc/theme-widgets.php:337 inc/theme-widgets.php:457
-msgid "READ MORE"
-msgstr "CZYTAJ WIĘCEJ"
 
 #: inc/theme-widgets.php:382
 msgctxt "backend"
@@ -1107,12 +1283,12 @@ msgctxt "backend"
 msgid "Image"
 msgstr "Obrazek"
 
-#: inc/theme-widgets.php:722 inc/theme-widgets.php:1228
+#: inc/theme-widgets.php:722 inc/theme-widgets.php:1230
 msgctxt "backend"
 msgid "Interval:"
 msgstr "Interwał:"
 
-#: inc/theme-widgets.php:723 inc/theme-widgets.php:1229
+#: inc/theme-widgets.php:723 inc/theme-widgets.php:1231
 msgctxt "backend"
 msgid ""
 "In miliseconds (1s = 1000ms). Set to <code>0</code> to disable auto-scroll."
@@ -1125,39 +1301,39 @@ msgctxt "backend"
 msgid "Carpress: Meet The Team"
 msgstr "Carpress: Poznaj naszą załogę."
 
-#: inc/theme-widgets.php:850
+#: inc/theme-widgets.php:852
 msgctxt "backend"
 msgid "Text for the link to all members (leave empty if don't want to show):"
 msgstr ""
 "Tekst przycisku prowadzącego do wszystkich członków załogi (zostaw pusty by "
 "nie wyświetlać)"
 
-#: inc/theme-widgets.php:879
+#: inc/theme-widgets.php:881
 msgctxt "backend"
 msgid "Carpress: Text with Link"
 msgstr "Carpress: Tekst z linkiem"
 
-#: inc/theme-widgets.php:972
+#: inc/theme-widgets.php:974
 msgctxt "backend"
 msgid "Link text"
 msgstr "Tekst odnośnika"
 
-#: inc/theme-widgets.php:976 inc/theme-widgets.php:1504
+#: inc/theme-widgets.php:978 inc/theme-widgets.php:1507
 msgctxt "backend"
 msgid "Link"
 msgstr "Odnośnik"
 
-#: inc/theme-widgets.php:981
+#: inc/theme-widgets.php:983
 msgctxt "backend"
 msgid "Text block"
 msgstr "Blok tekstowy"
 
-#: inc/theme-widgets.php:1006
+#: inc/theme-widgets.php:1008
 msgctxt "backend"
 msgid "Carpress: Custom Width Text For Home Page"
 msgstr "Carpress: Niestandardowa szerokość tekstu dla strony głównej"
 
-#: inc/theme-widgets.php:1008
+#: inc/theme-widgets.php:1010
 msgctxt "backend"
 msgid ""
 "Use this widget only on the home page of the Carpress theme. With this "
@@ -1166,230 +1342,93 @@ msgstr ""
 "Używaj tej widgety tylko na stronie głównej skórki Carpress. Tą wtyczką "
 "możesz sprecyzować niestandardową szerokość tekstu."
 
-#: inc/theme-widgets.php:1076
+#: inc/theme-widgets.php:1078
 msgctxt "backend"
 msgid "Number of columns:"
 msgstr "Ilość kolumn:"
 
-#: inc/theme-widgets.php:1085
+#: inc/theme-widgets.php:1087
 msgctxt "backend"
 msgid "Automatically add paragraphs"
 msgstr "Automatycznie dodawaj paragrafy"
 
-#: inc/theme-widgets.php:1111
+#: inc/theme-widgets.php:1113
 msgctxt "backend"
 msgid "Carpress: Testimonials"
 msgstr "Carpress: Referencje"
 
-#: inc/theme-widgets.php:1258
+#: inc/theme-widgets.php:1260
 msgctxt "backend"
 msgid "Carpress: Divider"
 msgstr "Carpress: rozdzielacz (divider)"
 
-#: inc/theme-widgets.php:1310
+#: inc/theme-widgets.php:1312
 msgctxt "backend"
 msgid "Carpress: Facebook"
 msgstr "Carpress: Facebook"
 
-#: inc/theme-widgets.php:1312
+#: inc/theme-widgets.php:1314
 msgctxt "backend"
 msgid "Use this widget only in the footer of the Carpress theme"
 msgstr "Uzywaj tej widgety tylko w stopce skórki Carpress"
 
-#: inc/theme-widgets.php:1394
+#: inc/theme-widgets.php:1396
 msgctxt "backend"
 msgid "FB Page to like"
 msgstr "Strona FB do polubień"
 
-#: inc/theme-widgets.php:1421
+#: inc/theme-widgets.php:1423
 msgctxt "backend"
 msgid "Carpress: Title with Icon"
 msgstr "Carpress: Tytuł z ikoną"
 
-#: inc/theme-widgets.php:1423
+#: inc/theme-widgets.php:1425
 msgctxt "backend"
 msgid "Widget for the front page in the head - select title, subtitle and icon"
 msgstr ""
 "Widgeta dla skecji head na stronie głównej - wybierz tytuł, podtytuł i ikonę"
 
-#: inc/theme-widgets.php:1496
+#: inc/theme-widgets.php:1499
 msgctxt "backend"
 msgid "Title"
 msgstr "Tytuł"
 
-#: inc/theme-widgets.php:1514
+#: inc/theme-widgets.php:1517
 msgctxt "backend"
 msgid "Text Color:"
 msgstr "Kolor tekstu"
 
-#: inc/theme-widgets.php:1519
+#: inc/theme-widgets.php:1522
 msgctxt "backend"
 msgid "Icon"
 msgstr "Ikona"
 
-#: inc/theme-widgets.php:1520
+#: inc/theme-widgets.php:1523
 msgctxt "backend"
 msgid "Click on the icon below or manually select from the %s website"
 msgstr "Kliknij na ikonę poniżej albo ręcznie wybierz z witryny %s"
 
-#: index.php:41 single.php:40
-msgid "Author"
-msgstr "Autor"
+#~ msgid "Cart Total"
+#~ msgstr "Koszyk razem"
 
-#: index.php:42 single.php:41
-msgid "No comments"
-msgstr "Brak komentarzy"
+#~ msgid "Cart Subtotal"
+#~ msgstr "Podsuma koszyka"
 
-#: index.php:42 single.php:41
-msgid "One comment"
-msgstr "Jeden komentarz"
+#~ msgid "Coupon:"
+#~ msgstr "Kupon:"
 
-#. translators: % represents the number, you must include it
-#: index.php:42 single.php:41
-msgid "% comments"
-msgstr "%c komentarzy"
+#~ msgid "Order Total"
+#~ msgstr "Całe zamówienie"
 
-#: index.php:43 single.php:42
-msgid "Categories"
-msgstr "Kategorie"
+#~ msgid " (taxes estimated for %s)"
+#~ msgstr " (podatek dla %s)"
 
-#: index.php:43 single.php:42
-msgid "Tags"
-msgstr "Tagi"
-
-#: index.php:53
-msgid "Read More"
-msgstr "Czytaj Więcej"
-
-#: index.php:55
-msgid "Link to this post"
-msgstr "Odnośnik do tego posta"
-
-#: index.php:73
-msgid "No posts found, sorry."
-msgstr "Przepraszamy, nie znaleziono postów."
-
-#: searchform.php:4
-msgid "Go"
-msgstr "Idź"
-
-#: single-services.php:66
-msgid "Back to services"
-msgstr "Powrót do usług."
-
-#: single.php:51
-msgid "Pages:"
-msgstr "Strony:"
-
-#: titlearea.php:54
-msgid "Category"
-msgstr "Kategoria"
-
-#: titlearea.php:56
-msgid "Tag"
-msgstr "Tag"
-
-#: titlearea.php:58
-msgid "Search Results For"
-msgstr "Szukaj wyników dla"
-
-#: titlearea.php:62
-msgid "Gallery"
-msgstr "Galeria"
-
-#: titlearea.php:64
-msgid "Meet the Team"
-msgstr "Poznaj załogę"
-
-#: woocommerce/cart/cart-totals.php:16
-msgid "Cart Total"
-msgstr "Koszyk razem"
-
-#: woocommerce/cart/cart-totals.php:21
-msgid "Cart Subtotal"
-msgstr "Podsuma koszyka"
-
-#: woocommerce/cart/cart-totals.php:27 woocommerce/cart/cart-totals.php:67
-msgid "Coupon:"
-msgstr "Kupon:"
-
-#: woocommerce/cart/cart-totals.php:75
-msgid "Order Total"
-msgstr "Całe zamówienie"
-
-#: woocommerce/cart/cart-totals.php:87
-msgid " (taxes estimated for %s)"
-msgstr " (podatek dla %s)"
-
-#: woocommerce/cart/cart-totals.php:90
-msgid ""
-"Note: Shipping and taxes are estimated%s and will be updated during checkout "
-"based on your billing and shipping information."
-msgstr ""
-"Uwaga: koszty wysyłki i podatku są szacunkowe %s i mogą ulec zmianie podczas "
-"kolejnych etapów zamówienia."
-
-#. Theme Name of the plugin/theme
-msgid "Carpress WP Theme"
-msgstr "Skórka Carpress WP"
-
-#. Theme URI of the plugin/theme
-msgid "http://carpress.demo.proteusthemes.com/"
-msgstr "http://carpress.demo.proteusthemes.com/"
-
-#. Description of the plugin/theme
-msgid ""
-"Carpress WP Theme is perfect for car mechanics, car wash, handymans and "
-"other local business, but it serves as good for any other type of website as "
-"well."
-msgstr ""
-"Skórka Carpress WP Themejest doskonała dla mechaników samochodowych, myjni "
-"samochodowych, złotych rączek i innych lokalnych biznesów, ale nadaje się "
-"również do innego typu stron internetowych."
-
-#. Author of the plugin/theme
-msgid "ProteusThemes"
-msgstr "ProteusThemes"
-
-#. Author URI of the plugin/theme
-msgid "http://www.proteusthemes.com/"
-msgstr "http://www.proteusthemes.com/"
-
-#. Template Name of the plugin/theme
-msgid "Appointment Page"
-msgstr "Strona wizyty"
-
-#. Template Name of the plugin/theme
-msgid "Contact Page without Sidebar"
-msgstr "Strona kontaktowa bez paska bocznego"
-
-#. Template Name of the plugin/theme
-msgid "Contact Page Template"
-msgstr "Szablon strony kontaktowej"
-
-#. Template Name of the plugin/theme
-msgid "Front Page Template With Content"
-msgstr "Szablon strony głównej z treścią"
-
-#. Template Name of the plugin/theme
-msgid "Front Page Template With Widgets &amp; Slider"
-msgstr "Strona główna ze slajderem widget"
-
-#. Template Name of the plugin/theme
-msgid "Front Page Template With Widgets"
-msgstr "Szablon strony głównej z widgetami"
-
-#. Template Name of the plugin/theme
-msgid "Regular Page without Sidebar"
-msgstr "Standardowa strona główna bez paska bocznego"
-
-#. Template Name of the plugin/theme
-msgid "Regular Page with a Sidebar on the Right"
-msgstr "Standardowa strona z paskiem bocznym po prawej"
-
-#. Template Name of the plugin/theme
-msgid "Services Layout"
-msgstr "Układ usług"
+#~ msgid ""
+#~ "Note: Shipping and taxes are estimated%s and will be updated during "
+#~ "checkout based on your billing and shipping information."
+#~ msgstr ""
+#~ "Uwaga: koszty wysyłki i podatku są szacunkowe %s i mogą ulec zmianie "
+#~ "podczas kolejnych etapów zamówienia."
 
 #~ msgid "Please enter your Envato Marketplace Username."
 #~ msgstr "Proszę wpisać nazwę użytkownika Evanto Marketplace (username)"
@@ -1733,9 +1772,6 @@ msgstr "Układ usług"
 
 #~ msgid "Layout Management"
 #~ msgstr "Zarządzanie układami"
-
-#~ msgid "Documentation"
-#~ msgstr "Dokumentacja"
 
 #~ msgid "Creating Options"
 #~ msgstr "Tworzenie opcji"

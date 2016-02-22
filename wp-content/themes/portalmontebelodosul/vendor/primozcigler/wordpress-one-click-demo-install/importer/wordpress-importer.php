@@ -995,7 +995,6 @@ class WP_Import extends WP_Importer {
 	// Display import page title
 	function header() {
 		echo '<div class="wrap">';
-		screen_icon();
 		echo '<h2>' . __( 'Import WordPress', 'radium' ) . '</h2>';
 
 		$updates = get_plugin_updates();
@@ -1073,7 +1072,7 @@ class WP_Import extends WP_Importer {
 	 * Added to http_request_timeout filter to force timeout at 60 seconds during import
 	 * @return int 60
 	 */
-	function bump_request_timeout() {
+	function bump_request_timeout( $val ) {
 		return 60;
 	}
 

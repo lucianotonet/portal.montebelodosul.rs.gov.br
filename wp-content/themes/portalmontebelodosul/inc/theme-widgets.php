@@ -4,297 +4,7 @@
  *
  * @package Carpress
  */
-/**************************************
- * Home Page Latest News Widget
- * -----------------------------------
- * List of the latest news on the home page
- **************************************/
 
-class Home_Last_News extends WP_Widget {
-
-	/**
-	 * Register widget with WordPress.
-	 */
-	public function __construct() {
-		parent::__construct(
-			false, // ID, auto generate when false
-			_x( "Carpress: Latest News" , 'backend', 'carpress_wp'), // Name
-			array(
-				'description' => _x( 'Use this widget only on the home page of the Carpress theme', 'backend', 'carpress_wp'),
-			)
-		);
-	}
-
-	/**
-	 * Front-end display of widget.
-	 *
-	 * @see WP_Widget::widget()
-	 *
-	 * @param array $args     Widget arguments.
-	 * @param array $instance Saved values from database.
-	 */
-	public function widget( $args, $instance ) {
-		$num = intval( $instance['num'] );
-		$link = $instance['link'];
-
-		?>
-		<div class="span<?php echo $num * 3; ?>"><!-- latest news -->
-			  <div class="lined">
-				<?php if( ! empty( $link ) ) { ?>
-				  <a href="<?php echo get_permalink( get_option( 'page_for_posts' ) ); ?>" class="btn btn-theme pull-right no-bevel"><?php echo $link; ?></a>
-				  <?php }
-					  $instance['title'] = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base );
-					  echo $instance['title'];
-				  ?>
-				  <span class="bolded-line"></span>
-			  </div>
-
-			  <div class="row">
-				<?php
-				$news = new WP_Query( array(
-					'posts_per_page'      => $num,
-					'ignore_sticky_posts' => true,
-				) );
-				if ( $news->have_posts() ) :
-					while( $news->have_posts() ) :
-						$news->the_post(); ?>
-				  <article class="span3">
-					  <h3 class="no-margin"><?php the_title(); ?></h3>
-					  <div class="meta-info">
-						  <span class="date"><?php the_time( get_option( 'date_format' ) ); ?></span>
-					  </div>
-					  <?php the_excerpt(); ?>
-					  <a href="<?php the_permalink(); ?>" class="read-more"><?php _e( 'READ MORE', 'carpress_wp'); ?> -</a>
-				  </article>
-						  <?php
-						endwhile;
-					endif;
-					wp_reset_postdata();
-				  ?>
-			  </div>
-		</div><!-- /latest news -->
-		<?php
-	}
-
-	/**
-	 * Sanitize widget form values as they are saved.
-	 *
-	 * @see WP_Widget::update()
-	 *
-	 * @param array $new_instance Values just sent to be saved.
-	 * @param array $old_instance Previously saved values from database.
-	 *
-	 * @return array Updated safe values to be saved.
-	 */
-	public function update( $new_instance, $old_instance ) {
-		$instance = array();
-
-		$instance['title'] = strip_tags( $new_instance['title'] );
-		$instance['num'] = strip_tags( $new_instance['num'] );
-		$instance['link'] = strip_tags( $new_instance['link'] );
-
-		return $instance;
-	}
-
-	/**
-	 * Back-end widget form.
-	 *
-	 * @see WP_Widget::form()
-	 *
-	 * @param array $instance Previously saved values from database.
-	 */
-	public function form( $instance ) {
-		if ( isset( $instance[ 'title' ] ) ) {
-			$title = $instance[ 'title' ];
-		}
-		else {
-			$title = 'Latest News // What is going on';
-		}
-
-		if ( isset( $instance[ 'num' ] ) ) {
-			$num = $instance[ 'num' ];
-		} else {
-			$num = '2';
-		}
-
-		if ( isset( $instance[ 'link' ] ) ) {
-			$link = $instance[ 'link' ];
-		} else {
-			$link = '';
-		}
-		?>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _ex( 'Title:', 'backend', 'carpress_wp'); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
-		</p>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'num' ); ?>"><?php _ex( 'Number of news to display', 'backend', 'carpress_wp'); ?>:</label>
-			<input size="5" id="<?php echo $this->get_field_id( 'num' ); ?>" name="<?php echo $this->get_field_name( 'num' ); ?>" type="text" value="<?php echo esc_attr( $num ); ?>" />
-		</p>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'link' ); ?>"><?php _ex( 'Text for the all posts\'s link', 'backend', 'carpress_wp'); ?>:</label> <br />
-			<input id="<?php echo $this->get_field_id( 'link' ); ?>" name="<?php echo $this->get_field_name( 'link' ); ?>" type="text" value="<?php echo esc_attr( $link ); ?>" />
-		</p>
-
-		<?php
-	}
-
-} // class Home_Last_News
-add_action( 'widgets_init', create_function( '', 'register_widget( "Home_Last_News" );' ) );
-
-
-
-/**************************************
- * Home Page Latest News Widget
- * -----------------------------------
- * List of the latest news on the home page
- **************************************/
-
-class Home_Category_News extends WP_Widget {
-
-	/**
-	 * Register widget with WordPress.
-	 */
-	public function __construct() {
-		parent::__construct(
-			false, // ID, auto generate when false
-			_x( "Notícias da categoria" , 'backend', 'carpress_wp'), // Name
-			array(
-				'description' => _x( 'Use this widget only on the home page of the Carpress theme', 'backend', 'carpress_wp'),
-			)
-		);
-	}
-
-	/**
-	 * Front-end display of widget.
-	 *
-	 * @see WP_Widget::widget()
-	 *
-	 * @param array $args     Widget arguments.
-	 * @param array $instance Saved values from database.
-	 */
-	public function widget( $args, $instance ) {
-		$num = isset($instance['num']) ? intval( $instance['num'] ) : null;
-		$link = isset($instance['link']) ? $instance['link'] : null;
-		$cat = isset($instance['cat']) ? $instance['cat'] : '';
-
-		?>
-		<div class="span<?php echo $num * 3; ?>"><!-- latest news -->
-			  <div class="lined">
-				<?php if( ! empty( $link ) ) { ?>
-				  <a href="<?php echo get_permalink( get_option( 'page_for_posts' ) ); ?>" class="btn btn-theme pull-right no-bevel"><?php echo $link; ?></a>
-				  <?php }
-					  $instance['title'] = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base );
-					  echo $instance['title'];
-				  ?>
-				  <span class="bolded-line"></span>
-			  </div>
-
-			  <div class="row">
-				<?php
-				$news = new WP_Query( array(
-					'posts_per_page'      => $num,
-					'ignore_sticky_posts' => true,
-					'cat'				  => $cat
-				) );
-				if ( $news->have_posts() ) :
-					while( $news->have_posts() ) :
-						$news->the_post(); ?>
-				  <article class="span3">
-					  <h3 class="no-margin"><?php the_title(); ?></h3>
-					  <div class="meta-info">
-						  <span class="date"><?php the_time( get_option( 'date_format' ) ); ?></span>
-					  </div>
-					  <?php the_excerpt(); ?>
-					  <a href="<?php the_permalink(); ?>" class="read-more"><?php _e( 'READ MORE', 'carpress_wp'); ?> -</a>
-				  </article>
-						  <?php
-						endwhile;
-					endif;
-					wp_reset_postdata();
-				  ?>
-			  </div>
-		</div><!-- /latest news -->
-		<?php
-	}
-
-	/**
-	 * Sanitize widget form values as they are saved.
-	 *
-	 * @see WP_Widget::update()
-	 *
-	 * @param array $new_instance Values just sent to be saved.
-	 * @param array $old_instance Previously saved values from database.
-	 *
-	 * @return array Updated safe values to be saved.
-	 */
-	public function update( $new_instance, $old_instance ) {
-		$instance = array();
-
-		$instance['title'] = strip_tags( $new_instance['title'] );
-		$instance['num'] = strip_tags( $new_instance['num'] );
-		$instance['link'] = strip_tags( $new_instance['link'] );
-		$instance['cat'] = strip_tags( $new_instance['cat'] );
-
-		return $instance;
-	}
-
-	/**
-	 * Back-end widget form.
-	 *
-	 * @see WP_Widget::form()
-	 *
-	 * @param array $instance Previously saved values from database.
-	 */
-	public function form( $instance ) {
-		if ( isset( $instance[ 'title' ] ) ) {
-			$title = $instance[ 'title' ];
-		}
-		else {
-			$title = 'Categoria Informativos // Útlimas notícias do categoria';
-		}
-
-		if ( isset( $instance[ 'num' ] ) ) {
-			$num = $instance[ 'num' ];
-		} else {
-			$num = '2';
-		}
-
-		if ( isset( $instance[ 'link' ] ) ) {
-			$link = $instance[ 'link' ];
-		} else {
-			$link = '';
-		}
-
-		?>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _ex( 'Title:', 'backend', 'carpress_wp'); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
-		</p>
-
-		<!-- Category Select Menu -->   
-	    <p>
-	        <select id="<?php echo $this->get_field_id('cat'); ?>" name="<?php echo $this->get_field_name('cat'); ?>" class="widefat" style="width:100%;">
-	            <?php foreach(get_terms('category','parent=0&hide_empty=0') as $term) { ?>
-	            <option <?php selected( $instance['cat'], $term->term_id ); ?> value="<?php echo $term->term_id; ?>"><?php echo $term->name; ?></option>
-	            <?php } ?>      
-	        </select>
-	    </p>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'num' ); ?>"><?php _ex( 'Number of news to display', 'backend', 'carpress_wp'); ?>:</label>
-			<input size="5" id="<?php echo $this->get_field_id( 'num' ); ?>" name="<?php echo $this->get_field_name( 'num' ); ?>" type="text" value="<?php echo esc_attr( $num ); ?>" />
-		</p>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'link' ); ?>"><?php _ex( 'Text for the all posts\'s link', 'backend', 'carpress_wp'); ?>:</label> <br />
-			<input id="<?php echo $this->get_field_id( 'link' ); ?>" name="<?php echo $this->get_field_name( 'link' ); ?>" type="text" value="<?php echo esc_attr( $link ); ?>" />
-		</p>
-
-		<?php
-	}
-
-	
-} // class Home_Last_News
-add_action( 'widgets_init', create_function( '', 'register_widget( "Home_Category_News" );' ) );
 
 /**************************************
  * Opening Time Widget
@@ -684,7 +394,143 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "Home_Service
 
 
 
+/**************************************
+ * Home Page Latest News Widget
+ * -----------------------------------
+ * List of the latest news on the home page
+ **************************************/
 
+class Home_Last_News extends WP_Widget {
+
+	/**
+	 * Register widget with WordPress.
+	 */
+	public function __construct() {
+		parent::__construct(
+			false, // ID, auto generate when false
+			_x( "Carpress: Latest News" , 'backend', 'carpress_wp'), // Name
+			array(
+				'description' => _x( 'Use this widget only on the home page of the Carpress theme', 'backend', 'carpress_wp'),
+			)
+		);
+	}
+
+	/**
+	 * Front-end display of widget.
+	 *
+	 * @see WP_Widget::widget()
+	 *
+	 * @param array $args     Widget arguments.
+	 * @param array $instance Saved values from database.
+	 */
+	public function widget( $args, $instance ) {
+		$num = intval( $instance['num'] );
+		$link = $instance['link'];
+
+		?>
+		<div class="span<?php echo $num * 3; ?>  carpress-latest-news-widget"><!-- latest news -->
+			  <div class="lined">
+				<?php if( ! empty( $link ) ) { ?>
+				  <a href="<?php echo get_permalink( get_option( 'page_for_posts' ) ); ?>" class="btn btn-theme pull-right no-bevel"><?php echo $link; ?></a>
+				  <?php }
+					  $instance['title'] = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base );
+					  echo $instance['title'];
+				  ?>
+				  <span class="bolded-line"></span>
+			  </div>
+
+			  <div class="row">
+				<?php
+				$news = new WP_Query( array(
+					'posts_per_page'      => $num,
+					'ignore_sticky_posts' => true,
+				) );
+				if ( $news->have_posts() ) :
+					while( $news->have_posts() ) :
+						$news->the_post(); ?>
+				  <article class="span3">
+					  <h3 class="no-margin"><?php the_title(); ?></h3>
+					  <div class="meta-info">
+						  <span class="date"><?php the_time( get_option( 'date_format' ) ); ?></span>
+					  </div>
+					  <?php the_excerpt(); ?>
+					  <a href="<?php the_permalink(); ?>" class="read-more"><?php _e( 'READ MORE', 'carpress_wp'); ?> -</a>
+				  </article>
+						  <?php
+						endwhile;
+					endif;
+					wp_reset_postdata();
+				  ?>
+			  </div>
+		</div><!-- /latest news -->
+		<?php
+	}
+
+	/**
+	 * Sanitize widget form values as they are saved.
+	 *
+	 * @see WP_Widget::update()
+	 *
+	 * @param array $new_instance Values just sent to be saved.
+	 * @param array $old_instance Previously saved values from database.
+	 *
+	 * @return array Updated safe values to be saved.
+	 */
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+
+		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['num'] = strip_tags( $new_instance['num'] );
+		$instance['link'] = strip_tags( $new_instance['link'] );
+
+		return $instance;
+	}
+
+	/**
+	 * Back-end widget form.
+	 *
+	 * @see WP_Widget::form()
+	 *
+	 * @param array $instance Previously saved values from database.
+	 */
+	public function form( $instance ) {
+		if ( isset( $instance[ 'title' ] ) ) {
+			$title = $instance[ 'title' ];
+		}
+		else {
+			$title = 'Latest News // What is going on';
+		}
+
+		if ( isset( $instance[ 'num' ] ) ) {
+			$num = $instance[ 'num' ];
+		} else {
+			$num = '2';
+		}
+
+		if ( isset( $instance[ 'link' ] ) ) {
+			$link = $instance[ 'link' ];
+		} else {
+			$link = '';
+		}
+		?>
+		<p>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _ex( 'Title:', 'backend', 'carpress_wp'); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id( 'num' ); ?>"><?php _ex( 'Number of news to display', 'backend', 'carpress_wp'); ?>:</label>
+			<input size="5" id="<?php echo $this->get_field_id( 'num' ); ?>" name="<?php echo $this->get_field_name( 'num' ); ?>" type="text" value="<?php echo esc_attr( $num ); ?>" />
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id( 'link' ); ?>"><?php _ex( 'Text for the all posts\'s link', 'backend', 'carpress_wp'); ?>:</label> <br />
+			<input id="<?php echo $this->get_field_id( 'link' ); ?>" name="<?php echo $this->get_field_name( 'link' ); ?>" type="text" value="<?php echo esc_attr( $link ); ?>" />
+		</p>
+
+		<?php
+	}
+
+} // class Home_Last_News
+add_action( 'widgets_init', create_function( '', 'register_widget( "Home_Last_News" );' ) );
 
 
 
@@ -924,6 +770,8 @@ class Home_Meet_Team extends WP_Widget {
 			'nopaging'   => true,
 			'meta_key'   => 'team_in_widget',
 			'meta_value' => 'yes',
+			'orderby'    => 'menu_order',
+			'order'      => 'ASC',
 		) );
 		$num_of_members = absint( $query_members->found_posts );
 
@@ -1599,10 +1447,11 @@ class Mehanic_Title_Icon_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		echo $args['before_widget'];
 		$color = ( ! empty( $instance['color'] ) && '#ffffff' != $instance['color'] ) ? ' style="color: ' . $instance['color'] . '"' : '';;
+		$title = apply_filters( 'widget_title', empty($instance['title']) ? '' : $instance['title'], $instance );
 		?>
 			<a class="widget-inner" href="<?php echo $instance['btn_link']; ?>">
 				<i class="fa  <?php echo $instance['icon']; ?>  fa-3x  pull-right"<?php echo $color; ?>></i>
-				<h3 class="widget-title"<?php echo $color; ?>><?php echo $instance['title']; ?></h3>
+				<h3 class="widget-title"<?php echo $color; ?>><?php echo $title; ?></h3>
 				<div class="widget-text"<?php echo $color; ?>><?php echo $instance['subtitle']; ?></div>
 			</a>
 		<?php
@@ -1665,7 +1514,7 @@ class Mehanic_Title_Icon_Widget extends WP_Widget {
 			});
 		</script>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'color' ); ?>"><?php _ex( 'Text Color:', 'backend', 'organique_wp' ); ?></label> <br>
+			<label for="<?php echo $this->get_field_id( 'color' ); ?>"><?php _ex( 'Text Color:', 'backend', 'carpress_wp' ); ?></label> <br>
 			<input class="js--attach-color-picker" id="<?php echo $this->get_field_id( 'color' ); ?>" name="<?php echo $this->get_field_name( 'color' ); ?>" type="text" value="<?php echo esc_attr( $color ); ?>" data-default-color="#ffffff" />
 		</p>
 

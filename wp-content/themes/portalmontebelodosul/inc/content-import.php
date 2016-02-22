@@ -30,6 +30,8 @@ if ( class_exists( 'Radium_Theme_Importer' ) && ! class_exists( 'Carpress_Theme_
 		public $theme_options_file_name = '__ignored__';
 		public $widgets_file_name       = 'widgets.json';
 		public $content_demo_file_name  = 'content.xml';
+		public $content_demo_url        = 'http://artifacts.proteusthemes.com/xml-exports/carpress-latest.xml';
+		public $widget_demo_url         = 'http://artifacts.proteusthemes.com/json-widgets/carpress.json';
 
 		/**
 		 * Holds a copy of the widget settings
@@ -47,7 +49,9 @@ if ( class_exists( 'Radium_Theme_Importer' ) && ! class_exists( 'Carpress_Theme_
 		 */
 		public function __construct() {
 
-			$this->demo_files_path = get_template_directory() . '/demo-content/';
+			$upload_dir = wp_upload_dir();
+
+			$this->demo_files_path = trailingslashit( $upload_dir['path'] );
 
 			self::$instance = $this;
 			parent::__construct();
@@ -71,11 +75,15 @@ if ( class_exists( 'Radium_Theme_Importer' ) && ! class_exists( 'Carpress_Theme_
 			);
 
 			// Set options for front page and blog page
-			$front_page_id = get_page_by_path( 'home-page' )->ID;
-			$blog_page_id  = get_page_by_path( 'blog' )->ID;
+			$front_page_id = get_page_by_title( 'Home Page' )->ID;
+			$blog_page_id  = get_page_by_title( 'Blog' )->ID;
 
+			update_option( 'show_on_front', 'page' );
 			update_option( 'page_on_front', $front_page_id );
 			update_option( 'page_for_posts', $blog_page_id );
+
+			// Set logo in customizer
+			set_theme_mod( 'logo_img', get_template_directory_uri() . '/assets/images/logo.png' );
 		}
 
 		/**

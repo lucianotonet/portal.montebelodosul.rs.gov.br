@@ -165,8 +165,8 @@ h2 a, h4 a {
 }
 
 .jumbotron--slider {
-    min-height: 365px;
-    padding-top: 180px;
+    height: 210px;
+    padding-top: 260px;
 }
 .jumbotron--slider .carousel-inner {
 }
@@ -186,15 +186,41 @@ h2 a, h4 a {
     /* height: 100%; */
 }
 .jumbotron .header-padding {
-    margin-left: 0;
+    margin-left: -100px;
     background-color: rgba(0, 0, 0, 0.5);
-    padding: 10px 30px;
-    border-radius: 3px;
+    padding: 10px 30px 10px 160px;
+    border-radius: 0px;
+    float: left;
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    max-width: 310px;
 }
-.jumbotron .jumbotron-title { color: #fff; font-size: 60px; font-weight: normal; margin-top: 0; }
+
+.jumbotron .jumbotron-title { color: #fff;font-size: 28px; font-weight: normal;text-align: left;vertical-align: baseline;margin: 0;}
 .align-bottom {
     display: inline-block;
     vertical-align: bottom;
     float: none;
     height: 362px;
+}
+
+div#em_widget-2, .widget_text {
+    padding: 10px;
+    text-align: center;
+    background: #fff;
+    color: #000;
+    border-radius: 3px;
+}
+div#em_widget-2 ul{
+    padding: 0;
+    margin: 0;
+}
+div#em_widget-2 ul li{
+    list-style: none;
+    border-bottom: 1px dashed #e3e3e3;
+}
+div#em_widget-2 h2{
+    padding: 0;
+    margin: 0;
 }

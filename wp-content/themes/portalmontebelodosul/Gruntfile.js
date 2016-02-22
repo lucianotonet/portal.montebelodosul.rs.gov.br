@@ -2,6 +2,11 @@ module.exports = function (grunt) {
 	// load all deps
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
+	var config = {
+		phpFileRegex:            '[^/]+\.php$',
+		phpFileInSubfolderRegex: '.*?\.php$',
+	}
+
 	// configuration
 	grunt.initConfig({
 		pgk: grunt.file.readJSON('package.json'),
@@ -69,7 +74,51 @@ module.exports = function (grunt) {
 					src: ['assets/js/custom.js', 'Gruntfile.js']
 				}
 			}
-		}
+		},
+
+		// https://www.npmjs.com/package/grunt-wp-i18n
+		makepot: {
+			target: {
+				options: {
+					domainPath:      'languages/',
+					include:         [config.phpFileRegex, '^inc/'+config.phpFileInSubfolderRegex, '^woocommerce/'+config.phpFileInSubfolderRegex],
+					mainFile:        'style.css',
+					potComments:     'Copyright (C) {year} ProteusThemes \n# This file is distributed under the GPL 2.0.',
+					potFilename:     'carpress.pot',
+					potHeaders:      {
+						poedit:                 true,
+						'report-msgid-bugs-to': 'http://support.proteusthemes.com/',
+					},
+					type: 'wp-theme',
+					updateTimestamp: false,
+					updatePoFiles:   true,
+				}
+			}
+		},
+
+		// https://www.npmjs.com/package/grunt-wp-i18n
+		addtextdomain: {
+			options: {
+				updateDomains: true
+			},
+			target: {
+				files: {
+					src: [
+						'*.php',
+						'inc/**/*.php',
+						'woocommerce/**/*.php'
+					]
+				}
+			}
+		},
+
+		// https://www.npmjs.com/package/grunt-po2mo
+		po2mo: {
+			files: {
+				src:    'languages/*.po',
+				expand: true,
+			},
+		},
 	});
 
 	// when developing
@@ -84,4 +133,11 @@ module.exports = function (grunt) {
 	grunt.registerTask('default', [
 		'server'
 	]);
+
+	// update languages files
+	grunt.registerTask( 'languages', [
+		'addtextdomain',
+		'makepot',
+		'po2mo',
+	] );
 };

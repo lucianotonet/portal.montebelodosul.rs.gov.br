@@ -27,7 +27,9 @@ add_filter( "the_title", "my_title" );
  * Add the subtitle to the widget titles
  */
 function widget_subtitle( $title, $instance = '', $id = '' ) {
-	if ( 'opening_time' === $id ) {
+	if ( 'opening_time' === $id ||
+	    '' === $id // Title & Icon Widget don't have an id
+	) {
 		return $title;
 	} else if ( 0 === strlen( trim( $title ) ) ) {
 		return '';
@@ -92,3 +94,16 @@ add_filter( 'use_default_gallery_style', '__return_false' );
  * Flush the rewrite rules after the OT settings are saved
  */
 add_action( 'ot_after_theme_options_save', 'flush_rewrite_rules' );
+
+
+/**
+ * Backwards compatibility for title tags theme support in WordPress 4.1
+ */
+if ( ! function_exists( '_wp_render_title_tag' ) && ! function_exists( 'carpress_render_title' ) ) {
+	function carpress_render_title() {
+		?>
+		<title><?php wp_title( '|', true, 'right' ); ?></title>
+		<?php
+	}
+	add_action( 'wp_head', 'carpress_render_title' );
+}

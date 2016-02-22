@@ -4,21 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dedbc949afdde11dcec7f244f7bba28b",
-    "content-hash": "98a4b24d97c55e8a9adcb5b975479f78",
+    "hash": "5041ae8287a19e16ab33a19168d05e7e",
     "packages": [
         {
             "name": "primozcigler/wordpress-one-click-demo-install",
-            "version": "v0.2.4",
+            "version": "v0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/primozcigler/wordpress-one-click-demo-install.git",
-                "reference": "4e1f8509f18007e6cdb2751d4c830f9149fafb0c"
+                "reference": "87c6e027105bd3688acf19e809a2f24b4eea76cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/primozcigler/wordpress-one-click-demo-install/zipball/4e1f8509f18007e6cdb2751d4c830f9149fafb0c",
-                "reference": "4e1f8509f18007e6cdb2751d4c830f9149fafb0c",
+                "url": "https://api.github.com/repos/primozcigler/wordpress-one-click-demo-install/zipball/87c6e027105bd3688acf19e809a2f24b4eea76cc",
+                "reference": "87c6e027105bd3688acf19e809a2f24b4eea76cc",
                 "shasum": ""
             },
             "type": "library",
@@ -41,9 +40,9 @@
             ],
             "description": "Once Click Demo Content Install for WordPress.",
             "support": {
-                "source": "https://github.com/primozcigler/wordpress-one-click-demo-install/tree/v0.2.4"
+                "source": "https://github.com/primozcigler/wordpress-one-click-demo-install/tree/v0.4.0"
             },
-            "time": "2014-10-20 08:20:26"
+            "time": "2015-05-28 12:56:17"
         }
     ],
     "packages-dev": [],

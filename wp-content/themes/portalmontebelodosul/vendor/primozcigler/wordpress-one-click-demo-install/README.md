@@ -8,9 +8,19 @@ This library works by importing wordpress content, widgets  and theme options wi
 ### Requirements:
 
 * WordPress Theme
-* `content.xml` - generated using the Worpress Content Exporter plugin
-* `widgets.json` - generated using the Widget Importer Exporter plugin. Rename it from .wie to .json
+* `content.xml` - generated using the Worpress Content Exporter plugin. Upload it to your server.
+* `widgets.json` - generated using the Widget Importer Exporter plugin. Rename it from .wie to .json and upload it to your server.
 * `theme_options.txt` - generated using the theme options frameworks such as Redux Framework, NHP Options Framework or Radium Framework
+
+The new version v0.4.0 the script gets the demo data files (content.xml and widgets.json) from the server so you need to specify the URLs to these files:
+
+```
+public $content_demo_url = 'http://your_domain.com/path-to-file/content.xml';
+public $widget_demo_url  = 'http://your_domain.com/path-to-file/widgets.json';
+```
+
+These files are then saved in the WordPress upload directory and used for demo import.
+
 
 ### How to use:
 

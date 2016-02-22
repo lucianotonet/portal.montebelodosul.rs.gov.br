@@ -6,21 +6,15 @@
  * @author Primoz Ciger <primoz@proteusnet.com>
  */
 
-if (!function_exists('unregister_post_type')):
-	/**
-	 * Remove the post types registered by parent theme
-	 * @param  [type] $post_type [description]
-	 * @return [type]            [description]
-	 */
-	function unregister_post_type($post_type) {
-		global $wp_post_types;
-		if (isset($wp_post_types[$post_type])) {
-			unset($wp_post_types[$post_type]);
-			return true;
-		}
-		return false;
-	}
-endif;
+/**
+ * Define the version variable to assign it to all the assets (css and js)
+ */
+// define( "CARPRESS_WP_VERSION", wp_get_theme()->get( 'Version' ) );
+
+/**
+ * Define the development
+ */
+// define( "CARPRESS_DEVELOPMENT", false );
 
 /**
  * Set the content width based on the theme's design and stylesheet.
@@ -49,10 +43,10 @@ if (!function_exists('carpress_adjust_content_width')) {
  * - ot_show_new_layout: will hide the "New Layout" section on the Theme Options page.
  */
 
-// if ( ! CARPRESS_DEVELOPMENT ) {
-// 	add_filter( 'ot_show_pages', '__return_false' );
-// 	add_filter( 'ot_show_new_layout', '__return_false' );
-// }
+if (!CARPRESS_DEVELOPMENT) {
+	add_filter('ot_show_pages', '__return_false');
+	add_filter('ot_show_new_layout', '__return_false');
+}
 
 // Required: set 'ot_theme_mode' filter to true.
 add_filter('ot_theme_mode', '__return_true');
@@ -61,9 +55,9 @@ add_filter('ot_theme_mode', '__return_true');
 load_template(trailingslashit(get_template_directory()) . 'bower_components/option-tree/ot-loader.php');
 
 // Load the options file
-// if ( ! CARPRESS_DEVELOPMENT ) {
-// 	locate_template( 'inc/theme-options.php', true, true );
-// }
+if (!CARPRESS_DEVELOPMENT) {
+	locate_template('inc/theme-options.php', true, true);
+}
 
 /**
  * Theme support and thumbnail sizes
@@ -81,6 +75,9 @@ if (!function_exists('carpress_setup')) {
 
 		// Add default posts and comments RSS feed links to head.
 		add_theme_support('automatic-feed-links');
+
+		// Add title tag support
+		add_theme_support('title-tag');
 
 		// WooCommerce basic support
 		add_theme_support('woocommerce');
@@ -117,10 +114,14 @@ if (!function_exists('carpress_setup')) {
  */
 if (!function_exists('custom_styles')) {
 	function custom_styles() {
-		// custom fonts
-		wp_register_style('custom-fonts', get_stylesheet_directory_uri() . "/assets/fonts/stylesheet.css", array('main-css'), CARPRESS_WP_VERSION);
-		// custom css
-		wp_register_style('custom-css', get_stylesheet_directory_uri() . "/assets/stylesheets/custom.css", array('custom-fonts'), CARPRESS_WP_VERSION);
+		// bootstrap css
+		wp_register_style('bootstrap', get_stylesheet_directory_uri() . "/assets/stylesheets/bootstrap.css", false, '2.2.1');
+		// main style
+		wp_register_style('main-css', get_stylesheet_directory_uri() . "/assets/stylesheets/main.css", array('bootstrap'), CARPRESS_WP_VERSION);
+		// CUSTOM CSS
+		wp_register_style('custom-css', get_stylesheet_directory_uri() . "/assets/stylesheets/custom.css", array('main-css'), CARPRESS_WP_VERSION);
+		// jquery UI theme
+		wp_register_style('jquery-ui-carpress', get_stylesheet_directory_uri() . "/assets/jquery-ui/css/smoothness/jquery-ui-1.10.2.custom.min.css", false, '1.10.2');
 	}
 	add_action("init", "custom_styles");
 }
@@ -128,13 +129,16 @@ if (!function_exists('custom_styles')) {
 /**
  * Enqueue styles
  */
-if (!function_exists('carpress_styles')) {
-	function carpress_styles() {
+if (!function_exists('enqueue_styles')) {
+	function enqueue_styles() {
 		if (!is_admin() && !is_login_page()) {
+			wp_enqueue_style('boostrap-css');
+			wp_enqueue_style('main-css');
 			wp_enqueue_style('custom-css');
+			wp_enqueue_style('jquery-ui-carpress');
 		}
 	}
-	add_action('wp_enqueue_scripts', 'carpress_styles');
+	add_action('wp_enqueue_scripts', 'enqueue_styles');
 }
 
 /**

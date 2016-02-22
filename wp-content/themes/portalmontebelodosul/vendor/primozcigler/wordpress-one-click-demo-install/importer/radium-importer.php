@@ -122,8 +122,9 @@ class Radium_Theme_Importer {
 
 				<script>
 					jQuery( function ( $ ) {
+						'use strict';
 						$( '.js-one-click-import-form' ).on( 'submit', function () {
-							$( this ).append( '<p style="font-width: bold; font-size: 1.5em;"><span class="spinner" style="display: inline-block; float: none;"></span> Importing now, please wait!</p>' );
+							$( this ).append( '<p style="font-width: bold; font-size: 1.5em;"><span class="spinner" style="display: inline-block; float: none; visibility: visible;"></span> Importing now, please wait!</p>' );
 							$( this ).find( '.panel-save' ).attr( 'disabled', true );
 						} );
 					} );
@@ -139,16 +140,68 @@ class Radium_Theme_Importer {
 
 		if( 'demo-data' == $action && check_admin_referer('radium-demo-code' , 'demononce')){
 
+			// Get content demo data xml file from the server
+			$this->get_demo_content_data_files( $this->content_demo_url , $this->content_demo_file_name );
+
 			$this->set_demo_data( $this->content_demo );
 
 			$this->set_demo_theme_options( $this->theme_options_file ); //import before widgets incase we need more sidebars
 
 			$this->set_demo_menus();
 
+			// Get widgets demo data file from the server
+			$this->get_demo_content_data_files( $this->widget_demo_url, $this->widgets_file_name );
+
 			$this->process_widget_import_file( $this->widgets );
 
 		}
 
+	}
+
+	/**
+	 * get_demo_content_data_files Get demo data file defined in $file
+	 * from the server and save it in the uploads directory
+	 * @param  string $file File name of the file to fetch from the server
+	 *
+	 * @return null
+	 */
+	public function get_demo_content_data_files( $url, $file ) {
+		// Test if the URL to the file is defined
+		if ( empty( $url ) ) {
+			wp_die( printf( _x( '<div class="error"><p>An error occurred! URL for <strong>%s</strong> is not defined!</p></div>', 'backend', 'radium' ), $file ) );
+		}
+
+		// Get file contents from the server
+		$response = wp_remote_get( $url );
+		if ( ! is_wp_error( $response ) ) {
+			$response_body = wp_remote_retrieve_body( $response );
+		}
+		else {
+			wp_die( printf( _x( '<div class="error"><p>An error occurred while fetching <strong>%s</strong> from the server!</p></div>', 'backend', 'radium' ), $file ) );
+		}
+
+		// Get user credentials for WP filesystem API
+		$demo_import_page_url = wp_nonce_url( 'themes.php?page=radium_demo_installer', 'radium_demo_installer' );
+		if ( false === ( $creds = request_filesystem_credentials( $demo_import_page_url, '', false, false, null ) ) ) {
+			return true;
+		}
+
+		// Now we have credentials, try to get the wp_filesystem running
+		if ( ! WP_Filesystem( $creds ) ) {
+			// Our credentials were no good, ask the user for them again
+			request_filesystem_credentials( $demo_import_page_url, '', true, false, null );
+			return true;
+		}
+
+		// Setup filename path to save the content from
+		$upload_dir = wp_upload_dir();
+		$filename = $this->demo_files_path . $file;
+
+		// By this point, the $wp_filesystem global should be working, so let's use it to create a file
+		global $wp_filesystem;
+		if ( ! $wp_filesystem->put_contents( $filename, $response_body, FS_CHMOD_FILE ) ) {
+			wp_die( printf( _x( '<div class="error"><p>An error occurred while writing file <strong>%s</strong> to the upload directory!</p></div>', 'backend', 'radium' ), $file ) );
+		}
 	}
 
 	/**
@@ -507,7 +560,7 @@ class Radium_Theme_Importer {
 
 				// Result for widget instance
 				$results[$sidebar_id]['widgets'][$widget_instance_id]['name'] = isset( $available_widgets[$id_base]['name'] ) ? $available_widgets[$id_base]['name'] : $id_base; // widget name or ID if name not available (not supported by site)
-				$results[$sidebar_id]['widgets'][$widget_instance_id]['title'] = $widget->title ? $widget->title : __( 'No Title', 'radium' ); // show "No Title" if widget instance is untitled
+				$results[$sidebar_id]['widgets'][$widget_instance_id]['title'] = ! empty( $widget->title ) ? $widget->title : __( 'No Title', 'radium' ); // show "No Title" if widget instance is untitled
 				$results[$sidebar_id]['widgets'][$widget_instance_id]['message_type'] = $widget_message_type;
 				$results[$sidebar_id]['widgets'][$widget_instance_id]['message'] = $widget_message;
 

@@ -1188,7 +1188,7 @@ ul.nav li.dropdown:hover > ul.dropdown-menu, ul.nav li:hover > ul.submenu-langua
 .jumbotron--slider .carousel-control.right { right: 2%; }
 .jumbotron--slider .carousel-control.left { left: 2%; }
 @media (max-width: 1337px) { .jumbotron--slider .carousel-control { display: none; } }
-.jumbotron--slider .carousel-indicators { left: 50%; width: 320px; margin-left: -160px; top: 84%; text-align: center; }
+.jumbotron--slider .carousel-indicators { left: 50%; width: 320px; margin-left: -160px;top: 80%; text-align: center;}
 .jumbotron--slider .carousel-indicators li { display: inline-block; float: none; cursor: pointer; }
 .jumbotron--slider .hidden-slide { display: none; }
 .jumbotron--slider .hidden-slide.shown { display: block; }

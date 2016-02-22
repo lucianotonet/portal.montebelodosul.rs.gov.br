@@ -3,7 +3,7 @@
  * Plugin Name: OptionTree
  * Plugin URI:  https://github.com/valendesigns/option-tree/
  * Description: Theme Options UI Builder for WordPress. A simple way to create & save Theme Options and Meta Boxes for free or premium themes.
- * Version:     2.4.2
+ * Version:     2.5.4
  * Author:      Derek Herman
  * Author URI:  http://valendesigns.com
  * License:     GPLv3
@@ -178,7 +178,7 @@ if ( ! class_exists( 'OT_Loader' ) ) {
       /**
        * Current Version number.
        */
-      define( 'OT_VERSION', '2.4.2' );
+      define( 'OT_VERSION', '2.5.4' );
       
       /**
        * For developers: Theme mode.
@@ -382,6 +382,9 @@ if ( ! class_exists( 'OT_Loader' ) ) {
         $files[] = 'ot-functions-docs-page';
       }
       
+      /* include the cleanup api */
+      $files[] = 'ot-cleanup-api';
+      
       /* require the files */
       foreach ( $files as $file ) {
         $this->load_file( OT_DIR . "includes" . DIRECTORY_SEPARATOR . "{$file}.php" );
@@ -486,7 +489,10 @@ if ( ! class_exists( 'OT_Loader' ) ) {
       
       /* global CSS */
       add_action( 'admin_head', array( $this, 'global_admin_css' ) );
-      
+
+      /* Google Fonts front-end CSS */
+      add_action( 'wp_enqueue_scripts', 'ot_load_google_fonts_css', 1 );
+ 
       /* dynamic front-end CSS */
       add_action( 'wp_enqueue_scripts', 'ot_load_dynamic_css', 999 );
 
@@ -516,6 +522,9 @@ if ( ! class_exists( 'OT_Loader' ) ) {
       
       /* AJAX call to create a new social link */
       add_action( 'wp_ajax_add_social_links', array( $this, 'add_social_links' ) );
+
+      /* AJAX call to retrieve Google Font data */
+      add_action( 'wp_ajax_ot_google_font', array( $this, 'retrieve_google_font' ) );
       
       // Adds the temporary hacktastic shortcode
       add_filter( 'media_view_settings', array( $this, 'shortcode' ), 10, 2 );
@@ -682,8 +691,13 @@ if ( ! class_exists( 'OT_Loader' ) ) {
     public function shortcode( $settings, $post ) {
   
       // Set the OptionTree post ID
-      if ( ! is_object( $post ) )
-        $settings['post']['id'] = ot_get_media_post_ID();
+      if ( ! is_object( $post ) ) {
+        $post_id = isset( $_GET['post'] ) ? $_GET['post'] : ( isset( $_GET['post_ID'] ) ? $_GET['post_ID'] : 0 );
+        if ( $post_id == 0 && function_exists( 'ot_get_media_post_ID' ) ) {
+          $post_id = ot_get_media_post_ID();
+        }
+        $settings['post']['id'] = $post_id;
+      }
       
       // No ID return settings
       if ( $settings['post']['id'] == 0 )
@@ -725,6 +739,30 @@ if ( ! class_exists( 'OT_Loader' ) ) {
       }
       
     }
+
+    /**
+     * Returns a JSON encoded Google fonts array.
+     *
+     * @return    array
+     *
+     * @access    public
+     * @since     2.5.0
+     */
+    public function retrieve_google_font() {
+
+      if ( isset( $_POST['field_id'], $_POST['family'] ) ) {
+        
+        ot_fetch_google_fonts();
+        
+        echo json_encode( array(
+          'variants' => ot_recognized_google_font_variants( $_POST['field_id'], $_POST['family'] ),
+          'subsets'  => ot_recognized_google_font_subsets( $_POST['field_id'], $_POST['family'] )
+        ) );
+        exit();
+
+      }
+
+    }
     
     /**
      * Filters the media uploader button.
@@ -737,7 +775,7 @@ if ( ! class_exists( 'OT_Loader' ) ) {
     public function change_image_button( $translation, $text, $domain ) {
       global $pagenow;
     
-      if ( $pagenow == 'themes.php' && 'default' == $domain && 'Insert into post' == $text ) {
+      if ( $pagenow == apply_filters( 'ot_theme_options_parent_slug', 'themes.php' ) && 'default' == $domain && 'Insert into post' == $text ) {
         
         // Once is enough.
         remove_filter( 'gettext', array( $this, 'ot_change_image_button' ) );

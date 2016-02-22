@@ -7,8 +7,34 @@
 
 
 function carpress_custom_post_types() {
-	
-	unregister_post_type( 'services' );
+	// services
+	$labels = array(
+		'name'               => __( 'Services' , 'carpress_wp'),
+		'singular_name'      => _x( 'Service' , 'backend', 'carpress_wp'),
+		'add_new'            => _x( 'Add New' , 'backend', 'carpress_wp'),
+		'add_new_item'       => _x( 'Add New Service' , 'backend', 'carpress_wp'),
+		'edit_item'          => _x( 'Edit Service' , 'backend', 'carpress_wp'),
+		'new_item'           => _x( 'New Service' , 'backend', 'carpress_wp'),
+		'all_items'          => _x( 'All Services' , 'backend', 'carpress_wp'),
+		'view_item'          => _x( 'View Service' , 'backend', 'carpress_wp'),
+		'search_items'       => _x( 'Search Services' , 'backend', 'carpress_wp'),
+		'not_found'          => _x( 'No services found' , 'backend', 'carpress_wp'),
+		'not_found_in_trash' => _x( 'No services found in Trash' , 'backend', 'carpress_wp'),
+		'menu_name'          => _x( 'Services' , 'backend', 'carpress_wp'),
+	);
+	$args = array(
+		'labels'          => $labels,
+		'public'          => true,
+		'show_ui'         => true,
+		'show_in_menu'    => true,
+		'query_var'       => true,
+		'rewrite'         => array( 'slug' => ot_get_option( 'services_url_slug', 'services' ) ),
+		'capability_type' => 'post',
+		'has_archive'     => true,
+		'hierarchical'    => false,
+		'supports'        => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes' )
+	);
+	register_post_type( 'services', $args );
 
 	// gallery
 	$labels = array(

@@ -6,6 +6,6 @@
       }
     ],
     "require": {
-        "primozcigler/wordpress-one-click-demo-install": "~0.2.1"
+        "primozcigler/wordpress-one-click-demo-install": "~0.4.0"
     }
 }

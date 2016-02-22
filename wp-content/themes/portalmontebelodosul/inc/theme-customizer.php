@@ -515,7 +515,7 @@ class Carpress_Customize {
 			'carpress_navbar_position',
 			array(
 				'label'    => _x( 'Main navbar position' , 'backend', 'carpress_wp'),
-				'section'  => 'nav',
+				'section'  => 'other',
 				'settings' => 'navbar_position',
 				'type'     => 'radio',
 				'choices'  => array(
@@ -591,7 +591,14 @@ class Carpress_Customize {
 			.nav-collapse .submenu-languages,
 			#wp-calendar caption,
 			.accordion-heading.open a .icon,
-			.tap-to-call {
+			.tap-to-call,
+			.woocommerce div.product form.cart .button,
+			.woocommerce-cart .wc-proceed-to-checkout a.checkout-button,
+			.woocommerce #payment #place_order,
+			.woocommerce button.button.alt:disabled,
+			.woocommerce button.button.alt:disabled:hover,
+			.woocommerce button.button.alt:disabled[disabled],
+			.woocommerce button.button.alt:disabled[disabled]:hover {
 				background-color: <?php echo $theme_mods['theme_clr']; ?>;
 			}
 
@@ -625,7 +632,10 @@ class Carpress_Customize {
 				border-bottom-color: <?php echo $theme_mods['theme_clr']; ?>;
 			}
 
-			.btn-featured:hover {
+			.btn-featured:hover,
+			.woocommerce div.product form.cart .button:hover,
+			.woocommerce-cart .wc-proceed-to-checkout a.checkout-button:hover,
+			.woocommerce #payment #place_order:hover {
 				background-color: <?php echo darken_css_color( $theme_mods['theme_clr'], 15 ) ; ?>;
 			}
 
@@ -717,7 +727,7 @@ class Carpress_Customize {
 
 
 		<?php endif;
-			if( !empty( $theme_mods['navbar_clr'] ) && '#000000' !== $theme_mods['navbar_clr'] ) : ?>
+			if( !empty( $theme_mods['navbar_clr'] ) ) : ?>
 
 			.navbar .container {
 				background: <?php echo $theme_mods['navbar_clr']; ?>;
